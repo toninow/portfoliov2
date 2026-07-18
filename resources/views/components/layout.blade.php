@@ -64,7 +64,7 @@
 
     <x-site.nav />
 
-    <main id="main">
+    <main id="main" data-page>
         {{ $slot }}
     </main>
 

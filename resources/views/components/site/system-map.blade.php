@@ -5,31 +5,38 @@
     // client-safe (no credentials, hosts or confidential data).
     $nodes = [
         [
-            'key' => 'suppliers', 'glyph' => '⇢',
-            'label' => ['es' => 'Proveedores', 'en' => 'Suppliers'],
-            'role' => ['es' => 'Entrada de datos', 'en' => 'Data intake'],
-            'desc' => ['es' => 'Catálogos de proveedores en Excel y web: SKU, EAN, precios, disponibilidad e imágenes.', 'en' => 'Supplier catalogs from Excel and web: SKU, EAN, prices, availability and images.'],
-            'tags' => ['Excel', 'CSV', 'EAN', 'SKU'],
+            'key' => 'web', 'glyph' => '⬡',
+            'label' => ['es' => 'Web & landings', 'en' => 'Web & landings'],
+            'role' => ['es' => 'Presencia online', 'en' => 'Online presence'],
+            'desc' => ['es' => 'Sitios web, landings y plataformas para instituciones y empresas: WordPress, Bitrix y desarrollos a medida con Laravel.', 'en' => 'Websites, landings and platforms for institutions and companies: WordPress, Bitrix and custom Laravel builds.'],
+            'tags' => ['WordPress', 'Laravel', 'Bitrix', 'SEO'],
         ],
         [
-            'key' => 'data', 'glyph' => '⋈',
-            'label' => ['es' => 'Catálogos y datos', 'en' => 'Catalogs & data'],
-            'role' => ['es' => 'Normalización', 'en' => 'Normalization'],
-            'desc' => ['es' => 'Limpieza, validación y enriquecimiento de datos de producto antes de entrar al ERP.', 'en' => 'Cleaning, validation and enrichment of product data before it reaches the ERP.'],
-            'tags' => ['PHP', 'Validación', 'Matching'],
+            'key' => 'data', 'glyph' => '⇢',
+            'label' => ['es' => 'Datos & proveedores', 'en' => 'Data & suppliers'],
+            'role' => ['es' => 'Entrada y normalización', 'en' => 'Intake & normalization'],
+            'desc' => ['es' => 'Catálogos de proveedores en Excel y web: SKU, EAN, precios e imágenes, limpiados y validados antes de entrar al sistema.', 'en' => 'Supplier catalogs from Excel and web: SKU, EAN, prices and images, cleaned and validated before entering the system.'],
+            'tags' => ['Excel', 'CSV', 'EAN', 'Validación'],
+        ],
+        [
+            'key' => 'ai', 'glyph' => '✦',
+            'label' => ['es' => 'Automatización + IA', 'en' => 'Automation + AI'],
+            'role' => ['es' => 'Motor asistido por IA', 'en' => 'AI-assisted engine'],
+            'desc' => ['es' => 'Automatizo tareas repetitivas y uso IA (asistentes como GPT/Claude y editores como Cursor) para acelerar el desarrollo, generar y revisar código y procesar datos con mejor criterio.', 'en' => 'I automate repetitive tasks and use AI (assistants like GPT/Claude and editors like Cursor) to speed up development, generate and review code, and process data with better judgement.'],
+            'tags' => ['IA', 'GPT / Claude', 'Cursor', 'Scripts'],
         ],
         [
             'key' => 'erp', 'glyph' => '▤',
             'label' => ['es' => 'ERP · Dolibarr', 'en' => 'ERP · Dolibarr'],
             'role' => ['es' => 'Núcleo de negocio', 'en' => 'Business core'],
             'desc' => ['es' => 'Productos, precios y stock centralizados en Dolibarr, con módulos a medida.', 'en' => 'Products, prices and stock centralized in Dolibarr, with custom modules.'],
-            'tags' => ['Dolibarr', 'PHP', 'MySQL'],
+            'tags' => ['Dolibarr', 'PHP', 'MySQL', 'Módulos'],
         ],
         [
             'key' => 'ecommerce', 'glyph' => '▣',
             'label' => ['es' => 'PrestaShop', 'en' => 'PrestaShop'],
             'role' => ['es' => 'Tienda online', 'en' => 'Online store'],
-            'desc' => ['es' => 'Sincronización de productos, precios y stock del ERP hacia el ecommerce.', 'en' => 'Sync of products, prices and stock from the ERP to the storefront.'],
+            'desc' => ['es' => 'Sincronización de productos, precios y stock del ERP hacia el ecommerce, con diagnóstico de errores.', 'en' => 'Sync of products, prices and stock from the ERP to the storefront, with error diagnostics.'],
             'tags' => ['PrestaShop', 'API', 'Sync'],
         ],
         [
@@ -37,36 +44,50 @@
             'label' => ['es' => 'Inventario', 'en' => 'Inventory'],
             'role' => ['es' => 'Stock en tiempo real', 'en' => 'Real-time stock'],
             'desc' => ['es' => 'Consulta de existencias por almacén, EAN, UPC y referencia desde el móvil.', 'en' => 'Stock lookups by warehouse, EAN, UPC and reference from mobile.'],
-            'tags' => ['API', 'Mobile', 'EAN'],
+            'tags' => ['API', 'Flutter', 'EAN'],
         ],
         [
             'key' => 'apps', 'glyph' => '◈',
-            'label' => ['es' => 'Apps internas', 'en' => 'Internal apps'],
-            'role' => ['es' => 'Herramientas a medida', 'en' => 'Custom tooling'],
-            'desc' => ['es' => 'Aplicaciones para resolver conflictos, revisar coincidencias y automatizar tareas.', 'en' => 'Apps to resolve conflicts, review matches and automate manual work.'],
-            'tags' => ['Laravel', 'Livewire', 'UX'],
+            'label' => ['es' => 'Apps a medida', 'en' => 'Custom apps'],
+            'role' => ['es' => 'Herramientas internas', 'en' => 'Internal tooling'],
+            'desc' => ['es' => 'Aplicaciones web y móviles para el trabajo diario: Laravel, Livewire y Flutter, con foco en una UX real y usable.', 'en' => 'Web and mobile apps for daily work: Laravel, Livewire and Flutter, focused on real, usable UX.'],
+            'tags' => ['Laravel', 'Livewire', 'Flutter'],
+        ],
+        [
+            'key' => 'db', 'glyph' => '⧉',
+            'label' => ['es' => 'APIs & bases de datos', 'en' => 'APIs & databases'],
+            'role' => ['es' => 'Datos & conexiones', 'en' => 'Data & connections'],
+            'desc' => ['es' => 'Modelado y consultas en MySQL y PostgreSQL, e integraciones vía APIs REST para conectar sistemas que antes no se hablaban.', 'en' => 'Data modeling and queries in MySQL and PostgreSQL, plus REST API integrations to connect systems that did not talk to each other.'],
+            'tags' => ['MySQL', 'PostgreSQL', 'REST'],
         ],
         [
             'key' => 'infra', 'glyph' => '❖',
-            'label' => ['es' => 'Servidores · Git', 'en' => 'Servers · Git'],
-            'role' => ['es' => 'Infraestructura', 'en' => 'Infrastructure'],
-            'desc' => ['es' => 'Linux y Docker, Gitea autogestionado, HTTPS y copias verificables con Restic.', 'en' => 'Linux and Docker, self-hosted Gitea, HTTPS and verifiable backups with Restic.'],
-            'tags' => ['Docker', 'Gitea', 'Restic'],
+            'label' => ['es' => 'Infraestructura', 'en' => 'Infrastructure'],
+            'role' => ['es' => 'Servidores & backups', 'en' => 'Servers & backups'],
+            'desc' => ['es' => 'Linux y Docker, Gitea autogestionado, HTTPS, despliegues y copias verificables con Restic.', 'en' => 'Linux and Docker, self-hosted Gitea, HTTPS, deploys and verifiable backups with Restic.'],
+            'tags' => ['Linux', 'Docker', 'Gitea', 'Restic'],
         ],
     ];
 
-    // Positions on a 440 x 380 stage, arranged as a flowing pipeline + loop.
+    // Positions on a 440 x 380 stage. AI/automation sits in the middle as the
+    // engine that touches everything — the work is a mesh, not a single pipeline.
     $pos = [
-        [70, 66],   // suppliers
-        [220, 48],  // data
-        [372, 96],  // erp
-        [388, 224], // ecommerce
-        [250, 300], // stock
-        [104, 300], // apps
-        [58, 190],  // infra
+        [72, 60],    // 0 web
+        [206, 46],   // 1 data
+        [220, 190],  // 2 ai (hub)
+        [368, 72],   // 3 erp
+        [398, 198],  // 4 ecommerce
+        [332, 316],  // 5 stock
+        [178, 344],  // 6 apps
+        [64, 306],   // 7 db
+        [38, 168],   // 8 infra
     ];
-    // Directed connections (data flow).
-    $edges = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0], [1, 4], [2, 6]];
+    // Interconnected flow (a mesh centred on automation + AI).
+    $edges = [
+        [1, 2], [0, 2], [2, 3], [2, 6], [2, 4],
+        [3, 4], [3, 5], [4, 5], [6, 5], [6, 7],
+        [7, 3], [8, 7], [8, 0],
+    ];
 
     // Adjacency for JS highlight.
     $adj = [];
@@ -112,7 +133,7 @@
 
                 {{-- Data pulses travelling along a few edges --}}
                 <g class="system-map__pulses" aria-hidden="true">
-                    @foreach([[0,1],[1,2],[2,3],[4,5]] as $k => [$a, $b])
+                    @foreach([[1,2],[2,3],[3,4],[2,6],[8,7]] as $k => [$a, $b])
                         @php $d = "M {$pos[$a][0]} {$pos[$a][1]} L {$pos[$b][0]} {$pos[$b][1]}"; @endphp
                         <circle r="2.6" fill="#22d3ee" class="map-pulse">
                             <animateMotion dur="{{ 2.4 + $k * 0.5 }}s" repeatCount="indefinite"

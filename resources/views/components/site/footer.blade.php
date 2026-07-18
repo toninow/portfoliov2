@@ -25,7 +25,9 @@
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('blog.index') }}">{{ __('portfolio.nav.blog') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('about') }}">{{ __('portfolio.nav.about') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('contact') }}">{{ __('portfolio.nav.contact') }}</a></li>
-                <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('cv') }}">{{ __('portfolio.nav.cv') }}</a></li>
+                @if($siteProfile->cvAvailable())
+                    <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('cv') }}">{{ __('portfolio.nav.cv') }}</a></li>
+                @endif
             </ul>
         </nav>
 

@@ -41,16 +41,16 @@ class PortfolioSeeder extends Seeder
         Profile::updateOrCreate(['id' => 1], [
             'name' => 'Antonio Benalcázar',
             'headline' => [
-                'es' => 'Desarrollador de software, automatización e integraciones empresariales',
-                'en' => 'Software developer, automation and enterprise integrations',
+                'es' => 'Desarrollador de software full-stack · Automatización e integraciones',
+                'en' => 'Full-stack software developer · Automation and integrations',
             ],
             'bio' => [
-                'es' => 'Analizo procesos reales, conecto sistemas y automatizo trabajo manual para construir herramientas internas útiles para empresas.',
-                'en' => 'I analyze real processes, connect systems and automate manual work to build internal tools that companies actually use.',
+                'es' => 'Desarrollo aplicaciones web e internas, automatizo procesos e integro sistemas (ERP, ecommerce, inventario, APIs e infraestructura). Me apoyo en la IA para construir más rápido y con mejor criterio.',
+                'en' => 'I build web and internal applications, automate processes and integrate systems (ERP, ecommerce, inventory, APIs and infrastructure). I use AI to build faster and with better judgement.',
             ],
             'about_long' => [
-                'es' => "Llevo varios años desarrollando software con foco en resolver problemas empresariales concretos. Trabajo sobre todo en la conexión entre ERP (Dolibarr), ecommerce (PrestaShop), inventario, catálogos de proveedores e infraestructura.\n\nMe interesan los procesos que todavía dependen de hojas de cálculo, mensajes y trabajo manual, y disfruto convirtiéndolos en sistemas más claros, medibles y fáciles de mantener.",
-                'en' => "I have spent several years building software focused on solving concrete business problems. I mostly work on connecting ERP (Dolibarr), ecommerce (PrestaShop), inventory, supplier catalogs and infrastructure.\n\nI am drawn to processes that still rely on spreadsheets, messages and manual work, and I enjoy turning them into clearer, measurable systems that are easy to maintain.",
+                'es' => "Soy desarrollador de software full-stack. Empecé construyendo sitios web, plataformas y landings para instituciones y empresas, y con el tiempo me especialicé en resolver problemas de negocio concretos: sistemas internos, automatización de procesos e integraciones entre ERP (Dolibarr), ecommerce (PrestaShop), inventario, catálogos de proveedores e infraestructura.\n\nTrabajo de punta a punta: backend con PHP y Laravel, interfaces web y móviles (Livewire, Flutter), bases de datos MySQL y PostgreSQL, APIs REST y servidores Linux con Docker, Git y copias de seguridad.\n\nUso la inteligencia artificial como parte natural de mi flujo de trabajo —asistentes como GPT y Claude y editores como Cursor— para generar y revisar código, procesar datos y avanzar más rápido sin perder criterio. Me interesan los procesos que todavía dependen de hojas de cálculo, mensajes y trabajo manual, y disfruto convirtiéndolos en sistemas más claros, medibles y fáciles de mantener.",
+                'en' => "I am a full-stack software developer. I started building websites, platforms and landing pages for institutions and companies, and over time I specialised in solving concrete business problems: internal systems, process automation and integrations between ERP (Dolibarr), ecommerce (PrestaShop), inventory, supplier catalogs and infrastructure.\n\nI work end to end: backend with PHP and Laravel, web and mobile interfaces (Livewire, Flutter), MySQL and PostgreSQL databases, REST APIs and Linux servers with Docker, Git and backups.\n\nI use artificial intelligence as a natural part of my workflow —assistants like GPT and Claude and editors like Cursor— to generate and review code, process data and move faster without losing judgement. I am drawn to processes that still rely on spreadsheets, messages and manual work, and I enjoy turning them into clearer, measurable systems that are easy to maintain.",
             ],
             'availability' => [
                 'es' => 'Disponible para nuevos proyectos',
@@ -92,6 +92,7 @@ class PortfolioSeeder extends Seeder
             'data' => ['MySQL', 'PostgreSQL', 'APIs REST'],
             'erp' => ['Dolibarr', 'PrestaShop', 'WordPress', 'Bitrix', 'Moodle'],
             'infra' => ['Linux', 'Docker', 'Git', 'Gitea', 'Apache', 'Restic'],
+            'ia' => ['IA (GPT · Claude)', 'Cursor', 'Automatización con IA'],
             'tools' => ['Microsoft 365'],
         ];
 
@@ -114,11 +115,17 @@ class PortfolioSeeder extends Seeder
     {
         $groups = [
             ['name' => ['es' => 'Backend', 'en' => 'Backend'], 'skills' => ['PHP', 'Laravel', 'Livewire']],
-            ['name' => ['es' => 'Frontend', 'en' => 'Frontend'], 'skills' => ['HTML5', 'CSS3', 'JavaScript', 'Tailwind CSS']],
-            ['name' => ['es' => 'Datos', 'en' => 'Data'], 'skills' => ['MySQL', 'PostgreSQL']],
+            ['name' => ['es' => 'Frontend & móvil', 'en' => 'Frontend & mobile'], 'skills' => ['HTML5', 'CSS3', 'JavaScript', 'Tailwind CSS', 'Flutter']],
+            ['name' => ['es' => 'Datos & APIs', 'en' => 'Data & APIs'], 'skills' => ['MySQL', 'PostgreSQL', 'APIs REST']],
             ['name' => ['es' => 'ERP & ecommerce', 'en' => 'ERP & ecommerce'], 'skills' => ['Dolibarr', 'PrestaShop', 'WordPress']],
             ['name' => ['es' => 'Infraestructura', 'en' => 'Infrastructure'], 'skills' => ['Linux', 'Docker', 'Git', 'Restic']],
+            ['name' => ['es' => 'IA & productividad', 'en' => 'AI & productivity'], 'skills' => ['Uso de IA (GPT · Claude)', 'Cursor', 'Automatización con IA', 'Prompting efectivo']],
         ];
+
+        // Idempotent refresh: seed content is not hand-edited in the admin, so a
+        // clean rebuild keeps groups/skills in sync without duplicating rows.
+        Skill::query()->delete();
+        SkillGroup::query()->delete();
 
         $sort = 0;
         foreach ($groups as $g) {
@@ -141,8 +148,14 @@ class PortfolioSeeder extends Seeder
                 'tech' => ['laravel', 'livewire', 'mysql'],
             ],
             [
-                'title' => ['es' => 'Automatización de procesos', 'en' => 'Process automation'],
-                'summary' => ['es' => 'Elimino tareas manuales conectando tus sistemas.', 'en' => 'I remove manual tasks by connecting your systems.'],
+                'title' => ['es' => 'Desarrollo web y plataformas', 'en' => 'Web development & platforms'],
+                'summary' => ['es' => 'Sitios web, plataformas y landings rápidas, medibles y bien posicionadas.', 'en' => 'Fast, measurable and well-ranked websites, platforms and landing pages.'],
+                'problems' => ['es' => ['Webs lentas o desactualizadas', 'Poca visibilidad en buscadores', 'Landings que no convierten'], 'en' => ['Slow or outdated sites', 'Low search visibility', 'Landings that do not convert']],
+                'tech' => ['laravel', 'wordpress', 'javascript'],
+            ],
+            [
+                'title' => ['es' => 'Automatización de procesos con IA', 'en' => 'Process automation with AI'],
+                'summary' => ['es' => 'Elimino tareas manuales conectando tus sistemas y apoyándome en IA.', 'en' => 'I remove manual tasks by connecting your systems and leveraging AI.'],
                 'problems' => ['es' => ['Trabajo manual repetido cada día', 'Errores por copiar y pegar', 'Tareas que nadie quiere hacer'], 'en' => ['Manual work repeated every day', 'Copy-paste errors', 'Tasks nobody wants to do']],
                 'tech' => ['php', 'apis-rest'],
             ],

@@ -99,6 +99,31 @@ if (nav) {
             });
         empty.hidden = true;
         body.hidden = false;
+        // Re-trigger the swap animation each time content changes.
+        body.classList.remove('is-in');
+        void body.offsetWidth;
+        body.classList.add('is-in');
+    }
+
+    const svg = map.querySelector('svg');
+    const nodesGroup = map.querySelector('.system-map__nodes');
+
+    // Expanding ring at the clicked node for a tactile, game-like feel.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function ripple(node) {
+        if (reduceMotion || !svg || !nodesGroup) return;
+        const ring = node.querySelector('.map-node__ring');
+        if (!ring) return;
+        const cx = ring.getAttribute('cx');
+        const cy = ring.getAttribute('cy');
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', cx);
+        c.setAttribute('cy', cy);
+        c.setAttribute('r', '12');
+        c.setAttribute('class', 'map-ripple');
+        nodesGroup.appendChild(c);
+        c.addEventListener('animationend', () => c.remove());
     }
 
     function preview(i) {
@@ -121,6 +146,7 @@ if (nav) {
         selected = i;
         highlight(i);
         fill(nodes[i]);
+        ripple(nodes[i]);
         nodes.forEach((n, idx) => n.setAttribute('aria-pressed', idx === i ? 'true' : 'false'));
         if (hint) hint.style.opacity = '0';
     }
@@ -151,6 +177,7 @@ if (nav) {
 
 // Reveal-on-scroll (respects reduced motion)
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealSelector = '[data-reveal], [data-reveal-stagger]';
 if (!prefersReduced && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
         (entries) => {
@@ -161,9 +188,23 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
                 }
             });
         },
-        { threshold: 0.12 }
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
-    document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+    document.querySelectorAll(revealSelector).forEach((el) => observer.observe(el));
 } else {
-    document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+    document.querySelectorAll(revealSelector).forEach((el) => el.classList.add('is-visible'));
 }
+
+// Contact form: gentle submit feedback so it feels responsive and human.
+(function initContactForm() {
+    const form = document.querySelector('[data-contact-form]');
+    if (!form) return;
+    form.addEventListener('submit', () => {
+        const btn = form.querySelector('[data-submit]');
+        if (!btn) return;
+        btn.dataset.label = btn.textContent;
+        btn.textContent = btn.dataset.sending || btn.textContent;
+        btn.disabled = true;
+        btn.style.opacity = '0.75';
+    });
+})();

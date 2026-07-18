@@ -15,10 +15,20 @@ class Profile extends Model
 
     protected $casts = [
         'extras' => 'array',
+        'cv_enabled' => 'boolean',
     ];
 
     public static function current(): self
     {
         return static::query()->firstOrCreate(['id' => 1], ['name' => 'Antonio Benalcázar']);
+    }
+
+    /**
+     * The CV download is offered publicly only when a file exists and the
+     * owner has it enabled from the admin panel.
+     */
+    public function cvAvailable(): bool
+    {
+        return (bool) $this->cv_path && (bool) ($this->cv_enabled ?? true);
     }
 }

@@ -11,7 +11,7 @@
             @if($profile->avatar_path)
                 <div class="max-w-xs mx-auto lg:mx-0 lg:sticky lg:top-28">
                     <img src="{{ Storage::url($profile->avatar_path) }}" alt="{{ $profile->name }}" class="w-full rounded-2xl border border-[var(--color-line)]">
-                    @if($profile->cv_path)
+                    @if($profile->cvAvailable())
                         <a href="{{ Locale::route('cv') }}" target="_blank" rel="noopener" class="mt-4 btn btn-primary w-full">{{ __('portfolio.nav.cv') }}</a>
                     @endif
                 </div>

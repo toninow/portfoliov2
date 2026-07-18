@@ -11,9 +11,10 @@ class CvController extends Controller
 {
     public function __invoke(): Response
     {
-        $path = Profile::current()->cv_path;
+        $profile = Profile::current();
+        $path = $profile->cv_path;
 
-        if (! $path || ! Storage::disk('public')->exists($path)) {
+        if (! $profile->cvAvailable() || ! Storage::disk('public')->exists($path)) {
             throw new NotFoundHttpException('CV no disponible.');
         }
 

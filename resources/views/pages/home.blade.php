@@ -4,12 +4,12 @@
     $l = app()->getLocale();
     $availability = $profile->getTranslation('availability', $l) ?: __('portfolio.availability.available');
     $capabilities = [
-        ['t' => ['es' => 'Sistemas internos', 'en' => 'Internal systems'], 'd' => ['es' => 'Herramientas a medida para el trabajo diario del equipo.', 'en' => 'Custom tools for the team\'s daily work.']],
-        ['t' => ['es' => 'Integraciones ERP · ecommerce', 'en' => 'ERP · ecommerce integrations'], 'd' => ['es' => 'Sincronizo productos, precios y stock entre Dolibarr y PrestaShop.', 'en' => 'I sync products, prices and stock between Dolibarr and PrestaShop.']],
-        ['t' => ['es' => 'Automatización de catálogos', 'en' => 'Catalog automation'], 'd' => ['es' => 'Proceso y enriquezco catálogos de proveedores.', 'en' => 'I process and enrich supplier catalogs.']],
-        ['t' => ['es' => 'Inventario y stock', 'en' => 'Inventory & stock'], 'd' => ['es' => 'Consulta de existencias por almacén, EAN y referencia.', 'en' => 'Stock lookups by warehouse, EAN and reference.']],
-        ['t' => ['es' => 'Infraestructura Linux', 'en' => 'Linux infrastructure'], 'd' => ['es' => 'Servidores, Docker, HTTPS y despliegues reproducibles.', 'en' => 'Servers, Docker, HTTPS and reproducible deploys.']],
-        ['t' => ['es' => 'Datos, APIs y backups', 'en' => 'Data, APIs & backups'], 'd' => ['es' => 'Sincronización por API y copias verificables con Restic.', 'en' => 'API sync and verifiable backups with Restic.']],
+        ['t' => ['es' => 'Sistemas internos y apps a medida', 'en' => 'Internal systems & custom apps'], 'd' => ['es' => 'Aplicaciones web y móviles (Laravel, Livewire, Flutter) para el trabajo diario del equipo.', 'en' => 'Web and mobile apps (Laravel, Livewire, Flutter) for the team\'s daily work.']],
+        ['t' => ['es' => 'Desarrollo web & landings', 'en' => 'Web development & landings'], 'd' => ['es' => 'Sitios, plataformas y landings para instituciones y empresas, con foco en velocidad y SEO.', 'en' => 'Sites, platforms and landings for institutions and companies, focused on speed and SEO.']],
+        ['t' => ['es' => 'Integraciones ERP · ecommerce', 'en' => 'ERP · ecommerce integrations'], 'd' => ['es' => 'Sincronizo productos, precios y stock entre Dolibarr, PrestaShop y otros sistemas vía API.', 'en' => 'I sync products, prices and stock between Dolibarr, PrestaShop and other systems via API.']],
+        ['t' => ['es' => 'Automatización con IA', 'en' => 'AI-assisted automation'], 'd' => ['es' => 'Elimino trabajo manual y uso IA para generar, revisar código y procesar datos más rápido.', 'en' => 'I remove manual work and use AI to generate, review code and process data faster.']],
+        ['t' => ['es' => 'Datos, APIs y bases de datos', 'en' => 'Data, APIs & databases'], 'd' => ['es' => 'Modelado y consultas en MySQL/PostgreSQL e integraciones REST entre sistemas.', 'en' => 'Data modeling and queries in MySQL/PostgreSQL and REST integrations between systems.']],
+        ['t' => ['es' => 'Infraestructura, Git & backups', 'en' => 'Infrastructure, Git & backups'], 'd' => ['es' => 'Linux, Docker, Gitea autogestionado, HTTPS y copias verificables con Restic.', 'en' => 'Linux, Docker, self-hosted Gitea, HTTPS and verifiable backups with Restic.']],
     ];
     $process = [
         'understand' => ['es' => 'Escucho el proceso real y a las personas que lo usan.', 'en' => 'I listen to the real process and the people using it.'],
@@ -18,7 +18,7 @@
         'implement' => ['es' => 'Construyo, integro y pruebo con datos reales.', 'en' => 'I build, integrate and test with real data.'],
         'measure' => ['es' => 'Mido resultados y mejoro de forma continua.', 'en' => 'I measure results and improve continuously.'],
     ];
-    $areaLabels = ['backend' => 'Backend', 'frontend' => 'Frontend', 'data' => 'Datos', 'erp' => 'ERP & ecommerce', 'infra' => 'Infraestructura', 'tools' => 'Herramientas'];
+    $areaLabels = ['backend' => 'Backend', 'frontend' => 'Frontend & móvil', 'data' => 'Datos & APIs', 'erp' => 'ERP & ecommerce', 'infra' => 'Infraestructura', 'ia' => 'IA & productividad', 'tools' => 'Herramientas'];
 @endphp
 
 <x-layout :description="$profile->getTranslation('headline', $l)">
@@ -34,16 +34,19 @@
             <div data-hero>
                 <p class="eyebrow">{{ __('portfolio.hero.eyebrow') }}</p>
                 <h1 class="mt-4 text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] font-bold text-balance">
-                    {{ $profile->getTranslation('headline', $l) ?: __('portfolio.hero.title') }}
+                    {{ __('portfolio.hero.title') }}
                 </h1>
-                <p class="mt-6 text-lg text-[var(--color-muted)] max-w-xl">
+                <p class="mt-3 text-base font-mono text-[var(--color-brand-bright)]">
+                    {{ $profile->getTranslation('headline', $l) }}
+                </p>
+                <p class="mt-5 text-lg text-[var(--color-muted)] max-w-xl">
                     {{ $profile->getTranslation('bio', $l) ?: __('portfolio.hero.lead') }}
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ Locale::route('projects.index') }}" class="btn btn-primary">{{ __('portfolio.hero.view_projects') }}</a>
                     <a href="{{ Locale::route('contact') }}" class="btn btn-ghost">{{ __('portfolio.hero.talk') }}</a>
-                    @if($profile->cv_path)
+                    @if($profile->cvAvailable())
                         <a href="{{ Locale::route('cv') }}" class="btn btn-ghost" target="_blank" rel="noopener">{{ __('portfolio.hero.download_cv') }}</a>
                     @endif
                 </div>
@@ -67,8 +70,8 @@
 
     {{-- 2 · Specialization band --}}
     <section class="border-y border-[var(--color-line)] bg-[var(--color-surface)]/40">
-        <div class="container-page py-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-mono text-[var(--color-muted)]">
-            @foreach(['ERP & ecommerce', 'Automatización', 'Apps internas', 'Inventario', 'Infraestructura', 'Datos & APIs'] as $item)
+        <div class="container-page py-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-mono text-[var(--color-muted)]" data-reveal-stagger>
+            @foreach(['Desarrollo web & apps', 'ERP & ecommerce', 'Automatización + IA', 'Integraciones & APIs', 'Inventario', 'Infraestructura'] as $item)
                 <span class="flex items-center gap-2"><span aria-hidden="true" style="color: var(--color-cyan)">◇</span>{{ $item }}</span>
             @endforeach
         </div>

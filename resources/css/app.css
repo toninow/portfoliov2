@@ -27,6 +27,10 @@
 
     --shadow-soft: 0 10px 30px -12px rgba(2, 8, 20, 0.6);
     --shadow-glow: 0 0 0 1px rgba(96, 165, 250, 0.15), 0 20px 60px -20px rgba(59, 130, 246, 0.35);
+
+    /* Motion: expressive but calm easing curves */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @layer base {
@@ -102,6 +106,7 @@
     }
 
     .btn {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -112,7 +117,12 @@
         font-size: 0.95rem;
         line-height: 1;
         min-height: 44px;
-        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        transition: transform 0.28s var(--ease-spring), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .btn:active {
+        transform: translateY(0) scale(0.97);
+        transition-duration: 0.06s;
     }
 
     .btn-primary {
@@ -123,6 +133,7 @@
     .btn-primary:hover {
         background: var(--color-brand-bright);
         transform: translateY(-2px);
+        box-shadow: 0 10px 26px -10px rgba(59, 130, 246, 0.7);
     }
 
     .btn-ghost {
@@ -171,6 +182,32 @@
 
     .link-underline:hover::after {
         width: 100%;
+    }
+
+    .input-field {
+        width: 100%;
+        border-radius: 0.75rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-line);
+        padding: 0.75rem 1rem;
+        font-size: 1rem; /* >=16px so mobile doesn't zoom */
+        color: var(--color-ink);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .input-field::placeholder {
+        color: color-mix(in oklab, var(--color-muted) 70%, transparent);
+    }
+
+    .input-field:hover {
+        border-color: color-mix(in oklab, var(--color-brand-bright) 40%, var(--color-line));
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: var(--color-brand-bright);
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
+        background: color-mix(in oklab, var(--color-surface) 88%, black);
     }
 }
 
@@ -253,18 +290,24 @@
 
 .map-edge {
     stroke-width: 1.6;
-    opacity: 0.45;
-    transition: opacity 0.25s ease, stroke-width 0.25s ease;
+    opacity: 0.4;
+    transition: opacity 0.35s var(--ease-out), stroke-width 0.35s var(--ease-out);
 }
 
 .map-edge.is-active {
     opacity: 1;
-    stroke-width: 2.6;
-    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    stroke-width: 3;
+    filter: drop-shadow(0 0 7px rgba(34, 211, 238, 0.75));
+    stroke-dasharray: 6 5;
+    animation: edge-flow 0.9s linear infinite;
 }
 
 .map-edge.is-dim {
-    opacity: 0.1;
+    opacity: 0.08;
+}
+
+@keyframes edge-flow {
+    to { stroke-dashoffset: -22; }
 }
 
 .map-pulse {
@@ -273,7 +316,7 @@
 
 .map-node {
     cursor: pointer;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.35s var(--ease-out);
 }
 
 .map-node:focus {
@@ -282,11 +325,30 @@
 
 .map-node__halo {
     fill: rgba(34, 211, 238, 0);
-    transition: fill 0.25s ease;
+    transition: fill 0.3s ease;
 }
 
 .map-node__ring {
-    transition: stroke 0.25s ease, filter 0.25s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: stroke 0.3s ease, filter 0.3s ease, transform 0.35s var(--ease-spring);
+}
+
+/* Click ripple injected by JS on select */
+.map-ripple {
+    fill: none;
+    stroke: var(--color-cyan);
+    stroke-width: 2;
+    opacity: 0.9;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: map-ripple 0.65s var(--ease-out) forwards;
+    pointer-events: none;
+}
+
+@keyframes map-ripple {
+    from { transform: scale(0.4); opacity: 0.85; }
+    to { transform: scale(3.4); opacity: 0; }
 }
 
 .map-node__glyph {
@@ -303,10 +365,17 @@
 }
 
 .map-node:hover .map-node__ring,
-.map-node:focus-visible .map-node__ring,
-.map-node.is-active .map-node__ring {
+.map-node:focus-visible .map-node__ring {
     stroke: var(--color-cyan);
     filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.7));
+    transform: scale(1.14);
+}
+
+.map-node.is-active .map-node__ring {
+    stroke: var(--color-cyan);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.9));
+    transform: scale(1.28);
 }
 
 .map-node:hover .map-node__label,
@@ -375,6 +444,36 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
+}
+
+/* Panel content animates in each time a node is selected/previewed */
+.system-map__panel-body.is-in {
+    animation: panel-swap 0.4s var(--ease-out);
+}
+
+.system-map__panel-body.is-in .system-map__panel-role { animation: panel-line 0.45s var(--ease-out) both; }
+.system-map__panel-body.is-in .system-map__panel-title { animation: panel-line 0.45s var(--ease-out) 0.04s both; }
+.system-map__panel-body.is-in .system-map__panel-desc { animation: panel-line 0.45s var(--ease-out) 0.08s both; }
+.system-map__panel-body.is-in .system-map__panel-tags { animation: panel-line 0.45s var(--ease-out) 0.12s both; }
+
+@keyframes panel-swap {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+}
+
+@keyframes panel-line {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+
+.system-map__panel-tags .chip {
+    transition: transform 0.2s var(--ease-spring), border-color 0.2s ease, color 0.2s ease;
+}
+
+.system-map__panel-tags .chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-brand-bright);
+    color: var(--color-ink);
 }
 
 /* Mobile flow */
@@ -470,15 +569,17 @@ html.js .system-map__frame .map-node {
 }
 
 html.js .system-map__frame .map-node:nth-child(1) { animation-delay: 0.35s; }
-html.js .system-map__frame .map-node:nth-child(2) { animation-delay: 0.45s; }
-html.js .system-map__frame .map-node:nth-child(3) { animation-delay: 0.55s; }
-html.js .system-map__frame .map-node:nth-child(4) { animation-delay: 0.65s; }
-html.js .system-map__frame .map-node:nth-child(5) { animation-delay: 0.75s; }
-html.js .system-map__frame .map-node:nth-child(6) { animation-delay: 0.85s; }
-html.js .system-map__frame .map-node:nth-child(7) { animation-delay: 0.95s; }
+html.js .system-map__frame .map-node:nth-child(2) { animation-delay: 0.42s; }
+html.js .system-map__frame .map-node:nth-child(3) { animation-delay: 0.49s; }
+html.js .system-map__frame .map-node:nth-child(4) { animation-delay: 0.56s; }
+html.js .system-map__frame .map-node:nth-child(5) { animation-delay: 0.63s; }
+html.js .system-map__frame .map-node:nth-child(6) { animation-delay: 0.70s; }
+html.js .system-map__frame .map-node:nth-child(7) { animation-delay: 0.77s; }
+html.js .system-map__frame .map-node:nth-child(8) { animation-delay: 0.84s; }
+html.js .system-map__frame .map-node:nth-child(9) { animation-delay: 0.91s; }
 
 @keyframes node-in {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(8px) scale(0.85); }
     to { opacity: 1; transform: none; }
 }
 
@@ -489,10 +590,12 @@ html.js [data-hero] > * {
 }
 
 html.js [data-hero] > *:nth-child(1) { animation-delay: 0.05s; }
-html.js [data-hero] > *:nth-child(2) { animation-delay: 0.14s; }
-html.js [data-hero] > *:nth-child(3) { animation-delay: 0.23s; }
-html.js [data-hero] > *:nth-child(4) { animation-delay: 0.32s; }
-html.js [data-hero] > *:nth-child(5) { animation-delay: 0.41s; }
+html.js [data-hero] > *:nth-child(2) { animation-delay: 0.13s; }
+html.js [data-hero] > *:nth-child(3) { animation-delay: 0.21s; }
+html.js [data-hero] > *:nth-child(4) { animation-delay: 0.29s; }
+html.js [data-hero] > *:nth-child(5) { animation-delay: 0.37s; }
+html.js [data-hero] > *:nth-child(6) { animation-delay: 0.45s; }
+html.js [data-hero] > *:nth-child(7) { animation-delay: 0.53s; }
 
 @keyframes hero-rise {
     from { opacity: 0; transform: translateY(14px); }
@@ -645,8 +748,10 @@ a.card.group:focus-visible {
 /* Reveal on scroll */
 html.js [data-reveal] {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
 }
 
 html.js [data-reveal].is-visible {
@@ -654,11 +759,54 @@ html.js [data-reveal].is-visible {
     transform: none;
 }
 
+/* Staggered children inside a reveal group */
+html.js [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+}
+
+html.js [data-reveal-stagger].is-visible > * {
+    opacity: 1;
+    transform: none;
+}
+
+html.js [data-reveal-stagger].is-visible > *:nth-child(1) { transition-delay: 0.03s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(2) { transition-delay: 0.09s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(3) { transition-delay: 0.15s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(4) { transition-delay: 0.21s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(5) { transition-delay: 0.27s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(6) { transition-delay: 0.33s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(7) { transition-delay: 0.39s; }
+html.js [data-reveal-stagger].is-visible > *:nth-child(8) { transition-delay: 0.45s; }
+
+/* Gentle page-enter fade so navigation feels smooth and human */
+html.js main[data-page] {
+    animation: page-enter 0.5s var(--ease-out) both;
+}
+
+@keyframes page-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Contact success message pops in */
+.contact-success {
+    animation: pop-in 0.5s var(--ease-spring) both;
+}
+
+@keyframes pop-in {
+    from { opacity: 0; transform: scale(0.96) translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    html.js [data-reveal] {
+    html.js [data-reveal],
+    html.js [data-reveal-stagger] > * {
         opacity: 1;
         transform: none;
     }
+    html.js main[data-page] { animation: none; }
 }
 
 /* Sticky nav */
