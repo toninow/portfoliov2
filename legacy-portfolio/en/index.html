@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en-En">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Antonio Benalcázar</title>
+    <meta content="Full Stack Developer, piensa 2 veces, programa una vez" name="description">
+    <meta content="Antonio Benalcázar, Portafolio, programador Ecuatoriano, programador, Ecuador, Desarrolador" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+    <style>
+        .swing {
+            animation: swing ease-in-out 1s infinite alternate;
+            transform-origin: center -20px;
+            float: left;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .swing img {
+            border: 5px solid #f8f8f8;
+            display: block;
+        }
+        
+        .swing:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #999;
+            top: -10px;
+            left: 50%;
+            z-index: 0;
+            border-bottom: none;
+            border-right: none;
+            transform: rotate(45deg);
+        }
+        /* nail */
+        
+        .swing:before {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            top: -14px;
+            left: 54%;
+            z-index: 5;
+            border-radius: 50% 50%;
+            background: #000;
+        }
+        
+        @keyframes swing {
+            0% {
+                transform: rotate(3deg);
+            }
+            100% {
+                transform: rotate(-3deg);
+            }
+        }
+        
+        .static {
+            position: absolute;
+            background: white;
+        }
+        
+        .static:hover {
+            opacity: 0;
+        }
+        
+        .btn1 {
+            padding: 15px 32px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            border: 3px solid var(--color-one);
+            cursor: pointer;
+            transition: background-color 0.5s linear, color 0.5s ease-out, transform 0.3s ease-out;
+        }
+        
+        .btn2 {
+            padding: 15px 32px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: background-color 0.5s linear, color 0.5s ease-out, transform 0.3s ease-out;
+        }
+        
+        .btn1:hover {
+            transform: translateY(-5px);
+        }
+        
+        .button-one {
+            background-color: var(--color-one);
+            color: var(--color-two);
+        }
+        
+        .button-one:hover {
+            color: var(--color-one);
+            background-color: var(--color-two);
+        }
+        
+        .button-two {
+            background-color: var(--color-one);
+            color: var(--color-two);
+        }
+        
+        .button-two:hover {
+            background-image: url("../assets/img/button-spanish.jpg");
+        }
+        
+         :root {
+            --color-one: black;
+            --color-two: #FFD700;
+        }
+        
+        .bg {
+            animation: slide 3s ease-in-out infinite alternate;
+            background-image: linear-gradient(-60deg, rgb(0, 0, 0) 50%, rgb(255, 230, 0) 50%);
+            bottom: 0;
+            left: -50%;
+            opacity: .5;
+            position: fixed;
+            right: -50%;
+            top: 0;
+            z-index: -1;
+        }
+        
+        .bg2 {
+            animation-direction: alternate-reverse;
+            animation-duration: 4s;
+        }
+        
+        .bg3 {
+            animation-duration: 5s;
+        }
+        
+        .content1 {
+            background-color: rgba(255, 255, 255, .8);
+            border-radius: .25em;
+            box-shadow: 0 0 .25em rgba(0, 0, 0, .25);
+            box-sizing: border-box;
+            left: 50%;
+            padding: 10vmin;
+            position: fixed;
+            text-align: center;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes slide {
+            0% {
+                transform: translateX(-25%);
+            }
+            100% {
+                transform: translateX(25%);
+            }
+        }
+        
+        .static {
+            position: absolute;
+        }
+        
+        .static:hover {
+            opacity: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ======= Mobile nav toggle button ======= -->
+    <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+    <!-- ======= Header ======= -->
+    <header id="header">
+        <div class="d-flex flex-column">
+
+            <div class="profile">
+                <img src="../assets/img/profile-img.webp" alt="" class="img-fluid rounded-circle">
+                <h1 class="text-light"><a href="index.html">Antonio Benalcázar</a></h1>
+                <div class="social-links mt-3 text-center">
+                    <a alt="enlace twitter" target="blank" href="https://twitter.com/SoloEscuchoRap" class="twitter"><i class="bx bxl-twitter"></i></a>
+                    <a alt="enlace facebook" target="blank" href="https://www.facebook.com/devdev00100101/" class="facebook"><i class="bx bxl-facebook"></i></a>
+                    <a alt="enlace instagram" target="blank" href="https://www.instagram.com/antdev0010/" class="instagram"><i class="bx bxl-instagram"></i></a>
+                    <a alt="enlace linkedin" target="blank" href="https://www.linkedin.com/in/antonio-jose-benalc%C3%A1zar-cabrejo-9870444b/" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                    <a alt="enlace github" target="blank" href="https://github.com/toninow" class="github"><i class="bx bxl-github"></i></a>
+                </div>
+                <div class="row" data-aos="fade-in">
+                    <div class="col-lg-12">
+                        <div align="center" style="margin: 5%;">
+                            <a target="blank" href="../">
+                                <button style="color: white;" class="btn2 button-two">Spanish</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav id="navbar" class="nav-menu navbar">
+                <ul>
+                    <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Welcome</span></a></li>
+                    <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About me</span></a></li>
+                    <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a></li>
+                    <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Let's talk</span></a></li>
+                </ul>
+            </nav>
+
+
+            <!-- .nav-menu -->
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+        <div class="hero-container" data-aos="fade-in">
+            <h1>Antonio Benalcázar</h1>
+            <p>I am <span class="typed" data-typed-items="Full Stack Dev., Administrator, Freestyle"></span></p>
+        </div>
+    </section>
+    <!-- End Hero -->
+
+    <main id="main">
+
+        <!-- ======= About Section ======= -->
+        <section id="about" class="skills section-bg">
+            <div class="container">
+
+                <div class="section-title">
+                    <h2>About me</h2>
+                    <p>Software Development Technologist, Passionate about technology since 93, dedicated to the world of the art of development, professional ability to channel and solve problems, skilled in decision making, teamwork, the world is a fascinating
+                        place but if you look through the latch you will see that there is a how and a why, that's where you can make a difference. world is a fascinating place but if you look through the latch you will see that there is a how and a why,
+                        that is where you can make the difference. Dare to change, and you can refactor the world. Translated with www.DeepL.com/Translator (free version)
+                    </p>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4" data-aos="fade-right">
+                        <img style="width: 100%; height: auto" src="assets/img/profile-img.webp" class="img-fluid" alt="">
+                    </div>
+                    <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
+                        <h3>Developer by nature</h3>
+                        <p class="fst-italic">
+
+                        </p>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Languages:</strong> <span>English, Spanish</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Hobbies:</strong> <span>Mc, Beatmaker, Gamer</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Country:</strong> <span>Ecuador</span></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Career:</strong> <span>Software Development Technologist</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Disponible</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Learning:</strong> <span>Livewire & React.js</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p>
+                            I have been studying programming for four years, two of them as a professional, keeping the focus on being better and improving the skills in what you code, where every day you always program with something new.
+                        </p>
+                        <div class="row" data-aos="fade-in">
+                            <div class="col-lg-12">
+                                <div align="center" style="margin: 5%;">
+                                    <a target="blank" href="../assets/docs/cvAntonioBenalcazar.pdf">
+                                        <button class="btn1 button-one"> <i class="fa fa-pdf"></i> Download CV</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- End About Section -->
+
+        <!-- ======= Skills Section ======= -->
+        <section id="skills" class="skills section-bg">
+            <div class="container">
+
+                <div class="section-title">
+                    <h2>Skills</h2>
+                    <p>Have allowed me to immerse myself in this exciting world.</p>
+                </div>
+
+                <div class="row skills-content">
+
+                    <div class="col-lg-6" data-aos="fade-up">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/html5.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/css3.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/js.webp" alt="">
+                                        </figure>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/laravel.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/flutter.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/php.webp" lt="">
+                                        </figure>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/bootstrap.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/postgresql.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/mysql.webp" lt="">
+                                        </figure>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/git.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/windows.webp" alt="">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <figure class="swing">
+                                            <img style="width: 100%; height: auto" src="../assets/img/skills/linux.webp" lt="">
+                                        </figure>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+        <!-- End Skills Section -->
+
+        <!-- ======= Portfolio Section ======= -->
+        <section id="portfolio" class="portfolio section-bg">
+            <div class="container">
+
+                <div class="section-title">
+                    <h2>Portfolio</h2>
+                    <p>I have done several projects over the years and it has allowed me to gain experience, responsibility, efficiency and the necessary knowledge to carry out the projects you need. </p>
+                </div>
+
+                <div class="row" data-aos="fade-up">
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <ul id="portfolio-flters">
+                            <li data-filter="*" class="filter-active">All</li>
+                            <li data-filter=".filter-app">Web System</li>
+                            <li data-filter=".filter-card">Wb Landing</li>
+                            <li data-filter=".filter-web">Videogames</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <div class="portfolio-wrap">
+                            <img id="myImg" style="width: 100%; height: auto" src="../assets/img/portfolio/port1.webp" class="img-fluid" alt="">
+                            <a target="blank" href="https://www.cruzrojainstituto.edu.ec">
+                                <div class="portfolio-links">
+                                    <button class="btn1 button-one">Página web istcre</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+                        <div class="portfolio-wrap">
+                            <img id="imgDino" style="width: 100%; height: auto" src="../assets/img/portfolio/port2.webp" class="img-fluid" alt="">
+                            <a target="blank" href="https://fonap-game.web.app/">
+                                <div class="portfolio-links">
+                                    <button class="btn1 button-one">Video juego aprendizaje Fundación fonap</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <div class="portfolio-wrap">
+                            <img id="imgDino" style="width: 100%; height: auto" src="../assets/img/portfolio/port3.webp" class="img-fluid" alt="">
+                            <a target="blank" href="https://www.revistaacademica-istcre.edu.ec/">
+                                <div class="portfolio-links">
+                                    <button class="btn1 button-one">Revista istcre</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+                        <div class="portfolio-wrap">
+                            <img id="imgDino" style="width: 100%; height: auto" src="../assets/img/portfolio/port4.webp" class="img-fluid" alt="">
+                            <a target="blank" href="https://admisiones.cruzrojainstituto.edu.ec/">
+                                <div class="portfolio-links">
+                                    <button class="btn1 button-one">Admisiones Istcre</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <div class="portfolio-wrap">
+                            <img id="imgDino" style="width: 100%; height: auto" src="../assets/img/portfolio/port5.webp" class="img-fluid" alt="">
+                            <a target="blank" href="https://www.cruzrojainstituto.edu.ec/cec">
+                                <div class="portfolio-links">
+                                    <button class="btn1 button-one">Educación Continua istcre</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+        <!-- End Portfolio Section -->
+
+        <!-- ======= Contact Section ======= -->
+        <section id="contact" class="contact">
+            <div class="bg"></div>
+            <div class="bg bg2"></div>
+            <div class="bg bg3"></div>
+            <div class="content">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 style="color: white;">Let's Talk</h2>
+                        <p style="color: white;">If you have any questions feel free to chat with me.</p>
+                    </div>
+                    <div class="row" data-aos="fade-in">
+                        <div class="col-lg-12">
+                            <div align="center" style="margin: 17%;">
+                                <a target="blank" href="https://api.whatsapp.com/send?phone=+593961372191&text=Hola,%20me%20gustaria%20preguntarte%20sobre..">
+                                    <button class="btn1 button-one"> <i class="fa fa-whatsapp"></i> Contact me</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Contact Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container">
+            <div class="credits">
+                <p> Designed By Antonio Benalcázar</p>
+            </div>
+        </div>
+    </footer>
+    <!-- End  Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="../assets/vendor/aos/aos.js"></script>
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendor/php-email-form/validate.js"></script>
+    <script src="../assets/vendor/purecounter/purecounter.js"></script>
+    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../assets/vendor/typed.js/typed.min.js"></script>
+    <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>
