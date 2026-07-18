@@ -22,6 +22,7 @@
             <ul class="space-y-2 text-[var(--color-muted)]">
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('projects.index') }}">{{ __('portfolio.nav.projects') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('services.index') }}">{{ __('portfolio.nav.services') }}</a></li>
+                <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('blog.index') }}">{{ __('portfolio.nav.blog') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('about') }}">{{ __('portfolio.nav.about') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('contact') }}">{{ __('portfolio.nav.contact') }}</a></li>
                 <li><a class="hover:text-[var(--color-ink)]" href="{{ Locale::route('cv') }}">{{ __('portfolio.nav.cv') }}</a></li>
@@ -49,7 +50,15 @@
     <div class="border-t border-[var(--color-line)]">
         <div class="container-page py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--color-muted)]">
             <p>&copy; {{ date('Y') }} {{ $siteProfile->name }}. {{ __('portfolio.footer.rights') }}</p>
-            <p class="font-mono">{{ __('portfolio.footer.built') }}</p>
+            <div class="flex items-center gap-4">
+                <p class="font-mono">{{ __('portfolio.footer.built') }}</p>
+                <a href="{{ url('/admin') }}" class="inline-flex items-center gap-1.5 hover:text-[var(--color-ink)]" rel="nofollow">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    {{ __('portfolio.footer.admin') }}
+                </a>
+            </div>
         </div>
     </div>
 </footer>

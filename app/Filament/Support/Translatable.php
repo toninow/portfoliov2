@@ -2,6 +2,7 @@
 
 namespace App\Filament\Support;
 
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Model;
@@ -60,6 +61,14 @@ class Translatable
         return Textarea::make($name)
             ->label($label)
             ->rows($rows)
+            ->formatStateUsing(fn (mixed $state) => self::read($state))
+            ->dehydrateStateUsing(self::write($name));
+    }
+
+    public static function markdown(string $name, string $label): MarkdownEditor
+    {
+        return MarkdownEditor::make($name)
+            ->label($label)
             ->formatStateUsing(fn (mixed $state) => self::read($state))
             ->dehydrateStateUsing(self::write($name));
     }

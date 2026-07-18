@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Project;
 use Illuminate\Http\Response;
 
@@ -13,6 +14,7 @@ class SitemapController extends Controller
             ['loc' => route('home'), 'priority' => '1.0'],
             ['loc' => route('projects.index'), 'priority' => '0.9'],
             ['loc' => route('services.index'), 'priority' => '0.8'],
+            ['loc' => route('blog.index'), 'priority' => '0.8'],
             ['loc' => route('about'), 'priority' => '0.7'],
             ['loc' => route('contact'), 'priority' => '0.6'],
         ];
@@ -22,6 +24,14 @@ class SitemapController extends Controller
                 'loc' => route('projects.show', $project),
                 'priority' => '0.7',
                 'lastmod' => optional($project->updated_at)->toAtomString(),
+            ];
+        }
+
+        foreach (Post::published()->get() as $post) {
+            $urls[] = [
+                'loc' => route('blog.show', $post),
+                'priority' => '0.6',
+                'lastmod' => optional($post->updated_at)->toAtomString(),
             ];
         }
 

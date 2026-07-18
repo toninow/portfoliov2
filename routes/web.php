@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\HomeController;
@@ -21,6 +22,8 @@ $publicRoutes = function (): void {
     Route::get('/proyectos', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/proyectos/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/servicios', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
     Route::get('/sobre-mi', AboutController::class)->name('about');
     Route::get('/contacto', [ContactController::class, 'index'])->name('contact');
     Route::post('/contacto', [ContactController::class, 'store'])

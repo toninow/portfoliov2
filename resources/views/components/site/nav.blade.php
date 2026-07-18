@@ -5,6 +5,7 @@
         ['label' => __('portfolio.nav.home'), 'url' => Locale::route('home'), 'name' => 'home'],
         ['label' => __('portfolio.nav.projects'), 'url' => Locale::route('projects.index'), 'name' => 'projects.index'],
         ['label' => __('portfolio.nav.services'), 'url' => Locale::route('services.index'), 'name' => 'services.index'],
+        ['label' => __('portfolio.nav.blog'), 'url' => Locale::route('blog.index'), 'name' => 'blog.index'],
         ['label' => __('portfolio.nav.about'), 'url' => Locale::route('about'), 'name' => 'about'],
         ['label' => __('portfolio.nav.contact'), 'url' => Locale::route('contact'), 'name' => 'contact'],
     ];
