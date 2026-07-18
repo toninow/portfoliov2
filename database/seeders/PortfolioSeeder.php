@@ -87,13 +87,13 @@ class PortfolioSeeder extends Seeder
     protected function seedTechnologies(): array
     {
         $map = [
-            'backend' => ['PHP', 'Laravel', 'Livewire'],
-            'frontend' => ['Tailwind CSS', 'Blade', 'JavaScript', 'HTML5', 'CSS3', 'Bootstrap', 'Flutter'],
-            'data' => ['MySQL', 'PostgreSQL', 'APIs REST'],
-            'erp' => ['Dolibarr', 'PrestaShop', 'WordPress', 'Bitrix', 'Moodle'],
+            'backend' => ['PHP', 'Python', 'Java', 'Laravel', 'Spring Boot', 'Django', 'Livewire', 'Power Fx'],
+            'frontend' => ['JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Blade', 'Bootstrap', 'Flutter', 'Dart', 'React Native'],
+            'data' => ['MySQL', 'PostgreSQL', 'SQL Server', 'APIs REST'],
+            'erp' => ['Dolibarr', 'PrestaShop', 'WordPress', 'Moodle', 'Bitrix'],
             'infra' => ['Linux', 'Docker', 'Git', 'Gitea', 'Apache', 'Restic'],
             'ia' => ['IA (GPT · Claude)', 'Cursor', 'Automatización con IA'],
-            'tools' => ['Microsoft 365'],
+            'tools' => ['Microsoft 365', 'Google Workspace', 'Scrum'],
         ];
 
         $technologies = [];
@@ -371,37 +371,68 @@ class PortfolioSeeder extends Seeder
 
     protected function seedExperience(): void
     {
-        Experience::updateOrCreate(
-            ['company' => 'Trabajo actual'],
+        // Seed content mirrors the 2025 CV. Rebuilt cleanly so admin/data stays
+        // in sync with the source without duplicating rows on reseed.
+        Experience::query()->delete();
+
+        $experiences = [
             [
-                'role' => ['es' => 'Desarrollo, automatización e integraciones', 'en' => 'Development, automation and integrations'],
-                'description' => ['es' => 'Sistemas internos, integración ERP-ecommerce, inventario e infraestructura.', 'en' => 'Internal systems, ERP-ecommerce integration, inventory and infrastructure.'],
-                'start_date' => '2022',
+                'role' => ['es' => 'Cofundador y desarrollador', 'en' => 'Co-founder and developer'],
+                'company' => 'R&B Studio · Marketing Digital',
+                'location' => 'Ecuador',
+                'description' => [
+                    'es' => 'Análisis, configuración y desarrollo de sitios web personalizados con WordPress y maquetado HTML5/CSS3, además de la gestión de presencia digital y redes sociales para marcas y empresas.',
+                    'en' => 'Analysis, configuration and development of custom websites with WordPress and HTML5/CSS3, plus digital presence and social media management for brands and companies.',
+                ],
+                'start_date' => '2023',
                 'is_current' => true,
                 'sort' => 0,
-            ]
-        );
-
-        Experience::updateOrCreate(
-            ['company' => 'Proyectos web'],
+            ],
             [
-                'role' => ['es' => 'Desarrollo web y sistemas', 'en' => 'Web and systems development'],
-                'description' => ['es' => 'Sitios web, sistemas y landings para instituciones y empresas en Ecuador.', 'en' => 'Websites, systems and landing pages for institutions and companies in Ecuador.'],
+                'role' => ['es' => 'Desarrollador de software · Soporte técnico TICS', 'en' => 'Software developer · IT support (TICS)'],
+                'company' => 'Instituto Superior Tecnológico Cruz Roja Ecuatoriana',
+                'location' => 'Ecuador',
+                'description' => [
+                    'es' => 'Desarrollo de sistemas web institucionales, gestión y mantenimiento de bases de datos, soporte técnico y Help Desk, administración de servidores y del entorno Microsoft, y administración de Moodle (cursos, actividades, docentes y estudiantes).',
+                    'en' => 'Development of institutional web systems, database management and maintenance, technical support and Help Desk, server and Microsoft environment administration, and Moodle administration (courses, activities, teachers and students).',
+                ],
                 'start_date' => '2019',
-                'end_date' => '2022',
+                'end_date' => '2025',
                 'sort' => 1,
-            ]
-        );
+            ],
+            [
+                'role' => ['es' => 'Becario · Desarrollador', 'en' => 'Intern · Developer'],
+                'company' => 'Algoritmun',
+                'location' => 'Ecuador',
+                'description' => [
+                    'es' => 'Desarrollo de aplicaciones móviles con React Native y administración de bases de datos y servidores Linux (CentOS y Ubuntu Server), dando soporte a la infraestructura y a soluciones a medida.',
+                    'en' => 'Mobile app development with React Native and administration of databases and Linux servers (CentOS and Ubuntu Server), supporting infrastructure and custom solutions.',
+                ],
+                'start_date' => '2017',
+                'end_date' => '2021',
+                'sort' => 2,
+            ],
+        ];
+
+        foreach ($experiences as $exp) {
+            Experience::create($exp);
+        }
     }
 
     protected function seedEducation(): void
     {
-        Education::updateOrCreate(
-            ['institution' => 'Instituto Superior Tecnológico Cruz Roja Ecuatoriana'],
-            [
-                'title' => ['es' => 'Tecnólogo en Desarrollo de Software', 'en' => 'Software Development Technologist'],
-                'sort' => 0,
-            ]
-        );
+        Education::query()->delete();
+
+        Education::create([
+            'title' => ['es' => 'Tecnólogo en Desarrollo de Software', 'en' => 'Software Development Technologist'],
+            'institution' => 'Instituto Superior Tecnológico de Turismo y Patrimonio Yavirac',
+            'description' => [
+                'es' => 'Formación en desarrollo de software, bases de datos y desarrollo de aplicaciones para entornos empresariales.',
+                'en' => 'Training in software development, databases and application development for business environments.',
+            ],
+            'start_year' => '2017',
+            'end_year' => '2019',
+            'sort' => 0,
+        ]);
     }
 }

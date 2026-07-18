@@ -819,3 +819,329 @@ html.js main[data-page] {
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-line);
 }
+
+/* ===== Process flow ("Cómo trabajo") ===== */
+.process-flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.75rem 1rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .process-flow { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .process-flow { grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+}
+
+.process-step {
+    position: relative;
+}
+
+.process-step__head {
+    position: relative;
+    display: flex;
+    margin-bottom: 0.9rem;
+}
+
+@media (min-width: 1024px) {
+    .process-step__head::before {
+        content: '';
+        position: absolute;
+        top: 27px;
+        left: 54px;
+        right: -1rem;
+        height: 2px;
+        background: linear-gradient(90deg, var(--color-brand), rgba(34, 211, 238, 0.05));
+        z-index: 0;
+    }
+
+    .process-step:last-child .process-step__head::before {
+        display: none;
+    }
+}
+
+.process-step__badge {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 1rem;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-surface) 92%, black);
+    color: var(--color-brand-bright);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s var(--ease-spring), color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.process-step__badge svg {
+    width: 26px;
+    height: 26px;
+}
+
+.process-step:hover .process-step__badge,
+.process-step:focus-within .process-step__badge {
+    transform: translateY(-4px) scale(1.06);
+    color: #fff;
+    background: linear-gradient(135deg, var(--color-brand), var(--color-cyan));
+    border-color: transparent;
+    box-shadow: 0 14px 32px -12px rgba(34, 211, 238, 0.65);
+}
+
+.process-step__num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--color-cyan);
+}
+
+.process-step__title {
+    margin-top: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.process-step__desc {
+    margin-top: 0.4rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+}
+
+/* ===== Experience timeline ===== */
+.timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.timeline__item {
+    position: relative;
+    padding-left: 2.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.timeline__item::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 1.5rem;
+    bottom: -0.25rem;
+    width: 2px;
+    background: var(--color-line);
+}
+
+.timeline__item:last-child::before {
+    display: none;
+}
+
+.timeline__marker {
+    position: absolute;
+    left: 0;
+    top: 1.2rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-brand-bright);
+    z-index: 1;
+    transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+}
+
+.timeline__item.is-current .timeline__marker {
+    background: var(--color-cyan);
+    border-color: var(--color-cyan);
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18);
+    animation: tl-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes tl-pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18); }
+    50% { box-shadow: 0 0 0 9px rgba(34, 211, 238, 0.04); }
+}
+
+.timeline__card {
+    background: color-mix(in oklab, var(--color-surface) 92%, black);
+    border: 1px solid var(--color-line);
+    border-left: 2px solid transparent;
+    border-radius: var(--radius-card);
+    padding: 1.05rem 1.25rem;
+    transition: transform 0.25s var(--ease-out), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.timeline__item:hover .timeline__card,
+.timeline__item:focus-within .timeline__card {
+    transform: translateX(4px);
+    border-left-color: var(--color-cyan);
+    box-shadow: var(--shadow-glow);
+}
+
+.timeline__item:hover .timeline__marker {
+    transform: scale(1.2);
+}
+
+.timeline__period {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    color: var(--color-muted);
+}
+
+.timeline__now {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-cyan);
+    border: 1px solid color-mix(in oklab, var(--color-cyan) 45%, transparent);
+    border-radius: 999px;
+    padding: 0.1rem 0.45rem;
+}
+
+.timeline__role {
+    margin-top: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.timeline__company {
+    margin-top: 0.1rem;
+    font-size: 0.85rem;
+    color: var(--color-brand-bright);
+}
+
+.timeline__loc {
+    color: var(--color-muted);
+}
+
+.timeline__desc {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+}
+
+/* ===== Technologies grid ===== */
+.tech-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .tech-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.tech-card {
+    position: relative;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-line);
+    background:
+        linear-gradient(180deg, color-mix(in oklab, var(--accent) 9%, transparent), transparent 42%),
+        color-mix(in oklab, var(--color-surface) 92%, black);
+    padding: 1.25rem 1.25rem 1.35rem;
+    overflow: hidden;
+    outline: none;
+    transition: transform 0.28s var(--ease-out), border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.tech-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0.85;
+}
+
+.tech-card:hover,
+.tech-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--accent) 55%, var(--color-line));
+    box-shadow: 0 18px 42px -22px color-mix(in oklab, var(--accent) 85%, transparent);
+}
+
+.tech-card__head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.9rem;
+}
+
+.tech-card__icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 0.7rem;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 15%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 32%, transparent);
+    transition: transform 0.3s var(--ease-spring);
+}
+
+.tech-card__icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.tech-card:hover .tech-card__icon {
+    transform: rotate(-6deg) scale(1.08);
+}
+
+.tech-card__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.98rem;
+}
+
+.tech-card__count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 32%, transparent);
+    border-radius: 999px;
+    padding: 0.05rem 0.5rem;
+}
+
+.tech-card__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.tech-chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.28rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    color: var(--color-muted);
+    background: color-mix(in oklab, var(--color-elevated) 70%, transparent);
+    cursor: default;
+    transition: transform 0.2s var(--ease-spring), color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.tech-chip:hover {
+    transform: translateY(-2px);
+    color: var(--color-ink);
+    border-color: color-mix(in oklab, var(--accent) 60%, transparent);
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
+}

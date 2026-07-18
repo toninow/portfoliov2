@@ -11,14 +11,6 @@
         ['t' => ['es' => 'Datos, APIs y bases de datos', 'en' => 'Data, APIs & databases'], 'd' => ['es' => 'Modelado y consultas en MySQL/PostgreSQL e integraciones REST entre sistemas.', 'en' => 'Data modeling and queries in MySQL/PostgreSQL and REST integrations between systems.']],
         ['t' => ['es' => 'Infraestructura, Git & backups', 'en' => 'Infrastructure, Git & backups'], 'd' => ['es' => 'Linux, Docker, Gitea autogestionado, HTTPS y copias verificables con Restic.', 'en' => 'Linux, Docker, self-hosted Gitea, HTTPS and verifiable backups with Restic.']],
     ];
-    $process = [
-        'understand' => ['es' => 'Escucho el proceso real y a las personas que lo usan.', 'en' => 'I listen to the real process and the people using it.'],
-        'audit' => ['es' => 'Reviso datos, sistemas y puntos de fricción.', 'en' => 'I review data, systems and friction points.'],
-        'design' => ['es' => 'Defino una solución clara y mantenible.', 'en' => 'I define a clear, maintainable solution.'],
-        'implement' => ['es' => 'Construyo, integro y pruebo con datos reales.', 'en' => 'I build, integrate and test with real data.'],
-        'measure' => ['es' => 'Mido resultados y mejoro de forma continua.', 'en' => 'I measure results and improve continuously.'],
-    ];
-    $areaLabels = ['backend' => 'Backend', 'frontend' => 'Frontend & móvil', 'data' => 'Datos & APIs', 'erp' => 'ERP & ecommerce', 'infra' => 'Infraestructura', 'ia' => 'IA & productividad', 'tools' => 'Herramientas'];
 @endphp
 
 <x-layout :description="$profile->getTranslation('headline', $l)">
@@ -129,16 +121,9 @@
     <section class="section">
         <div class="container-page">
             <p class="eyebrow">{{ __('portfolio.sections.process') }}</p>
-            <h2 class="mt-2 text-3xl sm:text-4xl font-bold mb-10">{{ __('portfolio.sections.process') }}</h2>
-            <ol class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                @foreach($process as $key => $desc)
-                    <li data-reveal class="card p-5">
-                        <span class="font-mono text-xs text-[var(--color-brand-bright)]">0{{ $loop->iteration }}</span>
-                        <h3 class="mt-2 font-display font-semibold">{{ __('portfolio.process.'.$key) }}</h3>
-                        <p class="mt-2 text-sm text-[var(--color-muted)]">{{ $desc[$l] }}</p>
-                    </li>
-                @endforeach
-            </ol>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-bold mb-4">{{ __('portfolio.sections.process') }}</h2>
+            <p class="text-[var(--color-muted)] max-w-2xl mb-10">{{ __('portfolio.process_lead') }}</p>
+            <x-site.process-flow />
         </div>
     </section>
 
@@ -148,21 +133,7 @@
         <div class="container-page">
             <p class="eyebrow">{{ __('portfolio.sections.experience') }}</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-bold mb-10">{{ __('portfolio.sections.experience') }}</h2>
-            <div class="space-y-4">
-                @foreach($experiences as $exp)
-                    <div data-reveal class="card p-5 sm:flex items-start gap-6">
-                        <div class="font-mono text-sm text-[var(--color-muted)] sm:w-40 shrink-0">
-                            {{ $exp->start_date }}@if($exp->start_date) – @endif{{ $exp->is_current ? ($l==='es'?'Actualidad':'Present') : $exp->end_date }}
-                        </div>
-                        <div>
-                            <h3 class="font-display font-semibold">{{ $exp->getTranslation('role', $l) }}@if($exp->company) · <span class="text-[var(--color-muted)]">{{ $exp->company }}</span>@endif</h3>
-                            @if($exp->getTranslation('description', $l))
-                                <p class="mt-1 text-sm text-[var(--color-muted)]">{{ $exp->getTranslation('description', $l) }}</p>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            <x-site.experience-timeline :experiences="$experiences" />
         </div>
     </section>
     @endif
@@ -172,19 +143,9 @@
     <section class="section">
         <div class="container-page">
             <p class="eyebrow">{{ __('portfolio.sections.technologies') }}</p>
-            <h2 class="mt-2 text-3xl sm:text-4xl font-bold mb-10">{{ __('portfolio.sections.technologies') }}</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                @foreach($technologies as $area => $techs)
-                    <div class="card p-6">
-                        <h3 class="font-mono text-xs uppercase tracking-wider text-[var(--color-brand-bright)]">{{ $areaLabels[$area] ?? $area }}</h3>
-                        <div class="mt-3 flex flex-wrap gap-2">
-                            @foreach($techs as $tech)
-                                <span class="chip">{{ $tech->name }}</span>
-                            @endforeach
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-bold mb-4">{{ __('portfolio.sections.technologies') }}</h2>
+            <p class="text-[var(--color-muted)] max-w-2xl mb-10">{{ __('portfolio.tech_lead') }}</p>
+            <x-site.tech-grid :technologies="$technologies" />
         </div>
     </section>
     @endif

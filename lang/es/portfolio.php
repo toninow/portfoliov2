@@ -35,6 +35,8 @@ return [
         'about' => 'Sobre Antonio',
         'contact' => 'Contacto',
     ],
+    'process_lead' => 'Un método simple y repetible: entender el problema real antes de escribir una sola línea de código.',
+    'tech_lead' => 'Las herramientas con las que trabajo, agrupadas por área. Sin porcentajes inventados: solo lo que uso de verdad.',
     'process' => [
         'understand' => 'Comprender',
         'audit' => 'Auditar',
@@ -90,7 +92,7 @@ return [
     ],
     'contact' => [
         'title' => 'Hablemos',
-        'lead' => 'Detrás de esto hay una persona, no un formulario. Escríbeme como le escribirías a un colega: cuéntame qué te ronda la cabeza y lo vemos juntos.',
+        'lead' => 'Cuéntame en qué estás trabajando o qué proceso te está dando problemas. Leo cada mensaje yo mismo y te respondo en persona.',
         'intro' => 'No necesitas tenerlo todo claro. Con tu nombre, un email y una idea de lo que necesitas me basta para responderte.',
         'name' => 'Tu nombre',
         'name_placeholder' => '¿Cómo te llamas?',

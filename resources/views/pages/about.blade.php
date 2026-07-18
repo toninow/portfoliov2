@@ -2,7 +2,6 @@
     use App\Support\Locale;
     use Illuminate\Support\Facades\Storage;
     $l = app()->getLocale();
-    $areaLabels = ['backend' => 'Backend', 'frontend' => 'Frontend', 'data' => 'Datos', 'erp' => 'ERP & ecommerce', 'infra' => 'Infraestructura', 'tools' => 'Herramientas'];
 @endphp
 
 <x-layout :title="__('portfolio.nav.about')" :description="$profile->getTranslation('bio', $l)">
@@ -26,16 +25,8 @@
                 @endif
 
                 @if($experiences->isNotEmpty())
-                    <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.sections.experience') }}</h2>
-                    <div class="mt-4 space-y-3">
-                        @foreach($experiences as $exp)
-                            <div class="card p-5">
-                                <div class="font-mono text-xs text-[var(--color-muted)]">{{ $exp->start_date }}@if($exp->start_date) – @endif{{ $exp->is_current ? ($l==='es'?'Actualidad':'Present') : $exp->end_date }}</div>
-                                <h3 class="mt-1 font-display font-semibold">{{ $exp->getTranslation('role', $l) }}@if($exp->company) · <span class="text-[var(--color-muted)]">{{ $exp->company }}</span>@endif</h3>
-                                @if($exp->getTranslation('description', $l))<p class="mt-1 text-sm text-[var(--color-muted)]">{{ $exp->getTranslation('description', $l) }}</p>@endif
-                            </div>
-                        @endforeach
-                    </div>
+                    <h2 class="mt-12 text-2xl font-bold mb-6">{{ __('portfolio.sections.experience') }}</h2>
+                    <x-site.experience-timeline :experiences="$experiences" />
                 @endif
 
                 @if($education->isNotEmpty())
@@ -45,10 +36,17 @@
                             <div class="card p-5">
                                 <h3 class="font-display font-semibold">{{ $edu->getTranslation('title', $l) }}</h3>
                                 @if($edu->institution)<p class="text-sm text-[var(--color-muted)]">{{ $edu->institution }} @if($edu->start_year)· {{ $edu->start_year }}@if($edu->end_year)–{{ $edu->end_year }}@endif @endif</p>@endif
+                                @if($edu->getTranslation('description', $l))<p class="mt-1 text-sm text-[var(--color-muted)]">{{ $edu->getTranslation('description', $l) }}</p>@endif
                             </div>
                         @endforeach
                     </div>
                 @endif
+
+                <h2 class="mt-12 text-2xl font-bold">{{ $l==='es'?'Idiomas':'Languages' }}</h2>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="chip">{{ $l==='es'?'Español · Nativo':'Spanish · Native' }}</span>
+                    <span class="chip">{{ $l==='es'?'Inglés · Avanzado':'English · Advanced' }}</span>
+                </div>
 
                 @if($certifications->isNotEmpty())
                     <h2 class="mt-12 text-2xl font-bold">{{ $l==='es'?'Certificaciones':'Certifications' }}</h2>
@@ -58,15 +56,8 @@
                 @endif
 
                 @if($technologies->isNotEmpty())
-                    <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.sections.technologies') }}</h2>
-                    <div class="mt-4 grid sm:grid-cols-2 gap-4">
-                        @foreach($technologies as $area => $techs)
-                            <div class="card p-5">
-                                <h3 class="font-mono text-xs uppercase tracking-wider text-[var(--color-brand-bright)]">{{ $areaLabels[$area] ?? $area }}</h3>
-                                <div class="mt-2 flex flex-wrap gap-2">@foreach($techs as $tech)<span class="chip">{{ $tech->name }}</span>@endforeach</div>
-                            </div>
-                        @endforeach
-                    </div>
+                    <h2 class="mt-12 text-2xl font-bold mb-6">{{ __('portfolio.sections.technologies') }}</h2>
+                    <x-site.tech-grid :technologies="$technologies" />
                 @endif
             </div>
         </div>

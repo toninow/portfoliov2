@@ -1,6 +1,13 @@
 {{-- Impactful, on-brand header + animated Snake background for the login. --}}
+<a href="{{ url('/') }}" class="ab-back-link">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="16" height="16">
+        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Volver a la web
+</a>
 <div class="ab-login-brand">
     <span class="ab-login-monogram" aria-hidden="true">AB</span>
+    <h1 class="ab-login-title">Antonio Benalcázar</h1>
     <p class="ab-login-tagline">Panel de administración</p>
 </div>
 
@@ -27,24 +34,72 @@
         pointer-events: none;
     }
 
-    .fi-simple-main {
-        border: 1px solid rgba(96, 165, 250, 0.22) !important;
-        box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.12), 0 30px 80px -30px rgba(59, 130, 246, 0.55) !important;
-        background: rgba(13, 27, 42, 0.78) !important;
-        backdrop-filter: blur(10px);
+    /* Hide Filament's default "Inicia sesión / Entre a su cuenta" header:
+       our branded block above replaces it. */
+    .fi-simple-header {
+        display: none !important;
     }
 
-    /* Readable text on the dark login card. */
-    .fi-simple-main :is(h1, h2, .fi-simple-header-heading) {
+    .fi-simple-main {
+        border: 1px solid rgba(96, 165, 250, 0.28) !important;
+        box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.14), 0 30px 90px -30px rgba(34, 211, 238, 0.6) !important;
+        /* More transparent so the Snake game shows through and stands out. */
+        background: rgba(9, 18, 33, 0.55) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* ---- Readable text on the dark, translucent login card ---- */
+    /* Headings */
+    .fi-simple-layout :is(h1, h2, h3, .fi-simple-header-heading) {
         color: #f8fafc !important;
     }
-
-    .fi-simple-main .fi-simple-header-subheading {
-        color: #b8c4d4 !important;
+    .fi-simple-layout .fi-simple-header-subheading {
+        color: #cbd5e1 !important;
     }
 
-    .fi-simple-main :is(label, .fi-fo-field-wrp-label, .fi-fo-field-wrp-label *) {
-        color: #e2e8f0 !important;
+    /* Field labels ("Correo electrónico", "Contraseña") — force light color.
+       Filament v4 uses .fi-fo-field-label for the visible label text. */
+    .fi-simple-layout label,
+    .fi-simple-layout .fi-fo-field-label,
+    .fi-simple-layout .fi-fo-field-label *,
+    .fi-simple-layout .fi-fo-field-wrp-label,
+    .fi-simple-layout .fi-fo-field-wrp-label *,
+    .fi-simple-main label {
+        color: #e8eef7 !important;
+        font-weight: 600 !important;
+    }
+    /* Required asterisk */
+    .fi-simple-layout .fi-fo-field-label sup,
+    .fi-simple-layout .fi-fo-field-label sup * {
+        color: #f87171 !important;
+    }
+
+    /* Inputs: dark translucent field with light text so it reads on the card */
+    .fi-simple-main .fi-input,
+    .fi-simple-main input:not([type="checkbox"]):not([type="radio"]) {
+        background-color: rgba(7, 17, 31, 0.72) !important;
+        color: #f8fafc !important;
+        border-color: rgba(96, 165, 250, 0.3) !important;
+    }
+    .fi-simple-main .fi-input::placeholder,
+    .fi-simple-main input::placeholder {
+        color: #7d8ba0 !important;
+    }
+    /* The input wrapper (Filament draws the border/bg here in v4) */
+    .fi-simple-main .fi-input-wrp {
+        background-color: rgba(7, 17, 31, 0.72) !important;
+        border-color: rgba(96, 165, 250, 0.3) !important;
+        --tw-ring-color: rgba(96, 165, 250, 0.35) !important;
+    }
+    .fi-simple-main .fi-input-wrp:focus-within {
+        border-color: rgba(96, 165, 250, 0.7) !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+    }
+    /* Icons inside inputs (e.g. the eye toggle) */
+    .fi-simple-main .fi-input-wrp-icon,
+    .fi-simple-main .fi-icon-btn {
+        color: #b8c4d4 !important;
     }
 
     .fi-simple-main a,
@@ -64,27 +119,60 @@
         display: none !important;
     }
 
+    .ab-back-link {
+        display: flex;
+        width: fit-content;
+        align-items: center;
+        gap: 0.4rem;
+        margin: 0 auto 1.1rem;
+        padding: 0.45rem 0.9rem;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        background: rgba(13, 27, 42, 0.55);
+        color: #cbd5e1 !important;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+    .ab-back-link:hover {
+        color: #f8fafc !important;
+        border-color: rgba(96, 165, 250, 0.6);
+        background: rgba(59, 130, 246, 0.18);
+        transform: translateX(-2px);
+    }
+    .ab-back-link svg { flex: none; }
+
     .ab-login-brand {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.6rem;
-        margin-bottom: 1.25rem;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
     }
 
     .ab-login-monogram {
         display: grid;
         place-items: center;
-        width: 3.25rem;
-        height: 3.25rem;
+        width: 3.5rem;
+        height: 3.5rem;
         border-radius: 0.9rem;
         font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 1.35rem;
         letter-spacing: 0.02em;
         color: #fff;
         background: linear-gradient(135deg, #3b82f6, #22d3ee);
-        box-shadow: 0 10px 30px -10px rgba(34, 211, 238, 0.7);
+        box-shadow: 0 10px 30px -8px rgba(34, 211, 238, 0.75);
+    }
+
+    .ab-login-title {
+        font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: #f8fafc !important;
+        text-align: center;
+        margin: 0.25rem 0 0;
     }
 
     .ab-login-tagline {
@@ -94,6 +182,7 @@
         text-transform: uppercase;
         color: #60a5fa;
         text-align: center;
+        margin: 0;
     }
 </style>
 
@@ -210,40 +299,47 @@
             // Base + glows.
             ctx.fillStyle = '#07111f';
             ctx.fillRect(0, 0, W, H);
-            var g1 = ctx.createRadialGradient(W * 0.5, 0, 0, W * 0.5, 0, H * 0.7);
-            g1.addColorStop(0, 'rgba(59,130,246,0.16)');
+            var g1 = ctx.createRadialGradient(W * 0.5, 0, 0, W * 0.5, 0, H * 0.75);
+            g1.addColorStop(0, 'rgba(59,130,246,0.22)');
             g1.addColorStop(1, 'rgba(59,130,246,0)');
             ctx.fillStyle = g1;
             ctx.fillRect(0, 0, W, H);
+            var g2 = ctx.createRadialGradient(W, H, 0, W, H, H * 0.8);
+            g2.addColorStop(0, 'rgba(34,211,238,0.14)');
+            g2.addColorStop(1, 'rgba(34,211,238,0)');
+            ctx.fillStyle = g2;
+            ctx.fillRect(0, 0, W, H);
 
-            // Grid.
-            ctx.strokeStyle = 'rgba(148,163,184,0.06)';
+            // Grid (brighter so the play field reads clearly).
+            ctx.strokeStyle = 'rgba(96,165,250,0.10)';
             ctx.lineWidth = 1;
             for (var x = 0; x <= cols; x++) { ctx.beginPath(); ctx.moveTo(x * CELL, 0); ctx.lineTo(x * CELL, rows * CELL); ctx.stroke(); }
             for (var y = 0; y <= rows; y++) { ctx.beginPath(); ctx.moveTo(0, y * CELL); ctx.lineTo(cols * CELL, y * CELL); ctx.stroke(); }
 
             // Food.
             ctx.save();
-            ctx.shadowColor = 'rgba(96,165,250,0.9)';
-            ctx.shadowBlur = 14;
-            ctx.fillStyle = '#60a5fa';
+            ctx.shadowColor = 'rgba(96,165,250,1)';
+            ctx.shadowBlur = 22;
+            ctx.fillStyle = '#93c5fd';
             ctx.beginPath();
-            ctx.arc(food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL * 0.24, 0, Math.PI * 2);
+            ctx.arc(food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL * 0.28, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
 
-            // Snake.
+            // Snake (brighter body + stronger head glow so it pops).
             for (var i = snake.length - 1; i >= 0; i--) {
                 var s = snake[i];
                 var t = 1 - i / snake.length;
                 var pad = 3;
                 ctx.save();
                 if (i === 0) {
-                    ctx.shadowColor = 'rgba(34,211,238,0.9)';
-                    ctx.shadowBlur = 16;
-                    ctx.fillStyle = '#22d3ee';
+                    ctx.shadowColor = 'rgba(34,211,238,1)';
+                    ctx.shadowBlur = 24;
+                    ctx.fillStyle = '#5eead4';
                 } else {
-                    ctx.fillStyle = 'rgba(34,211,238,' + (0.28 + t * 0.5).toFixed(3) + ')';
+                    ctx.shadowColor = 'rgba(34,211,238,0.5)';
+                    ctx.shadowBlur = 8;
+                    ctx.fillStyle = 'rgba(34,211,238,' + (0.45 + t * 0.5).toFixed(3) + ')';
                 }
                 roundRect(s.x * CELL + pad, s.y * CELL + pad, CELL - pad * 2, CELL - pad * 2, 6);
                 ctx.fill();

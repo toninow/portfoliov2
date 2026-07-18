@@ -35,6 +35,8 @@ return [
         'about' => 'About Antonio',
         'contact' => 'Contact',
     ],
+    'process_lead' => 'A simple, repeatable method: understand the real problem before writing a single line of code.',
+    'tech_lead' => 'The tools I work with, grouped by area. No made-up percentages: only what I actually use.',
     'process' => [
         'understand' => 'Understand',
         'audit' => 'Audit',
@@ -90,7 +92,7 @@ return [
     ],
     'contact' => [
         'title' => "Let's talk",
-        'lead' => "There's a real person behind this, not a form. Write to me like you'd write to a colleague: tell me what's on your mind and we'll figure it out together.",
+        'lead' => "Tell me what you're working on or which process is giving you trouble. I read every message myself and reply in person.",
         'intro' => "You don't need to have it all figured out. Your name, an email and a rough idea of what you need is enough for me to reply.",
         'name' => 'Your name',
         'name_placeholder' => "What's your name?",
