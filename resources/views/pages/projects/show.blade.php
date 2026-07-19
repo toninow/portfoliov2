@@ -13,7 +13,9 @@
     $qualResults = collect($project->qualitative_results ?? [])->filter(fn ($s) => filled(data_get($s, 'label')))->values();
     $links = collect($project->external_links ?? [])->filter(fn ($s) => filled(data_get($s, 'url')))->values();
     $publicMetrics = $project->metrics;
-    $gallery = $project->images;
+    $gallery = $project->relationLoaded('images')
+        ? $project->images->where('is_visible', true)->values()
+        : $project->visibleImages;
 
     $jsonLd = [
         '@context' => 'https://schema.org',
@@ -112,15 +114,6 @@
                 </dl>
             </header>
 
-            @if($project->main_image_path)
-                <figure class="mt-10">
-                    <img src="{{ Storage::url($project->main_image_path) }}"
-                         alt="{{ $project->translated('name') }}"
-                         width="1200" height="720" loading="eager"
-                         class="w-full rounded-2xl border border-[var(--color-line)]">
-                </figure>
-            @endif
-
             @if($project->technologies->isNotEmpty())
                 <div class="mt-8">
                     <h2 class="font-mono text-xs uppercase tracking-wider text-[var(--color-brand-bright)]">{{ __('portfolio.projects.technologies') }}</h2>
@@ -131,6 +124,10 @@
                     </div>
                 </div>
             @endif
+
+            <div class="mt-12">
+                <x-site.project-media :project="$project" :gallery="$gallery" />
+            </div>
 
             {{-- Impact metrics --}}
             @if($publicMetrics->isNotEmpty())
@@ -298,27 +295,6 @@
                     <section data-reveal>
                         <h2 class="text-xl sm:text-2xl font-bold">{{ __('portfolio.projects.constraints') }}</h2>
                         <div class="mt-3 text-[var(--color-muted)] leading-relaxed whitespace-pre-line">{{ $project->translated('constraints') }}</div>
-                    </section>
-                @endif
-
-                @if($gallery->isNotEmpty())
-                    <section data-reveal aria-labelledby="gallery-heading">
-                        <h2 id="gallery-heading" class="text-xl sm:text-2xl font-bold mb-4">{{ __('portfolio.projects.gallery') }}</h2>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            @foreach($gallery as $image)
-                                <figure class="card overflow-hidden">
-                                    <a href="{{ Storage::url($image->path) }}" target="_blank" rel="noopener" class="block">
-                                        <img src="{{ Storage::url($image->path) }}"
-                                             alt="{{ $image->getTranslation('alt', $l) ?: $project->translated('name') }}"
-                                             width="800" height="500" loading="lazy"
-                                             class="w-full h-auto">
-                                    </a>
-                                    @if($image->getTranslation('caption', $l))
-                                        <figcaption class="p-3 text-sm text-[var(--color-muted)]">{{ $image->getTranslation('caption', $l) }}</figcaption>
-                                    @endif
-                                </figure>
-                            @endforeach
-                        </div>
                     </section>
                 @endif
 

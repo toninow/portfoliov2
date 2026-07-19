@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\ProjectImage;
 use App\Models\ProjectMetric;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -170,5 +171,46 @@ class ProjectCaseStudyTest extends TestCase
         $cases = Project::published()->caseStudies()->pluck('slug');
         $this->assertTrue($cases->contains('mp-proveedores'));
         $this->assertFalse($cases->contains(fn ($slug) => str_contains($slug, 'istcre')));
+    }
+
+    public function test_case_study_shows_visual_evidence_with_video_and_gallery(): void
+    {
+        $project = Project::where('slug', 'mp-proveedores')->firstOrFail();
+        $project->update([
+            'main_image_path' => 'projects/mp-proveedores-cover.png',
+            'demo_video_path' => 'projects/videos/mp-proveedores.mp4',
+        ]);
+
+        ProjectImage::create([
+            'project_id' => $project->id,
+            'path' => 'projects/gallery/mp-proveedores/panel.png',
+            'alt' => ['es' => 'Panel de proveedores', 'en' => 'Suppliers panel'],
+            'caption' => ['es' => 'Panel principal', 'en' => 'Main panel'],
+            'type' => 'desktop',
+            'is_featured' => true,
+            'is_visible' => true,
+            'sort' => 0,
+        ]);
+
+        $html = $this->get('/proyectos/mp-proveedores')->assertOk()->getContent();
+
+        $this->assertStringContainsString('Evidencia visual', $html);
+        $this->assertStringContainsString('Vídeo de demostración', $html);
+        $this->assertStringContainsString('projects/videos/mp-proveedores.mp4', $html);
+        $this->assertStringContainsString('data-lightbox', $html);
+        $this->assertStringContainsString('Panel principal', $html);
+        $this->assertStringContainsString('project-media__grid', $html);
+    }
+
+    public function test_project_card_shows_video_badge_when_demo_exists(): void
+    {
+        Project::where('slug', 'mp-proveedores')->update([
+            'demo_video_path' => 'projects/videos/mp-proveedores.mp4',
+            'main_image_path' => 'projects/mp-proveedores-cover.png',
+        ]);
+
+        $html = $this->get('/proyectos')->assertOk()->getContent();
+        $this->assertStringContainsString('project-card__media-badge', $html);
+        $this->assertMatchesRegularExpression('/project-card__media-badge[\s\S]*?Vídeo/', $html);
     }
 }

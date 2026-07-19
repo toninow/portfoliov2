@@ -1417,6 +1417,187 @@ html.js main[data-page] {
     opacity: 0.97;
 }
 
+.project-card__media-badge {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-line) 70%, transparent);
+    background: color-mix(in oklab, var(--color-bg) 82%, transparent);
+    backdrop-filter: blur(6px);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.project-card__media-badge svg {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+/* Case study visual evidence */
+.project-media__grid {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: 1fr;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+@media (min-width: 640px) {
+    .project-media__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.project-media__trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+    color: inherit;
+}
+
+.project-media__trigger:focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 2px;
+}
+
+.project-media__item {
+    transition: transform 0.2s var(--ease-out), border-color 0.2s ease;
+}
+
+.project-media__item:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in oklab, var(--color-cyan) 40%, var(--color-line));
+}
+
+.project-media__video video {
+    display: block;
+}
+
+.project-lightbox {
+    width: min(96vw, 1200px);
+    max-width: 96vw;
+    max-height: 92vh;
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: color-mix(in oklab, var(--color-bg) 94%, black);
+    color: var(--color-ink);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 0.45);
+}
+
+.project-lightbox::backdrop {
+    background: rgb(0 0 0 / 0.72);
+    backdrop-filter: blur(4px);
+}
+
+.project-lightbox__panel {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: min(70vh, 720px);
+    padding: 2.5rem 3.25rem 1.25rem;
+}
+
+.project-lightbox__figure {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.project-lightbox__figure img {
+    max-width: 100%;
+    max-height: min(72vh, 780px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.5rem;
+}
+
+.project-lightbox__caption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+.project-lightbox__close,
+.project-lightbox__nav {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-surface) 90%, black);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.project-lightbox__close:hover,
+.project-lightbox__nav:hover,
+.project-lightbox__close:focus-visible,
+.project-lightbox__nav:focus-visible {
+    border-color: var(--color-brand-bright);
+    outline: none;
+}
+
+.project-lightbox__close {
+    top: 0.65rem;
+    right: 0.65rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.project-lightbox__nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.project-lightbox__nav.is-prev { left: 0.55rem; }
+.project-lightbox__nav.is-next { right: 0.55rem; }
+
+.project-lightbox__nav[hidden] { display: none; }
+
+@media (max-width: 639px) {
+    .project-lightbox__panel {
+        padding: 2.75rem 0.75rem 1rem;
+    }
+
+    .project-lightbox__nav {
+        width: 2.1rem;
+        height: 2.1rem;
+        font-size: 1.35rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-media__item,
+    .project-card__media-badge {
+        transition: none;
+    }
+}
+
 .home-impact {
     display: grid;
     gap: 1rem;

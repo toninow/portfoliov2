@@ -398,3 +398,81 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
         if (labelOpen) labelOpen.hidden = !next;
     });
 })();
+
+// Project case study: screenshot lightbox with keyboard navigation.
+(function initProjectLightbox() {
+    const root = document.querySelector('[data-project-media]');
+    const dialog = document.querySelector('[data-lightbox]');
+    if (!root || !dialog || typeof dialog.showModal !== 'function') return;
+
+    const imageEl = dialog.querySelector('[data-lightbox-image]');
+    const captionEl = dialog.querySelector('[data-lightbox-caption-el]');
+    const prevBtn = dialog.querySelector('[data-lightbox-prev]');
+    const nextBtn = dialog.querySelector('[data-lightbox-next]');
+    const closeBtn = dialog.querySelector('[data-lightbox-close]');
+    const triggers = Array.from(root.querySelectorAll('[data-lightbox-open]'));
+    if (!imageEl || triggers.length === 0) return;
+
+    let index = 0;
+
+    const items = triggers.map((el) => ({
+        src: el.getAttribute('data-lightbox-src') || '',
+        alt: el.getAttribute('data-lightbox-alt') || '',
+        caption: el.getAttribute('data-lightbox-caption') || '',
+    })).filter((item) => item.src);
+
+    if (items.length === 0) return;
+
+    const render = () => {
+        const item = items[index];
+        if (!item) return;
+        imageEl.src = item.src;
+        imageEl.alt = item.alt;
+        if (captionEl) captionEl.textContent = item.caption || '';
+        const multi = items.length > 1;
+        if (prevBtn) prevBtn.hidden = !multi;
+        if (nextBtn) nextBtn.hidden = !multi;
+    };
+
+    const openAt = (i) => {
+        index = ((i % items.length) + items.length) % items.length;
+        render();
+        if (!dialog.open) dialog.showModal();
+    };
+
+    const step = (delta) => {
+        index = (index + delta + items.length) % items.length;
+        render();
+    };
+
+    triggers.forEach((el, i) => {
+        el.addEventListener('click', () => {
+            const raw = el.getAttribute('data-lightbox-index');
+            const fromAttr = raw === null ? i : Number.parseInt(raw, 10);
+            openAt(Number.isFinite(fromAttr) ? fromAttr : i);
+        });
+    });
+
+    prevBtn?.addEventListener('click', () => step(-1));
+    nextBtn?.addEventListener('click', () => step(1));
+    closeBtn?.addEventListener('click', () => dialog.close());
+
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+        if (!dialog.open) return;
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            step(-1);
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            step(1);
+        }
+    });
+
+    dialog.addEventListener('close', () => {
+        imageEl.removeAttribute('src');
+    });
+})();

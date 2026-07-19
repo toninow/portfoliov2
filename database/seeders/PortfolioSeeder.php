@@ -398,23 +398,23 @@ class PortfolioSeeder extends Seeder
                     'en' => 'Checking stock by warehouse required the desktop ERP, impractical on the floor. Searching by EAN, UPC, reference or name was not agile away from a fixed desk.',
                 ],
                 'responsibilities' => [
-                    'es' => 'Diseño mobile-first, integración con la API de Dolibarr, autenticación, roles y modo de consulta.',
-                    'en' => 'Mobile-first design, Dolibarr API integration, authentication, roles and read-focused lookup mode.',
+                    'es' => 'Diseño mobile-first web, integración con la API de Dolibarr, autenticación, roles y modo de consulta.',
+                    'en' => 'Mobile-first web design, Dolibarr API integration, authentication, roles and read-focused lookup mode.',
                 ],
                 'role' => [
-                    'es' => 'Producto, backend de integración y app móvil',
-                    'en' => 'Product, integration backend and mobile app',
+                    'es' => 'Producto, backend de integración y app web',
+                    'en' => 'Product, integration backend and web app',
                 ],
                 'solution' => [
-                    'es' => 'App mobile-first (Flutter) con búsqueda por EAN, UPC, referencia y nombre, stock por almacén, integración con la API de Dolibarr y control de permisos orientado a consulta.',
-                    'en' => 'Mobile-first Flutter app with search by EAN, UPC, reference and name, stock by warehouse, Dolibarr API integration and permission control focused on lookup.',
+                    'es' => 'Aplicación web mobile-first con búsqueda por EAN, UPC, referencia y nombre, stock por almacén, integración con la API de Dolibarr y control de permisos orientado a consulta.',
+                    'en' => 'Mobile-first web app with search by EAN, UPC, reference and name, stock by warehouse, Dolibarr API integration and permission control focused on lookup.',
                 ],
                 'qualitative_results' => [
-                    ['label' => 'Acceso a stock desde móvil'],
+                    ['label' => 'Acceso a stock desde el móvil'],
                     ['label' => 'Búsqueda por código y nombre'],
                     ['label' => 'Consulta por almacén'],
                 ],
-                'tech' => ['flutter', 'dolibarr', 'apis-rest'],
+                'tech' => ['php', 'javascript', 'dolibarr', 'apis-rest'],
                 'type' => 'Inventario',
             ],
             [

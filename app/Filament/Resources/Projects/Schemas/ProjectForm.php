@@ -226,6 +226,12 @@ class ProjectForm
                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif'])
                 ->maxSize(5120)->imageEditor()
                 ->helperText('Obligatoria para publicar un caso de estudio.'),
+            FileUpload::make('demo_video_path')->label('Vídeo de demostración')
+                ->disk('public')
+                ->directory('projects/videos')
+                ->acceptedFileTypes(['video/mp4', 'video/webm'])
+                ->maxSize(102400)
+                ->helperText('MP4 o WebM. Opcional. Se muestra con la portada como póster.'),
             Repeater::make('images')->label('Galería')->relationship()
                 ->schema([
                     FileUpload::make('path')->label('Imagen')->image()->disk('public')

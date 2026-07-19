@@ -46,6 +46,13 @@
             </div>
         @endif
 
+        @if($project->demo_video_path)
+            <span class="project-card__media-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                {{ __('portfolio.projects.has_video') }}
+            </span>
+        @endif
+
         @if($problem && $isCase)
             <div class="proj-overlay" aria-hidden="true">
                 <span class="proj-overlay__label">{{ __('portfolio.projects.the_problem') }}</span>

@@ -44,14 +44,14 @@
             'label' => ['es' => 'Inventario', 'en' => 'Inventory'],
             'role' => ['es' => 'Stock en tiempo real', 'en' => 'Real-time stock'],
             'desc' => ['es' => 'Consulta de existencias por almacén, EAN, UPC y referencia desde el móvil.', 'en' => 'Stock lookups by warehouse, EAN, UPC and reference from mobile.'],
-            'tags' => ['API', 'Flutter', 'EAN'],
+            'tags' => ['API', 'PHP', 'EAN'],
         ],
         [
             'key' => 'apps', 'glyph' => '◈',
             'label' => ['es' => 'Apps a medida', 'en' => 'Custom apps'],
             'role' => ['es' => 'Herramientas internas', 'en' => 'Internal tooling'],
-            'desc' => ['es' => 'Aplicaciones web y móviles para el trabajo diario: Laravel, Livewire y Flutter, con foco en una UX real y usable.', 'en' => 'Web and mobile apps for daily work: Laravel, Livewire and Flutter, focused on real, usable UX.'],
-            'tags' => ['Laravel', 'Livewire', 'Flutter'],
+            'desc' => ['es' => 'Aplicaciones web para el trabajo diario: Laravel, Livewire y herramientas internas, con foco en una UX real y usable.', 'en' => 'Web apps for daily work: Laravel, Livewire and internal tools, focused on real, usable UX.'],
+            'tags' => ['Laravel', 'Livewire', 'PHP'],
         ],
         [
             'key' => 'db', 'glyph' => '⧉',
