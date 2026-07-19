@@ -18,17 +18,21 @@ class PortfolioPolishTest extends TestCase
         $this->seed(PortfolioSeeder::class);
     }
 
-    public function test_home_shows_cases_before_systems_map(): void
+    public function test_home_shows_systems_map_beside_hero_title(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
 
         $casesPos = strpos($html, 'id="casos"');
         $mapPos = strpos($html, 'id="mapa-sistemas"');
+        $heroPos = strpos($html, 'data-hero');
 
         $this->assertNotFalse($casesPos);
         $this->assertNotFalse($mapPos);
-        $this->assertLessThan($mapPos, $casesPos);
+        $this->assertNotFalse($heroPos);
+        $this->assertTrue($heroPos < $mapPos);
+        $this->assertTrue($mapPos < $casesPos);
         $this->assertStringContainsString(__('portfolio.projects.view_all_cases'), $html);
+        $this->assertSame(1, substr_count($html, __('portfolio.hero.map_desc')));
     }
 
     public function test_services_page_publishes_four_canonical_services_without_ai_duplicate(): void

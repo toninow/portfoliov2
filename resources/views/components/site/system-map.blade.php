@@ -97,8 +97,8 @@
     }
 @endphp
 
-<figure class="system-map" data-system-map role="group" aria-labelledby="system-map-title">
-    <figcaption id="system-map-title" class="sr-only">{{ __('portfolio.hero.map_desc') }}</figcaption>
+<figure class="system-map" data-system-map role="group" aria-labelledby="systems-map-heading">
+    <figcaption class="sr-only">{{ __('portfolio.hero.map_title') }}</figcaption>
 
     {{-- Desktop / tablet: interactive SVG minimap --}}
     <div class="hidden sm:block system-map__frame surface">
@@ -109,7 +109,7 @@
 
         <div class="system-map__stage">
             <svg viewBox="0 0 440 380" class="system-map__svg" role="img"
-                 aria-label="{{ __('portfolio.hero.map_desc') }}">
+                 aria-label="{{ __('portfolio.hero.map_title') }}">
                 <defs>
                     <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stop-color="#3b82f6"/>

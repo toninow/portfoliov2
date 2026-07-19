@@ -50,6 +50,16 @@
                     </p>
                 @endif
             </div>
+
+            <aside id="mapa-sistemas" class="min-w-0 scroll-mt-24" aria-labelledby="systems-map-heading" data-reveal>
+                <p class="eyebrow">{{ __('portfolio.hero.map_title') }}</p>
+                <h2 id="systems-map-heading" class="mt-2 text-xl sm:text-2xl font-bold text-balance">
+                    {{ __('portfolio.hero.map_desc') }}
+                </h2>
+                <div class="mt-5">
+                    <x-site.system-map />
+                </div>
+            </aside>
         </div>
     </section>
 
@@ -109,15 +119,6 @@
                     </div>
                 @endforeach
             </div>
-        </div>
-    </section>
-
-    {{-- 5 · Systems map --}}
-    <section id="mapa-sistemas" class="section scroll-mt-24" aria-labelledby="systems-map-heading">
-        <div class="container-page">
-            <h2 id="systems-map-heading" class="text-3xl sm:text-4xl font-bold max-w-2xl">{{ __('portfolio.hero.map_title') }}</h2>
-            <p class="mt-4 text-[var(--color-muted)] max-w-2xl leading-relaxed mb-8">{{ __('portfolio.hero.map_desc') }}</p>
-            <x-site.system-map />
         </div>
     </section>
 
