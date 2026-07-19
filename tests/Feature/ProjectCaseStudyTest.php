@@ -203,6 +203,8 @@ class ProjectCaseStudyTest extends TestCase
         $this->assertStringContainsString('Panel principal', $html);
         $this->assertStringContainsString('project-media__thumbs', $html);
         $this->assertStringContainsString('related-slider', $html);
+        $this->assertStringContainsString('data-related-dots', $html);
+        $this->assertStringContainsString('data-related-prev', $html);
     }
 
     public function test_project_card_shows_video_badge_when_demo_exists(): void

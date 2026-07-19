@@ -1604,53 +1604,108 @@ html.js main[data-page] {
     pointer-events: none;
 }
 
-/* Related projects infinite slider */
+/* Related projects: 3-up carousel with dots */
+.related-slider__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.related-slider__controls {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.related-slider__nav {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-surface) 90%, black);
+    color: var(--color-ink);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.related-slider__nav:hover,
+.related-slider__nav:focus-visible {
+    border-color: var(--color-brand-bright);
+    outline: none;
+}
+
 .related-slider__viewport {
     overflow: hidden;
-    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
 }
 
 .related-slider__track {
+    --related-gap: 1rem;
+    --related-per-view: 3;
     display: flex;
-    gap: 1rem;
-    width: max-content;
-    animation: related-marquee 45s linear infinite;
-}
-
-.related-slider__viewport:hover .related-slider__track,
-.related-slider__viewport:focus-within .related-slider__track {
-    animation-play-state: paused;
+    gap: var(--related-gap);
+    transition: transform 0.45s var(--ease-out);
+    will-change: transform;
 }
 
 .related-slider__item {
-    flex: 0 0 min(18.5rem, 78vw);
+    flex: 0 0 calc((100% - (var(--related-per-view) - 1) * var(--related-gap)) / var(--related-per-view));
+    min-width: 0;
 }
 
 .related-slider__item .project-card {
     height: 100%;
 }
 
-@keyframes related-marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+.related-slider__dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+    min-height: 1.25rem;
+}
+
+.related-slider__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-muted) 55%, transparent);
+    cursor: pointer;
+    transition: width 0.2s ease, background 0.2s ease;
+}
+
+.related-slider__dot.is-active {
+    width: 1.35rem;
+    background: var(--color-brand-bright);
+}
+
+.related-slider__dot:focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 2px;
+}
+
+@media (max-width: 1023px) {
+    .related-slider__track {
+        --related-per-view: 2;
+    }
+}
+
+@media (max-width: 639px) {
+    .related-slider__track {
+        --related-per-view: 1;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .related-slider__track {
-        animation: none;
-        flex-wrap: wrap;
-        width: 100%;
-    }
-
-    .related-slider__viewport {
-        mask-image: none;
-        -webkit-mask-image: none;
-        overflow: visible;
-    }
-
-    .related-slider__item[aria-hidden="true"] {
-        display: none;
+        transition: none;
     }
 }
 

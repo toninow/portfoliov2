@@ -399,6 +399,94 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
     });
 })();
 
+// Related projects: 3-up carousel with infinite wrap + dots.
+(function initRelatedSlider() {
+    const root = document.querySelector('[data-related-slider]');
+    if (!root) return;
+
+    const track = root.querySelector('[data-related-track]');
+    const items = Array.from(root.querySelectorAll('[data-related-item]'));
+    const dotsEl = root.querySelector('[data-related-dots]');
+    const prevBtn = root.querySelector('[data-related-prev]');
+    const nextBtn = root.querySelector('[data-related-next]');
+    if (!track || items.length === 0 || !dotsEl) return;
+
+    let page = 0;
+    let perView = 3;
+
+    const readPerView = () => {
+        const raw = getComputedStyle(track).getPropertyValue('--related-per-view').trim();
+        const n = Number.parseInt(raw, 10);
+        return Number.isFinite(n) && n > 0 ? n : 3;
+    };
+
+    const pageCount = () => Math.max(1, Math.ceil(items.length / perView));
+
+    const renderDots = () => {
+        const total = pageCount();
+        dotsEl.hidden = total <= 1;
+        dotsEl.innerHTML = '';
+        for (let i = 0; i < total; i += 1) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'related-slider__dot' + (i === page ? ' is-active' : '');
+            btn.setAttribute('role', 'tab');
+            btn.setAttribute('aria-selected', i === page ? 'true' : 'false');
+            btn.setAttribute('aria-label', `${i + 1} / ${total}`);
+            btn.addEventListener('click', () => goTo(i));
+            dotsEl.appendChild(btn);
+        }
+        prevBtn?.toggleAttribute('hidden', total <= 1);
+        nextBtn?.toggleAttribute('hidden', total <= 1);
+    };
+
+    const apply = () => {
+        const total = pageCount();
+        page = ((page % total) + total) % total;
+        const offset = page * perView;
+        const styles = getComputedStyle(track);
+        const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+        const itemWidth = items[0].getBoundingClientRect().width;
+        track.style.transform = `translateX(-${offset * (itemWidth + gap)}px)`;
+
+        Array.from(dotsEl.children).forEach((dot, i) => {
+            const active = i === page;
+            dot.classList.toggle('is-active', active);
+            dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        items.forEach((item, i) => {
+            const visible = i >= offset && i < offset + perView;
+            item.toggleAttribute('aria-hidden', !visible);
+            item.inert = !visible;
+        });
+    };
+
+    const goTo = (next) => {
+        const total = pageCount();
+        page = ((next % total) + total) % total;
+        apply();
+    };
+
+    let resizeTimer = 0;
+    const sync = () => {
+        perView = readPerView();
+        page = Math.min(page, pageCount() - 1);
+        renderDots();
+        apply();
+    };
+
+    prevBtn?.addEventListener('click', () => goTo(page - 1));
+    nextBtn?.addEventListener('click', () => goTo(page + 1));
+
+    window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(sync, 120);
+    });
+
+    sync();
+})();
+
 // Project case study: unified gallery stage + lightbox for images.
 (function initProjectGallery() {
     const root = document.querySelector('[data-project-media]');

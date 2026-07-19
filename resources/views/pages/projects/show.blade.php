@@ -315,21 +315,23 @@
 
             @if($related->isNotEmpty())
                 <section class="related-slider mt-16" data-related-slider aria-labelledby="related-heading">
-                    <div class="flex items-end justify-between gap-4 mb-5 px-1">
+                    <div class="related-slider__head">
                         <h2 id="related-heading" class="text-xl font-bold">{{ __('portfolio.projects.related') }}</h2>
-                        <p class="text-xs font-mono text-[var(--color-muted)] hidden sm:block">{{ __('portfolio.projects.related_hint') }}</p>
+                        <div class="related-slider__controls">
+                            <button type="button" class="related-slider__nav" data-related-prev aria-label="{{ __('portfolio.projects.previous') }}">‹</button>
+                            <button type="button" class="related-slider__nav" data-related-next aria-label="{{ __('portfolio.projects.next') }}">›</button>
+                        </div>
                     </div>
                     <div class="related-slider__viewport">
-                        <div class="related-slider__track">
-                            @foreach([1, 2] as $loopPass)
-                                @foreach($related as $rel)
-                                    <div class="related-slider__item" @if($loopPass === 2) aria-hidden="true" @endif>
-                                        <x-site.project-card :project="$rel" size="compact" />
-                                    </div>
-                                @endforeach
+                        <div class="related-slider__track" data-related-track>
+                            @foreach($related as $rel)
+                                <div class="related-slider__item" data-related-item>
+                                    <x-site.project-card :project="$rel" size="compact" />
+                                </div>
                             @endforeach
                         </div>
                     </div>
+                    <div class="related-slider__dots" data-related-dots role="tablist" aria-label="{{ __('portfolio.projects.related') }}"></div>
                 </section>
             @endif
 
