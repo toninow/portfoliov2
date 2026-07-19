@@ -126,8 +126,20 @@ class ProjectController extends Controller
             })
             ->orderByDesc('is_case_study')
             ->orderBy('sort')
-            ->limit(3)
+            ->limit(8)
             ->get();
+
+        if ($related->count() < 4) {
+            $fill = Project::published()
+                ->with(['category', 'technologies'])
+                ->where('id', '!=', $project->id)
+                ->whereNotIn('id', $related->pluck('id'))
+                ->orderByDesc('is_case_study')
+                ->orderBy('sort')
+                ->limit(8 - $related->count())
+                ->get();
+            $related = $related->concat($fill)->values();
+        }
 
         return view('pages.projects.show', [
             'project' => $project,

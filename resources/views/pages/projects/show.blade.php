@@ -314,12 +314,21 @@
             </div>
 
             @if($related->isNotEmpty())
-                <section class="mt-16" aria-labelledby="related-heading">
-                    <h2 id="related-heading" class="text-xl font-bold mb-5">{{ __('portfolio.projects.related') }}</h2>
-                    <div class="grid sm:grid-cols-3 gap-4">
-                        @foreach($related as $rel)
-                            <x-site.project-card :project="$rel" size="compact" />
-                        @endforeach
+                <section class="related-slider mt-16" data-related-slider aria-labelledby="related-heading">
+                    <div class="flex items-end justify-between gap-4 mb-5 px-1">
+                        <h2 id="related-heading" class="text-xl font-bold">{{ __('portfolio.projects.related') }}</h2>
+                        <p class="text-xs font-mono text-[var(--color-muted)] hidden sm:block">{{ __('portfolio.projects.related_hint') }}</p>
+                    </div>
+                    <div class="related-slider__viewport">
+                        <div class="related-slider__track">
+                            @foreach([1, 2] as $loopPass)
+                                @foreach($related as $rel)
+                                    <div class="related-slider__item" @if($loopPass === 2) aria-hidden="true" @endif>
+                                        <x-site.project-card :project="$rel" size="compact" />
+                                    </div>
+                                @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </section>
             @endif

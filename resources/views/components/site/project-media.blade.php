@@ -8,79 +8,138 @@
     $l = app()->getLocale();
     $cover = $project->main_image_path ? Storage::url($project->main_image_path) : null;
     $video = $project->demo_video_path ? Storage::url($project->demo_video_path) : null;
-    $items = $gallery->values();
-    $hasMedia = $cover || $video || $items->isNotEmpty();
+
+    $slides = collect();
+
+    if ($video) {
+        $slides->push([
+            'type' => 'video',
+            'src' => $video,
+            'poster' => $cover,
+            'alt' => $project->translated('name'),
+            'caption' => __('portfolio.projects.demo_video'),
+            'thumb' => $cover,
+        ]);
+    }
+
+    foreach ($gallery->values() as $image) {
+        $src = Storage::url($image->path);
+        $alt = $image->getTranslation('alt', $l) ?: $project->translated('name');
+        $caption = $image->getTranslation('caption', $l) ?: $alt;
+        $slides->push([
+            'type' => 'image',
+            'src' => $src,
+            'poster' => null,
+            'alt' => $alt,
+            'caption' => $caption,
+            'thumb' => $src,
+        ]);
+    }
+
+    if ($slides->isEmpty() && $cover) {
+        $slides->push([
+            'type' => 'image',
+            'src' => $cover,
+            'poster' => null,
+            'alt' => $project->translated('name'),
+            'caption' => $project->translated('name'),
+            'thumb' => $cover,
+        ]);
+    }
+
+    $total = $slides->count();
+    $imageCount = $slides->where('type', 'image')->count();
+    $hasVideo = (bool) $video;
 @endphp
 
-@if($hasMedia)
+@if($total > 0)
     <section class="project-media" data-project-media aria-labelledby="project-media-title">
-        <div class="flex items-end justify-between gap-4 mb-5">
+        <div class="project-media__head">
             <h2 id="project-media-title" class="text-xl sm:text-2xl font-bold">{{ __('portfolio.projects.evidence') }}</h2>
-            @if($items->isNotEmpty())
-                <p class="text-sm text-[var(--color-muted)] font-mono">{{ trans_choice('portfolio.projects.shots_count', $items->count(), ['count' => $items->count()]) }}</p>
-            @endif
+            <p class="project-media__meta font-mono">
+                @if($hasVideo && $imageCount > 0)
+                    {{ __('portfolio.projects.media_mixed', ['images' => $imageCount]) }}
+                @elseif($hasVideo)
+                    {{ __('portfolio.projects.demo_video') }}
+                @else
+                    {{ trans_choice('portfolio.projects.shots_count', $imageCount, ['count' => $imageCount]) }}
+                @endif
+            </p>
         </div>
 
-        @if($video)
-            <figure class="project-media__video card overflow-hidden mb-5">
-                <video
-                    class="w-full aspect-video bg-black"
-                    controls
-                    playsinline
-                    preload="metadata"
-                    @if($cover) poster="{{ $cover }}" @endif
-                >
-                    <source src="{{ $video }}" type="video/mp4">
-                    {{ __('portfolio.projects.video_fallback') }}
-                </video>
-                <figcaption class="p-3 text-sm text-[var(--color-muted)]">{{ __('portfolio.projects.demo_video') }}</figcaption>
-            </figure>
-        @elseif($cover)
-            <figure class="project-media__cover mb-5">
-                <button type="button"
-                        class="project-media__trigger block w-full text-left"
-                        data-lightbox-open
-                        data-lightbox-src="{{ $cover }}"
-                        data-lightbox-alt="{{ $project->translated('name') }}"
-                        data-lightbox-caption="{{ $project->translated('name') }}">
-                    <img src="{{ $cover }}"
-                         alt="{{ $project->translated('name') }}"
-                         width="1200" height="720" loading="eager"
-                         class="w-full rounded-2xl border border-[var(--color-line)]">
-                </button>
-            </figure>
-        @endif
-
-        @if($items->isNotEmpty())
-            <ul class="project-media__grid">
-                @foreach($items as $index => $image)
-                    @php
-                        $src = Storage::url($image->path);
-                        $alt = $image->getTranslation('alt', $l) ?: $project->translated('name');
-                        $caption = $image->getTranslation('caption', $l);
-                    @endphp
-                    <li>
-                        <figure class="project-media__item card overflow-hidden">
+        <div class="project-media__gallery card overflow-hidden" data-gallery>
+            <div class="project-media__stage" data-gallery-stage>
+                @foreach($slides as $index => $slide)
+                    <figure
+                        class="project-media__slide"
+                        data-gallery-slide
+                        data-slide-type="{{ $slide['type'] }}"
+                        data-slide-index="{{ $index }}"
+                        @if($index !== 0) hidden @endif
+                    >
+                        @if($slide['type'] === 'video')
+                            <video
+                                class="project-media__video"
+                                controls
+                                playsinline
+                                preload="metadata"
+                                @if($slide['poster']) poster="{{ $slide['poster'] }}" @endif
+                                data-gallery-video
+                            >
+                                <source src="{{ $slide['src'] }}" type="video/mp4">
+                                {{ __('portfolio.projects.video_fallback') }}
+                            </video>
+                        @else
                             <button type="button"
                                     class="project-media__trigger"
                                     data-lightbox-open
-                                    data-lightbox-index="{{ $index }}"
-                                    data-lightbox-src="{{ $src }}"
-                                    data-lightbox-alt="{{ $alt }}"
-                                    data-lightbox-caption="{{ $caption }}">
-                                <img src="{{ $src }}"
-                                     alt="{{ $alt }}"
-                                     width="800" height="500" loading="lazy" decoding="async"
-                                     class="w-full h-full object-cover aspect-[16/10]">
+                                    data-lightbox-src="{{ $slide['src'] }}"
+                                    data-lightbox-alt="{{ $slide['alt'] }}"
+                                    data-lightbox-caption="{{ $slide['caption'] }}">
+                                <img src="{{ $slide['src'] }}"
+                                     alt="{{ $slide['alt'] }}"
+                                     width="1200" height="720"
+                                     loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                     decoding="async"
+                                     class="project-media__image">
                             </button>
-                            @if($caption)
-                                <figcaption class="p-3 text-sm text-[var(--color-muted)]">{{ $caption }}</figcaption>
-                            @endif
-                        </figure>
-                    </li>
+                        @endif
+                        <figcaption class="project-media__caption" data-gallery-caption>
+                            <span>{{ $slide['caption'] }}</span>
+                            <span class="project-media__counter" data-gallery-counter>{{ $index + 1 }} / {{ $total }}</span>
+                        </figcaption>
+                    </figure>
                 @endforeach
-            </ul>
-        @endif
+
+                @if($total > 1)
+                    <button type="button" class="project-media__nav is-prev" data-gallery-prev aria-label="{{ __('portfolio.projects.previous') }}">‹</button>
+                    <button type="button" class="project-media__nav is-next" data-gallery-next aria-label="{{ __('portfolio.projects.next') }}">›</button>
+                @endif
+            </div>
+
+            @if($total > 1)
+                <div class="project-media__thumbs" data-gallery-thumbs role="tablist" aria-label="{{ __('portfolio.projects.gallery') }}">
+                    @foreach($slides as $index => $slide)
+                        <button type="button"
+                                class="project-media__thumb{{ $index === 0 ? ' is-active' : '' }}"
+                                data-gallery-thumb
+                                data-slide-index="{{ $index }}"
+                                role="tab"
+                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
+                                aria-label="{{ $slide['caption'] }}">
+                            @if($slide['thumb'])
+                                <img src="{{ $slide['thumb'] }}" alt="" width="160" height="100" loading="lazy" decoding="async">
+                            @else
+                                <span class="project-media__thumb-fallback" aria-hidden="true"></span>
+                            @endif
+                            @if($slide['type'] === 'video')
+                                <span class="project-media__thumb-play" aria-hidden="true">▶</span>
+                            @endif
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+        </div>
     </section>
 
     <dialog class="project-lightbox" data-lightbox aria-label="{{ __('portfolio.projects.gallery') }}">

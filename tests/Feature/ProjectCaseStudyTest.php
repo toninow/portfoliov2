@@ -197,9 +197,11 @@ class ProjectCaseStudyTest extends TestCase
         $this->assertStringContainsString('Evidencia visual', $html);
         $this->assertStringContainsString('Vídeo de demostración', $html);
         $this->assertStringContainsString('projects/videos/mp-proveedores.mp4', $html);
+        $this->assertStringContainsString('data-gallery', $html);
         $this->assertStringContainsString('data-lightbox', $html);
         $this->assertStringContainsString('Panel principal', $html);
-        $this->assertStringContainsString('project-media__grid', $html);
+        $this->assertStringContainsString('project-media__thumbs', $html);
+        $this->assertStringContainsString('related-slider', $html);
     }
 
     public function test_project_card_shows_video_badge_when_demo_exists(): void
