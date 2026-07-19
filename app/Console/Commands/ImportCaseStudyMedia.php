@@ -25,19 +25,25 @@ class ImportCaseStudyMedia extends Command
      */
     protected array $map = [
         'mp-proveedores' => [
-            'module' => 'dolibarr-module-mp-proveedores-dol',
-            'cover' => '02-index-panel.png',
+            // Source: #dolibarr-module-mp-proveedores-dolv5
+            'module' => 'dolibarr-module-mp-proveedores-dolv5',
+            'cover' => '02-salud-casos.png',
             'shots' => [
-                '02-index-panel.png',
-                '03-lista-productos-proveedor.png',
-                '04-productos-dolibarr.png',
-                '05-auditoria-producto.png',
-                '07-vinculacion.png',
-                '08-conflictos-ean.png',
-                '09-exportacion.png',
-                '13-detalle-producto.png',
+                '02-salud-casos.png',
+                '03-lista-casos.png',
+                '04-vinculacion.png',
+                '05-enlaces.png',
+                '06-sync.png',
+                '07-runs.png',
+                '08-api.png',
+                '09-mapeo-proveedores.png',
+                '12-detalle-caso-conflicto.png',
+                '13-detalle-caso-duplicado-ean.png',
+                '16-lista-casos-filtrada.png',
+                '21-filtro-panel-activo.png',
+                '27-filtro-final-overview.png',
             ],
-            'video' => 'videos/dolibarr-module-mp-proveedores-dol.mp4',
+            'video' => 'videos/dolibarr-module-mp-proveedores-dolv5.mp4',
         ],
         'control-stock-dolibarr' => [
             'module' => 'web-control-stock-dolibarr',
@@ -58,19 +64,7 @@ class ImportCaseStudyMedia extends Command
             ],
             'video' => 'videos/prestashop-module-mp-dolipresta-debug.mp4',
         ],
-        'automatizacion-catalogos-proveedores' => [
-            'module' => 'dolibarr-module-mp-proveedores-dolv5',
-            'cover' => '03-lista-casos.png',
-            'shots' => [
-                '02-salud-casos.png',
-                '03-lista-casos.png',
-                '04-vinculacion.png',
-                '06-sync.png',
-                '07-runs.png',
-                '11-detalle-caso-producto.png',
-            ],
-            'video' => 'videos/dolibarr-module-mp-proveedores-dolv5.mp4',
-        ],
+        // automatizacion-catalogos-proveedores: no separate pack; V5 media belongs to mp-proveedores.
     ];
 
     public function handle(): int
@@ -167,9 +161,41 @@ class ImportCaseStudyMedia extends Command
             }
         }
 
+        if ($force) {
+            $this->clearProjectMedia('automatizacion-catalogos-proveedores', $disk);
+        }
+
         $this->info('Done.');
 
         return self::SUCCESS;
+    }
+
+    protected function clearProjectMedia(string $slug, $disk): void
+    {
+        $project = Project::query()->where('slug', $slug)->first();
+        if (! $project) {
+            return;
+        }
+
+        $this->info("Clearing media for {$slug} (reassigned pack)");
+
+        foreach ($project->images as $image) {
+            if ($image->path && $disk->exists($image->path)) {
+                $disk->delete($image->path);
+            }
+            $image->delete();
+        }
+
+        foreach (array_filter([$project->main_image_path, $project->demo_video_path]) as $path) {
+            if ($disk->exists($path)) {
+                $disk->delete($path);
+            }
+        }
+
+        $project->forceFill([
+            'main_image_path' => null,
+            'demo_video_path' => null,
+        ])->save();
     }
 
     protected function download(string $url, string $dest, $disk): bool
