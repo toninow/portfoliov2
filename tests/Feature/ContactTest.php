@@ -21,6 +21,7 @@ class ContactTest extends TestCase
         return array_merge([
             'name' => 'Empresa Demo',
             'email' => 'demo@empresa.com',
+            'need_type' => 'project',
             'message' => 'Necesito integrar Dolibarr con PrestaShop.',
             'consent' => '1',
         ], $overrides);

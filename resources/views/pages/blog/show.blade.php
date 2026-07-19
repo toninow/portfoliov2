@@ -61,8 +61,17 @@
             @endif
 
             <div class="mt-12 surface p-8 text-center" style="box-shadow: var(--shadow-glow);">
-                <h2 class="text-xl sm:text-2xl font-bold">{{ __('portfolio.blog.cta_title') }}</h2>
-                <a href="{{ Locale::route('contact') }}" class="mt-5 inline-flex btn btn-primary">{{ __('portfolio.nav.cta') }}</a>
+                @php
+                    $ctaTitle = ($post->category ?? 'tech') === 'personal'
+                        ? __('portfolio.blog.cta_personal')
+                        : __('portfolio.blog.cta_tech');
+                @endphp
+                <h2 class="text-xl sm:text-2xl font-bold">{{ $ctaTitle }}</h2>
+                @if(($post->category ?? 'tech') === 'personal')
+                    <a href="{{ Locale::route('blog.index') }}" class="mt-5 inline-flex btn btn-primary">{{ __('portfolio.blog.more') }}</a>
+                @else
+                    <a href="{{ Locale::route('contact') }}" class="mt-5 inline-flex btn btn-primary">{{ __('portfolio.nav.cta') }}</a>
+                @endif
             </div>
         </div>
 

@@ -354,3 +354,47 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
         }
     });
 })();
+
+// Contact form: show reason-specific optional fields.
+(function initContactReason() {
+    const select = document.querySelector('[data-contact-reason]');
+    if (!select) return;
+
+    const sync = () => {
+        const reason = select.value;
+        document.querySelectorAll('[data-reason-fields]').forEach((panel) => {
+            const key = panel.getAttribute('data-reason-fields');
+            const visible = key === 'job'
+                ? reason === 'job'
+                : key === 'project'
+                    ? reason === 'project' || reason === 'consulting'
+                    : false;
+            panel.classList.toggle('hidden', !visible);
+            panel.querySelectorAll('input, select, textarea').forEach((input) => {
+                input.disabled = !visible;
+            });
+        });
+    };
+
+    select.addEventListener('change', sync);
+    sync();
+})();
+
+// About page: expand/collapse additional technologies.
+(function initTechMore() {
+    const button = document.querySelector('[data-tech-more]');
+    const panel = document.getElementById('tech-additional-panel');
+    if (!button || !panel) return;
+
+    const labelClosed = button.querySelector('[data-tech-more-label-closed]');
+    const labelOpen = button.querySelector('[data-tech-more-label-open]');
+
+    button.addEventListener('click', () => {
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        const next = !expanded;
+        button.setAttribute('aria-expanded', next ? 'true' : 'false');
+        panel.hidden = !next;
+        if (labelClosed) labelClosed.hidden = next;
+        if (labelOpen) labelOpen.hidden = !next;
+    });
+})();

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -25,12 +26,18 @@ class Service extends Model
     {
         return SlugOptions::create()
             ->generateSlugsFrom(fn (Service $s) => $s->getTranslation('title', 'es') ?: 'service')
-            ->saveSlugsTo('slug');
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 
     public function technologies(): BelongsToMany
     {
         return $this->belongsToMany(Technology::class);
+    }
+
+    public function relatedProject(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'related_project_id');
     }
 
     public function scopePublished($query)

@@ -34,6 +34,15 @@ class PostForm
                             ->unique(ignoreRecord: true)
                             ->helperText('Se usa en la URL: /blog/mi-entrada')
                             ->columnSpanFull(),
+                        Select::make('category')
+                            ->label('Categoría')
+                            ->options([
+                                'tech' => 'Tecnología y procesos',
+                                'personal' => 'Diario personal',
+                            ])
+                            ->default('tech')
+                            ->required()
+                            ->helperText('Define el CTA público y ayuda a separar captación de contenido personal.'),
                         T::text('topic', 'Tema')
                             ->helperText('Etiqueta corta, p. ej. "Cambio personal" o "Automatización".'),
                         T::area('excerpt', 'Resumen', 3)

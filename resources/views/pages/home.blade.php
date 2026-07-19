@@ -50,10 +50,6 @@
                     </p>
                 @endif
             </div>
-
-            <div id="mapa-sistemas" class="min-w-0 scroll-mt-24">
-                <x-site.system-map />
-            </div>
         </div>
     </section>
 
@@ -66,7 +62,7 @@
                     <p class="eyebrow">{{ __('portfolio.projects.cases_eyebrow') }}</p>
                     <h2 class="mt-2 text-3xl sm:text-4xl font-bold">{{ __('portfolio.projects.cases_title') }}</h2>
                 </div>
-                <a href="{{ Locale::route('projects.index') }}" class="hidden sm:inline-flex btn btn-ghost">{{ __('portfolio.projects.all') }}</a>
+                <a href="{{ Locale::route('projects.index') }}" class="hidden sm:inline-flex btn btn-ghost">{{ __('portfolio.projects.view_all_cases') }}</a>
             </div>
             <div class="grid sm:grid-cols-2 gap-5">
                 @foreach($homeCases as $project)
@@ -75,6 +71,9 @@
                         :size="$loop->first ? 'large' : 'medium'"
                         variant="case" />
                 @endforeach
+            </div>
+            <div class="mt-8 sm:hidden">
+                <a href="{{ Locale::route('projects.index') }}" class="btn btn-ghost w-full justify-center">{{ __('portfolio.projects.view_all_cases') }}</a>
             </div>
         </div>
     </section>
@@ -113,7 +112,16 @@
         </div>
     </section>
 
-    {{-- 5 · How I work --}}
+    {{-- 5 · Systems map --}}
+    <section id="mapa-sistemas" class="section scroll-mt-24" aria-labelledby="systems-map-heading">
+        <div class="container-page">
+            <h2 id="systems-map-heading" class="text-3xl sm:text-4xl font-bold max-w-2xl">{{ __('portfolio.hero.map_title') }}</h2>
+            <p class="mt-4 text-[var(--color-muted)] max-w-2xl leading-relaxed mb-8">{{ __('portfolio.hero.map_desc') }}</p>
+            <x-site.system-map />
+        </div>
+    </section>
+
+    {{-- 6 · How I work --}}
     <section id="como-trabajo" class="section bg-[var(--color-surface)]/40 border-y border-[var(--color-line)] scroll-mt-24">
         <div class="container-page">
             <h2 class="text-3xl sm:text-4xl font-bold mb-4">{{ __('portfolio.sections.process') }}</h2>
@@ -129,7 +137,7 @@
             <p class="eyebrow">{{ __('portfolio.sections.experience_eyebrow') }}</p>
             <h2 id="experiencia-title" class="mt-2 text-3xl sm:text-4xl font-bold max-w-2xl">{{ __('portfolio.sections.experience') }}</h2>
             <p class="mt-4 text-[var(--color-muted)] max-w-2xl leading-relaxed mb-10">{{ __('portfolio.sections.experience_lead') }}</p>
-            <x-site.experience-timeline :experiences="$experiences" />
+            <x-site.experience-timeline :experiences="$experiences" variant="compact" />
         </div>
     </section>
     @endif

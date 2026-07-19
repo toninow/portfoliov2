@@ -8,7 +8,7 @@
 <x-layout :title="__('portfolio.projects.title')" :description="__('portfolio.projects.lead')">
     <section class="section">
         <div class="container-page">
-            <p class="eyebrow">{{ __('portfolio.nav.projects') }}</p>
+            <p class="eyebrow">{{ __('portfolio.projects.page_eyebrow') }}</p>
             <h1 class="mt-2 text-4xl sm:text-5xl font-bold">{{ __('portfolio.projects.title') }}</h1>
             <p class="mt-4 max-w-2xl text-lg text-[var(--color-muted)]">{{ __('portfolio.projects.lead') }}</p>
 

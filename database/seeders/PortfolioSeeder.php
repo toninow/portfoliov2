@@ -32,6 +32,7 @@ class PortfolioSeeder extends Seeder
         $categories = $this->seedCategories();
         $this->seedFeaturedProjects($categories, $technologies);
         $this->seedLegacyProjects($categories, $technologies);
+        $this->linkServicesToProjects();
         $this->seedExperience();
         $this->seedEducation();
     }
@@ -86,26 +87,72 @@ class PortfolioSeeder extends Seeder
     /** @return array<string, Technology> */
     protected function seedTechnologies(): array
     {
-        $map = [
-            'backend' => ['PHP', 'Python', 'Java', 'Laravel', 'Spring Boot', 'Django', 'Livewire', 'Power Fx'],
-            'frontend' => ['JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Blade', 'Bootstrap', 'Flutter', 'Dart', 'React Native'],
-            'data' => ['MySQL', 'PostgreSQL', 'SQL Server', 'APIs REST'],
-            'erp' => ['Dolibarr', 'PrestaShop', 'WordPress', 'Moodle', 'Bitrix'],
-            'infra' => ['Linux', 'Docker', 'Git', 'Gitea', 'Apache', 'Restic'],
-            'ia' => ['IA (GPT · Claude)', 'Cursor', 'Automatización con IA'],
-            'tools' => ['Microsoft 365', 'Google Workspace', 'Scrum'],
+        // [name, area, relevance, featured]
+        $items = [
+            ['PHP', 'backend', 'primary', true],
+            ['Laravel', 'backend', 'primary', true],
+            ['Python', 'backend', 'primary', true],
+            ['APIs REST', 'backend', 'primary', true],
+            ['MySQL', 'data', 'primary', true],
+            ['PostgreSQL', 'data', 'primary', true],
+            ['SQL Server', 'data', 'practical', false],
+            ['Livewire', 'web', 'primary', true],
+            ['Blade', 'web', 'primary', true],
+            ['Tailwind CSS', 'web', 'primary', true],
+            ['JavaScript', 'web', 'primary', true],
+            ['HTML5', 'web', 'practical', false],
+            ['CSS3', 'web', 'practical', false],
+            ['Linux', 'infra', 'primary', true],
+            ['Docker', 'infra', 'primary', true],
+            ['Git', 'infra', 'primary', true],
+            ['Apache', 'infra', 'primary', true],
+            ['Gitea', 'infra', 'primary', true],
+            ['Restic', 'infra', 'primary', true],
+            ['Dolibarr', 'platforms', 'primary', true],
+            ['PrestaShop', 'platforms', 'primary', true],
+            ['WordPress', 'platforms', 'practical', false],
+            ['Moodle', 'platforms', 'practical', false],
+            ['Bitrix', 'platforms', 'previous', false],
+            ['Java', 'additional', 'previous', false],
+            ['Spring Boot', 'additional', 'previous', false],
+            ['Django', 'additional', 'previous', false],
+            ['Power Fx', 'additional', 'previous', false],
+            ['Flutter', 'additional', 'previous', false],
+            ['Dart', 'additional', 'previous', false],
+            ['React Native', 'additional', 'previous', false],
+            ['Bootstrap', 'additional', 'previous', false],
+            ['AI assistants', 'tools', 'practical', false],
+            ['Cursor', 'tools', 'practical', false],
+            ['AI-assisted automation', 'tools', 'practical', false],
+            ['Microsoft 365', 'tools', 'practical', false],
+            ['Google Workspace', 'tools', 'practical', false],
+            ['Scrum', 'tools', 'practical', false],
         ];
 
         $technologies = [];
-        $sort = 0;
-        foreach ($map as $area => $names) {
-            foreach ($names as $name) {
-                $slug = Str::slug($name);
-                $technologies[$slug] = Technology::updateOrCreate(
-                    ['slug' => $slug],
-                    ['name' => $name, 'area' => $area, 'sort' => $sort++]
-                );
+        foreach ($items as $index => [$name, $area, $relevance, $featured]) {
+            $slug = Str::slug($name);
+            // Keep legacy AI slug if the renamed label would create a new row.
+            if ($name === 'AI assistants') {
+                $slug = 'ia-gpt-claude';
             }
+            if ($name === 'AI-assisted automation') {
+                $slug = 'automatizacion-con-ia';
+            }
+
+            $technologies[$slug] = Technology::updateOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $name,
+                    'area' => $area,
+                    'relevance' => $relevance,
+                    'is_featured' => $featured,
+                    'is_visible' => true,
+                    'show_on_about' => true,
+                    'show_on_projects' => true,
+                    'sort' => $index,
+                ]
+            );
         }
 
         return $technologies;
@@ -139,73 +186,101 @@ class PortfolioSeeder extends Seeder
     /** @param array<string, Technology> $tech */
     protected function seedServices(array $tech): void
     {
+        // Legacy rows remain unpublished so historical data is preserved.
+        Service::query()->update(['is_published' => false]);
+
         $services = [
             [
-                'title' => ['es' => 'Desarrollo de sistemas internos', 'en' => 'Internal systems development'],
-                'summary' => ['es' => 'Aplicaciones a medida para el trabajo diario de tu equipo.', 'en' => 'Custom applications for your team\'s daily work.'],
-                'problems' => ['es' => ['Procesos manuales repetitivos', 'Información dispersa en hojas de cálculo', 'Falta de trazabilidad'], 'en' => ['Repetitive manual processes', 'Data scattered across spreadsheets', 'Lack of traceability']],
-                'includes' => ['es' => ['Análisis del proceso', 'Diseño de la solución', 'Desarrollo e integración'], 'en' => ['Process analysis', 'Solution design', 'Development and integration']],
-                'tech' => ['laravel', 'livewire', 'mysql'],
+                'slug' => 'aplicaciones-internas-y-automatizacion',
+                'title' => ['es' => 'Aplicaciones internas y automatización', 'en' => 'Internal applications and automation'],
+                'summary' => [
+                    'es' => 'Desarrollo de herramientas para sustituir hojas de cálculo, comprobaciones manuales y procesos repetitivos por flujos más claros y controlados.',
+                    'en' => 'Building tools that replace spreadsheets, manual checks and repetitive work with clearer, controlled workflows.',
+                ],
+                'problems' => ['es' => ['Procesos diarios en Excel o mensajes', 'Comprobaciones manuales propensas a error', 'Falta de trazabilidad operativa'], 'en' => ['Daily work stuck in spreadsheets or chat', 'Error-prone manual checks', 'No operational traceability']],
+                'includes' => ['es' => ['Análisis del proceso real', 'Diseño de la herramienta interna', 'Automatización e integración con sistemas existentes', 'Uso de IA como apoyo cuando aporta valor'], 'en' => ['Analysis of the real process', 'Internal tool design', 'Automation and integration with existing systems', 'AI assistants as support when they add value']],
+                'deliverables' => ['es' => ['Aplicación o flujo operativo', 'Documentación esencial', 'Despliegue y acompañamiento inicial'], 'en' => ['Application or operational flow', 'Essential documentation', 'Deployment and initial support']],
+                'use_cases' => ['es' => ['Paneles internos', 'Validación de catálogos', 'Flujos de revisión humana'], 'en' => ['Internal panels', 'Catalog validation', 'Human review workflows']],
+                'tech' => ['laravel', 'livewire', 'php', 'mysql'],
             ],
             [
-                'title' => ['es' => 'Desarrollo web y plataformas', 'en' => 'Web development & platforms'],
-                'summary' => ['es' => 'Sitios web, plataformas y landings rápidas, medibles y bien posicionadas.', 'en' => 'Fast, measurable and well-ranked websites, platforms and landing pages.'],
-                'problems' => ['es' => ['Webs lentas o desactualizadas', 'Poca visibilidad en buscadores', 'Landings que no convierten'], 'en' => ['Slow or outdated sites', 'Low search visibility', 'Landings that do not convert']],
-                'tech' => ['laravel', 'wordpress', 'javascript'],
+                'slug' => 'integraciones-empresariales',
+                'title' => ['es' => 'Integraciones empresariales', 'en' => 'Business integrations'],
+                'summary' => [
+                    'es' => 'Conexión entre ERP, ecommerce, proveedores, inventario, bases de datos y APIs para evitar información aislada o duplicada.',
+                    'en' => 'Connecting ERP, ecommerce, suppliers, inventory, databases and APIs so information is not siloed or duplicated.',
+                ],
+                'problems' => ['es' => ['Stock o precios descuadrados entre sistemas', 'Doble introducción de datos', 'Fallos de sincronización sin diagnóstico'], 'en' => ['Stock or prices out of sync across systems', 'Duplicate data entry', 'Sync failures without clear diagnosis']],
+                'includes' => ['es' => ['Diseño de la sincronización', 'APIs REST y reglas de dirección de datos', 'Manejo de errores y compatibilidad entre versiones'], 'en' => ['Sync design', 'REST APIs and data-direction rules', 'Error handling and version compatibility']],
+                'deliverables' => ['es' => ['Integración operativa', 'Registros o logs de diagnóstico', 'Guía de operación'], 'en' => ['Working integration', 'Diagnostic logs', 'Operations guide']],
+                'use_cases' => ['es' => ['PrestaShop ↔ Dolibarr', 'Proveedores ↔ ERP', 'Inventario consultable'], 'en' => ['PrestaShop ↔ Dolibarr', 'Suppliers ↔ ERP', 'Queryable inventory']],
+                'tech' => ['dolibarr', 'prestashop', 'apis-rest', 'php'],
             ],
             [
-                'title' => ['es' => 'Automatización de procesos con IA', 'en' => 'Process automation with AI'],
-                'summary' => ['es' => 'Elimino tareas manuales conectando tus sistemas y apoyándome en IA.', 'en' => 'I remove manual tasks by connecting your systems and leveraging AI.'],
-                'problems' => ['es' => ['Trabajo manual repetido cada día', 'Errores por copiar y pegar', 'Tareas que nadie quiere hacer'], 'en' => ['Manual work repeated every day', 'Copy-paste errors', 'Tasks nobody wants to do']],
-                'tech' => ['php', 'apis-rest'],
+                'slug' => 'datos-y-catalogos',
+                'title' => ['es' => 'Datos y catálogos', 'en' => 'Data and catalogs'],
+                'summary' => [
+                    'es' => 'Importación, normalización, validación y enriquecimiento de productos, referencias, códigos de barras, precios, stock e imágenes.',
+                    'en' => 'Importing, normalizing, validating and enriching products, references, barcodes, prices, stock and images.',
+                ],
+                'problems' => ['es' => ['Catálogos inconsistentes entre proveedores', 'EAN usados como identificador único incorrecto', 'Imágenes o precios incompletos'], 'en' => ['Inconsistent supplier catalogs', 'EANs misused as unique identifiers', 'Incomplete images or prices']],
+                'includes' => ['es' => ['Importaciones idempotentes', 'Matching y revisión humana', 'Validación de códigos y relaciones'], 'en' => ['Idempotent imports', 'Matching and human review', 'Code and relationship validation']],
+                'deliverables' => ['es' => ['Pipeline de datos', 'Informes de conflictos', 'Actualización controlada en destino'], 'en' => ['Data pipeline', 'Conflict reports', 'Controlled updates in the target system']],
+                'use_cases' => ['es' => ['Catálogos de proveedores', 'Enriquecimiento de productos', 'Control de stock consultable'], 'en' => ['Supplier catalogs', 'Product enrichment', 'Queryable stock control']],
+                'tech' => ['php', 'mysql', 'dolibarr'],
             ],
             [
-                'title' => ['es' => 'Integración de ERP y ecommerce', 'en' => 'ERP and ecommerce integration'],
-                'summary' => ['es' => 'Sincronización entre Dolibarr y PrestaShop: productos, precios y stock.', 'en' => 'Sync between Dolibarr and PrestaShop: products, prices and stock.'],
-                'problems' => ['es' => ['Stock descuadrado entre web y ERP', 'Precios que no coinciden', 'Doble trabajo de introducción de datos'], 'en' => ['Stock mismatch between web and ERP', 'Prices out of sync', 'Duplicate data entry']],
-                'tech' => ['dolibarr', 'prestashop', 'apis-rest'],
-            ],
-            [
-                'title' => ['es' => 'Herramientas de stock e inventario', 'en' => 'Stock and inventory tools'],
-                'summary' => ['es' => 'Consulta de existencias por almacén, EAN y referencia.', 'en' => 'Stock lookups by warehouse, EAN and reference.'],
-                'tech' => ['dolibarr', 'flutter', 'apis-rest'],
-            ],
-            [
-                'title' => ['es' => 'Automatización de catálogos', 'en' => 'Catalog automation'],
-                'summary' => ['es' => 'Proceso, valido y enriquezco catálogos de proveedores.', 'en' => 'I process, validate and enrich supplier catalogs.'],
-                'tech' => ['php', 'mysql'],
-            ],
-            [
-                'title' => ['es' => 'Desarrollo de módulos', 'en' => 'Module development'],
-                'summary' => ['es' => 'Módulos y extensiones para Dolibarr, PrestaShop y aplicaciones existentes.', 'en' => 'Modules and extensions for Dolibarr, PrestaShop and existing apps.'],
-                'tech' => ['php', 'dolibarr', 'prestashop'],
-            ],
-            [
-                'title' => ['es' => 'Auditoría y diagnóstico técnico', 'en' => 'Technical audit and diagnosis'],
-                'summary' => ['es' => 'Reviso tus sistemas y detecto puntos de mejora y riesgo.', 'en' => 'I review your systems and find improvement and risk points.'],
-                'tech' => ['linux', 'mysql'],
-            ],
-            [
-                'title' => ['es' => 'Infraestructura, Git y backups', 'en' => 'Infrastructure, Git and backups'],
-                'summary' => ['es' => 'Servidores Linux, Docker, repositorios privados y copias verificables.', 'en' => 'Linux servers, Docker, private repositories and verifiable backups.'],
+                'slug' => 'infraestructura-y-continuidad',
+                'title' => ['es' => 'Infraestructura y continuidad', 'en' => 'Infrastructure and continuity'],
+                'summary' => [
+                    'es' => 'Administración de servicios Linux, despliegues, repositorios privados, copias de seguridad y diagnóstico de incidencias.',
+                    'en' => 'Managing Linux services, deployments, private repositories, backups and incident diagnosis.',
+                ],
+                'problems' => ['es' => ['Servicios internos frágiles', 'Backups sin restauración probada', 'Repositorios o despliegues poco controlados'], 'en' => ['Fragile internal services', 'Backups without tested restores', 'Uncontrolled repos or deployments']],
+                'includes' => ['es' => ['Servidores Linux y Docker', 'Gitea y flujos de despliegue', 'Restic y verificación de restauración', 'Diagnóstico de incidencias'], 'en' => ['Linux servers and Docker', 'Gitea and deployment flows', 'Restic and restore verification', 'Incident diagnosis']],
+                'deliverables' => ['es' => ['Servicio estable', 'Procedimiento de backup/restore', 'Documentación operativa'], 'en' => ['Stable service', 'Backup/restore procedure', 'Operational documentation']],
+                'use_cases' => ['es' => ['Gitea autogestionado', 'Backups con Restic', 'Servicios internos en Linux'], 'en' => ['Self-hosted Gitea', 'Restic backups', 'Internal Linux services']],
                 'tech' => ['linux', 'docker', 'gitea', 'restic'],
             ],
         ];
 
         foreach ($services as $i => $s) {
             $service = Service::updateOrCreate(
-                ['slug' => Str::slug($s['title']['es'])],
+                ['slug' => $s['slug']],
                 [
                     'title' => $s['title'],
                     'summary' => $s['summary'] ?? null,
                     'problems' => $s['problems'] ?? null,
                     'includes' => $s['includes'] ?? null,
+                    'deliverables' => $s['deliverables'] ?? null,
+                    'use_cases' => $s['use_cases'] ?? null,
                     'sort' => $i,
                     'is_published' => true,
                 ]
             );
             $ids = collect($s['tech'] ?? [])->map(fn ($slug) => $tech[$slug]->id ?? null)->filter()->all();
             $service->technologies()->sync($ids);
+        }
+    }
+
+    protected function linkServicesToProjects(): void
+    {
+        $map = [
+            'aplicaciones-internas-y-automatizacion' => 'mp-proveedores',
+            'integraciones-empresariales' => 'integracion-prestashop-dolibarr',
+            'datos-y-catalogos' => 'automatizacion-catalogos-proveedores',
+            'infraestructura-y-continuidad' => 'gitea-autogestionado',
+        ];
+
+        foreach ($map as $serviceSlug => $projectSlug) {
+            $projectId = Project::query()->where('slug', $projectSlug)->value('id');
+            if (! $projectId) {
+                continue;
+            }
+
+            Service::query()
+                ->where('slug', $serviceSlug)
+                ->update(['related_project_id' => $projectId]);
         }
     }
 
@@ -567,19 +642,19 @@ class PortfolioSeeder extends Seeder
     protected function seedLegacyProjects(array $cat, array $tech): void
     {
         $legacy = [
-            ['Sitio web Istcre', 'Website for the Ecuadorian Red Cross Technological Institute', 'Sitio Web del Instituto Superior Tecnológico Cruz Roja Ecuatoriana', 2020, 'web', ['wordpress'], 'sitio_web-Istcre.jpg', 'https://www.cruzrojainstituto.edu.ec/'],
+            ['Sitio web Istcre', 'Website for the Ecuadorian Red Cross Technological Institute', 'Sitio Web del Instituto Superior Tecnológico Cruz Roja Ecuatoriana', 2020, 'web', ['wordpress'], 'sitio_web-Istcre.jpg', 'https://istcre.edu.ec/'],
             ['Juego educativo FONAP', 'Interactive learning game developed for the FONAP Foundation', 'Videojuego interactivo para aprendizaje desarrollado para la Fundación FONAP', 2021, 'web', [], 'port2.webp', 'https://fonap-game.web.app/'],
             ['Revista ISTCRE', "Digital platform for the institute's academic journal", 'Plataforma digital para la revista académica del instituto', 2021, 'web', ['laravel', 'mysql'], 'port3.webp', 'https://www.revistaacademica-istcre.edu.ec/'],
             ['Admisiones ISTCRE', "Landing page for the institute's admission process", 'Landing page para el proceso de admisiones del instituto', 2022, 'web', ['php', 'html5', 'css3', 'javascript', 'mysql'], 'port4.webp', 'https://admisiones.cruzrojainstituto.edu.ec/'],
-            ['Educación Continua ISTCRE', "Web system for the institute's continuing education courses", 'Sistema web para los cursos de educación continua del instituto', 2022, 'web', ['php', 'html5', 'css3', 'javascript', 'mysql'], 'port5.webp', 'https://www.cruzrojainstituto.edu.ec/cec'],
-            ['Instituto de la ciudad de Quito', 'Research website for the Quito City Institute', 'Sitio Web de investigación del Instituto de la ciudad de Quito', 2022, 'web', ['wordpress'], 'instituto-ciudad.jpg', 'https://institutodelaciudad.com.ec/'],
+            ['Educación Continua ISTCRE', "Web system for the institute's continuing education courses", 'Sistema web para los cursos de educación continua del instituto', 2022, 'web', ['php', 'html5', 'css3', 'javascript', 'mysql'], 'port5.webp', 'https://cec.istcre.edu.ec/'],
+            ['Instituto de la ciudad de Quito', 'Research website for the Quito City Institute', 'Sitio Web de investigación del Instituto de la ciudad de Quito', 2022, 'web', ['wordpress'], 'instituto-ciudad.jpg', null],
             ['Constructora Carei Home', 'Carei Home real estate development and management website', 'Sitio web Carei Home, desarrollo y gestión de proyectos inmobiliarios', 2023, 'web', ['wordpress'], 'carei.jpg', null],
-            ['Productos Calma', 'Informational website for anti-stress blanket sales', 'Sitio web informativo de venta de mantas antiestrés', 2023, 'web', ['wordpress'], 'productos_calma.jpg', 'https://productoscalma.net/'],
-            ['Landing Netlife Internet', 'Website for the Netlife internet contract request form', 'Formulario de solicitud de contrato de internet Netlife', 2023, 'web', ['wordpress'], 'netlifenetec.jpg', 'https://internetnetlife.net.ec/'],
+            ['Productos Calma', 'Informational website for anti-stress blanket sales', 'Sitio web informativo de venta de mantas antiestrés', 2023, 'web', ['wordpress'], 'productos_calma.jpg', null],
+            ['Landing Netlife Internet', 'Website for the Netlife internet contract request form', 'Formulario de solicitud de contrato de internet Netlife', 2023, 'web', ['wordpress'], 'netlifenetec.jpg', null],
             ['Landing Netlife Internet (com.ec)', 'Website for the Netlife internet contract request form', 'Formulario de solicitud de contrato de internet Netlife', 2024, 'web', ['php', 'html5', 'css3', 'javascript', 'bitrix'], 'netlifeinternetcomec.jpg', 'https://netlifeinternet.com.ec/'],
             ['Landing Netlife Internet (ec)', 'Website for the Netlife internet contract request form', 'Formulario de solicitud de contrato de internet Netlife', 2024, 'web', ['php', 'html5', 'css3', 'javascript', 'bitrix'], 'netlifeinternetec.jpg', 'https://netlifeinternet.ec/'],
             ['Landing Fibramax Internet', 'Website for the Fibramax internet contract request form', 'Formulario de solicitud de contrato de internet Fibramax', 2025, 'web', ['php', 'html5', 'css3', 'javascript', 'bitrix'], 'fibramaxnet.jpg', 'https://ventas-fibramax.net/'],
-            ['Landing Celerity Internet', 'Website for the Celerity internet contract request form', 'Formulario de solicitud de contrato de internet Celerity', 2025, 'web', ['wordpress'], 'ventascelerity.jpg', 'https://ventas-celerity.com/'],
+            ['Landing Celerity Internet', 'Website for the Celerity internet contract request form', 'Formulario de solicitud de contrato de internet Celerity', 2025, 'web', ['wordpress'], 'ventascelerity.jpg', null],
             ['Landing Promociones Fibramax', 'Website for the Fibramax internet contract request form', 'Formulario de solicitud de contrato de internet Fibramax', 2025, 'web', ['wordpress'], 'promociones-fibramax.jpg', 'https://promociones-fibramax.com/'],
         ];
 
@@ -641,7 +716,7 @@ class PortfolioSeeder extends Seeder
                     'es' => 'Cofundador y desarrollador web',
                     'en' => 'Co-founder and Web Developer',
                 ],
-                'company' => 'R&B Studio · Marketing digital',
+                'company' => 'R&B Studio',
                 'company_sector' => 'Marketing digital',
                 'company_url' => 'https://rbestudio.net',
                 'location' => 'Ecuador',
@@ -667,7 +742,7 @@ class PortfolioSeeder extends Seeder
                     'en' => 'Software Developer · IT Support',
                 ],
                 'company' => 'Instituto Superior Tecnológico Cruz Roja Ecuatoriana',
-                'company_url' => 'https://www.cruzrojainstituto.edu.ec',
+                'company_url' => 'https://istcre.edu.ec/',
                 'location' => 'Ecuador',
                 'city' => null,
                 'country' => 'Ecuador',
@@ -691,7 +766,7 @@ class PortfolioSeeder extends Seeder
                     'en' => 'Software Development Intern',
                 ],
                 'company' => 'Algoritmun',
-                'company_url' => 'https://www.algoritmun.com',
+                'company_url' => 'https://algoritmun.com/',
                 'location' => 'Ecuador',
                 'city' => null,
                 'country' => 'Ecuador',
@@ -723,12 +798,13 @@ class PortfolioSeeder extends Seeder
         Education::create([
             'title' => ['es' => 'Tecnólogo en Desarrollo de Software', 'en' => 'Software Development Technologist'],
             'institution' => 'Instituto Superior Tecnológico de Turismo y Patrimonio Yavirac',
+            'institution_url' => 'https://yavirac.edu.ec/',
             'description' => [
                 'es' => 'Formación en desarrollo de software, bases de datos y desarrollo de aplicaciones para entornos empresariales.',
                 'en' => 'Training in software development, databases and application development for business environments.',
             ],
             'start_year' => '2017',
-            'end_year' => '2019',
+            'end_year' => '2021',
             'sort' => 0,
         ]);
     }

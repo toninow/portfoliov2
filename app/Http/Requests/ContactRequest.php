@@ -19,9 +19,11 @@ class ContactRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:40'],
             'company' => ['nullable', 'string', 'max:120'],
             'country' => ['nullable', 'string', 'max:80'],
-            'need_type' => ['nullable', 'string', 'max:120'],
+            'need_type' => ['required', 'string', 'in:job,project,consulting,other'],
             'estimated_value' => ['nullable', 'string', 'max:80'],
             'subject' => ['nullable', 'string', 'max:180'],
+            'systems' => ['nullable', 'string', 'max:180'],
+            'offer_url' => ['nullable', 'url', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],
             'consent' => ['accepted'],
             // Honeypot: must stay empty.

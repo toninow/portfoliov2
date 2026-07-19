@@ -16,6 +16,8 @@ class Post extends Model
 
     public const STATUSES = ['draft', 'published', 'archived'];
 
+    public const CATEGORIES = ['tech', 'personal'];
+
     /** @var array<int, string> */
     public array $translatable = [
         'title', 'excerpt', 'body', 'topic',

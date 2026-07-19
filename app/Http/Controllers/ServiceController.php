@@ -10,7 +10,7 @@ class ServiceController extends Controller
     public function index(): View
     {
         return view('pages.services', [
-            'services' => Service::published()->with('technologies')->get(),
+            'services' => Service::published()->with(['technologies', 'relatedProject'])->get(),
         ]);
     }
 }

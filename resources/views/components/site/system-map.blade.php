@@ -16,14 +16,14 @@
             'label' => ['es' => 'Datos & proveedores', 'en' => 'Data & suppliers'],
             'role' => ['es' => 'Entrada y normalización', 'en' => 'Intake & normalization'],
             'desc' => ['es' => 'Catálogos de proveedores en Excel y web: SKU, EAN, precios e imágenes, limpiados y validados antes de entrar al sistema.', 'en' => 'Supplier catalogs from Excel and web: SKU, EAN, prices and images, cleaned and validated before entering the system.'],
-            'tags' => ['Excel', 'CSV', 'EAN', 'Validación'],
+            'tags' => ['Excel', 'CSV', 'EAN', 'Validation'],
         ],
         [
             'key' => 'ai', 'glyph' => '✦',
             'label' => ['es' => 'Automatización', 'en' => 'Automation'],
             'role' => ['es' => 'Procesos y flujos', 'en' => 'Processes and flows'],
             'desc' => ['es' => 'Reduzco trabajo manual con scripts, importaciones y flujos repetibles. Uso herramientas de IA como apoyo para analizar, desarrollar, revisar y documentar, manteniendo la validación técnica sobre el resultado.', 'en' => 'I reduce manual work with scripts, imports and repeatable flows. I use AI tools to support analysis, development, review and documentation, while keeping technical validation of the result.'],
-            'tags' => ['Scripts', 'Flujos', 'Importaciones'],
+            'tags' => ['Scripts', 'Flows', 'Imports'],
         ],
         [
             'key' => 'erp', 'glyph' => '▤',
@@ -103,7 +103,6 @@
     {{-- Desktop / tablet: interactive SVG minimap --}}
     <div class="hidden sm:block system-map__frame surface">
         <div class="system-map__bar">
-            <span class="eyebrow">{{ __('portfolio.hero.map_title') }}</span>
             <span class="system-map__hint" data-map-hint>{{ __('portfolio.hero.map_hint') }}</span>
             <span class="system-map__live"><span class="system-map__live-dot"></span>live</span>
         </div>

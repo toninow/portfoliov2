@@ -33,17 +33,70 @@ class Experience extends Model
         return $query->orderBy('sort')->orderByDesc('start_date');
     }
 
-    public function displayLocation(): ?string
+    public function companyName(): string
     {
-        $parts = array_filter([$this->city, $this->country ?: $this->location]);
+        $company = trim((string) $this->company);
+        $sector = trim((string) $this->company_sector);
+
+        if ($sector !== '' && str_contains($company, $sector)) {
+            $company = trim(str_replace([' · '.$sector, '· '.$sector, $sector], '', $company), " \t\n\r\0\x0B·");
+        }
+
+        return $company !== '' ? $company : (string) $this->company;
+    }
+
+    public function sectorLabel(?string $locale = null): ?string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $sector = trim((string) $this->company_sector);
+
+        if ($sector === '') {
+            return null;
+        }
+
+        if ($locale === 'en' && strcasecmp($sector, 'Marketing digital') === 0) {
+            return 'Digital Marketing';
+        }
+
+        return $sector;
+    }
+
+    public function companyHeading(?string $locale = null): string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $parts = array_filter([
+            $this->companyName(),
+            $this->sectorLabel($locale),
+            $this->displayLocation($locale),
+        ]);
+
+        return implode(' · ', $parts);
+    }
+
+    public function displayLocation(?string $locale = null): ?string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $city = trim((string) $this->city);
+        $country = trim((string) ($this->country ?: $this->location));
+
+        if ($locale === 'en') {
+            $country = match ($country) {
+                'España' => 'Spain',
+                'Madrid, España' => 'Madrid, Spain',
+                default => $country,
+            };
+            if ($city === '' && str_contains($country, ', ')) {
+                return $country;
+            }
+        }
+
+        $parts = array_values(array_unique(array_filter([$city, $country])));
 
         if ($parts === []) {
             return null;
         }
 
         // Avoid "Ecuador · Ecuador" when country and legacy location match.
-        $parts = array_values(array_unique($parts));
-
         return implode(', ', $parts);
     }
 

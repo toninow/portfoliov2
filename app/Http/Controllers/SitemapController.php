@@ -10,18 +10,31 @@ class SitemapController extends Controller
 {
     public function index(): Response
     {
-        $urls = [
-            ['loc' => route('home'), 'priority' => '1.0'],
-            ['loc' => route('projects.index'), 'priority' => '0.9'],
-            ['loc' => route('services.index'), 'priority' => '0.8'],
-            ['loc' => route('blog.index'), 'priority' => '0.8'],
-            ['loc' => route('about'), 'priority' => '0.7'],
-            ['loc' => route('contact'), 'priority' => '0.6'],
+        $static = [
+            ['name' => 'home', 'priority' => '1.0'],
+            ['name' => 'projects.index', 'priority' => '0.9'],
+            ['name' => 'services.index', 'priority' => '0.8'],
+            ['name' => 'blog.index', 'priority' => '0.8'],
+            ['name' => 'about', 'priority' => '0.7'],
+            ['name' => 'contact', 'priority' => '0.6'],
+            ['name' => 'cv', 'priority' => '0.5'],
         ];
+
+        $urls = [];
+
+        foreach ($static as $page) {
+            $urls[] = ['loc' => route($page['name']), 'priority' => $page['priority']];
+            $urls[] = ['loc' => route('en.'.$page['name']), 'priority' => $page['priority']];
+        }
 
         foreach (Project::published()->get() as $project) {
             $urls[] = [
                 'loc' => route('projects.show', $project),
+                'priority' => '0.7',
+                'lastmod' => optional($project->updated_at)->toAtomString(),
+            ];
+            $urls[] = [
+                'loc' => route('en.projects.show', $project),
                 'priority' => '0.7',
                 'lastmod' => optional($project->updated_at)->toAtomString(),
             ];
@@ -30,6 +43,11 @@ class SitemapController extends Controller
         foreach (Post::published()->get() as $post) {
             $urls[] = [
                 'loc' => route('blog.show', $post),
+                'priority' => '0.6',
+                'lastmod' => optional($post->updated_at)->toAtomString(),
+            ];
+            $urls[] = [
+                'loc' => route('en.blog.show', $post),
                 'priority' => '0.6',
                 'lastmod' => optional($post->updated_at)->toAtomString(),
             ];

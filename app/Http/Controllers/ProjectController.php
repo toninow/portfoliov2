@@ -78,7 +78,13 @@ class ProjectController extends Controller
             'caseStudies' => $caseStudies,
             'archive' => $archive,
             'categories' => ProjectCategory::orderBy('sort')->get(),
-            'technologies' => Technology::orderBy('name')->get(),
+            'technologies' => Technology::query()
+                ->visible()
+                ->where('show_on_projects', true)
+                ->where('area', '!=', 'tools')
+                ->whereHas('projects', fn ($q) => $q->published())
+                ->orderBy('name')
+                ->get(),
             'years' => Project::published()->whereNotNull('year')->distinct()->orderByDesc('year')->pluck('year'),
             'filters' => $filters,
             'totalVisible' => $totalVisible,

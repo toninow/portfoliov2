@@ -62,8 +62,10 @@ class PositioningCopyTest extends TestCase
         $this->assertSame(1, preg_match_all('/<h1\b/i', $en));
         $this->assertStringContainsString('Mi evolución profesional', $es);
         $this->assertStringContainsString('My professional path', $en);
-        $this->assertStringContainsString('Uso responsable de inteligencia artificial', $es);
-        $this->assertStringContainsString('Responsible use of AI', $en);
+        $this->assertStringContainsString('Herramientas de trabajo', $es);
+        $this->assertStringContainsString('Work Tools', $en);
+        $this->assertStringContainsString('Tecnologías con las que trabajo', $es);
+        $this->assertStringContainsString('Technologies I Work With', $en);
         $this->assertStringContainsString('Ver proyectos', $es);
         $this->assertStringContainsString('View Projects', $en);
         $this->assertStringNotContainsString('Mi evolución profesional', $en);

@@ -21,13 +21,28 @@ class HomeController extends Controller
             ->orderByDesc('year')
             ->get();
 
-        $homeCases = Project::published()->caseStudies()
+        $preferredCaseSlugs = [
+            'mp-proveedores',
+            'control-stock-dolibarr',
+            'integracion-prestashop-dolibarr',
+        ];
+
+        $preferredCases = Project::published()->caseStudies()
             ->with(['category', 'technologies', 'metrics' => fn ($q) => $q->where('is_public', true)])
-            ->orderByDesc('is_featured')
-            ->orderBy('sort')
-            ->orderByDesc('year')
-            ->take(3)
-            ->get();
+            ->whereIn('slug', $preferredCaseSlugs)
+            ->get()
+            ->sortBy(fn (Project $project) => array_search($project->slug, $preferredCaseSlugs, true))
+            ->values();
+
+        $homeCases = $preferredCases->count() >= 3
+            ? $preferredCases->take(3)
+            : Project::published()->caseStudies()
+                ->with(['category', 'technologies', 'metrics' => fn ($q) => $q->where('is_public', true)])
+                ->orderByDesc('is_featured')
+                ->orderBy('sort')
+                ->orderByDesc('year')
+                ->take(3)
+                ->get();
 
         $impactMetrics = $homeCases
             ->flatMap(fn ($p) => $p->metrics)

@@ -134,7 +134,7 @@ class ProjectCaseStudyTest extends TestCase
         $this->get('/proyectos')->assertSee('>2026<', false);
     }
 
-    public function test_home_shows_map_in_hero_and_cases_before_problems(): void
+    public function test_home_shows_cases_then_problems_then_systems_map(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
         $mapPos = strpos($html, 'id="mapa-sistemas"');
@@ -143,8 +143,8 @@ class ProjectCaseStudyTest extends TestCase
         $this->assertNotFalse($mapPos);
         $this->assertNotFalse($casesPos);
         $this->assertNotFalse($problemsPos);
-        $this->assertLessThan($casesPos, $mapPos);
         $this->assertLessThan($problemsPos, $casesPos);
+        $this->assertLessThan($mapPos, $problemsPos);
         $this->assertSame(1, substr_count($html, __('portfolio.hero.map_title')));
     }
 

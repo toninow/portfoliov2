@@ -13,7 +13,7 @@
 @endphp
 
 <header data-sticky-nav class="fixed inset-x-0 top-0 z-50">
-    <nav class="container-page flex items-center justify-between h-16 md:h-20" aria-label="Principal">
+    <nav class="container-page flex items-center justify-between h-16 md:h-20" aria-label="{{ __('portfolio.nav.menu') }}">
         <a href="{{ Locale::route('home') }}" class="flex items-center gap-3 shrink-0">
             <span aria-hidden="true"
                   class="grid place-items-center w-10 h-10 rounded-xl font-display font-bold text-white"

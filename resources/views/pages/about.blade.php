@@ -52,26 +52,22 @@
                     </ol>
                 @endif
 
-                <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.about_page.ai_title') }}</h2>
-                <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{{ __('portfolio.about_page.ai_body') }}</p>
-
-                <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.about_page.interest_title') }}</h2>
-                <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{{ __('portfolio.about_page.interest_body') }}</p>
-
-                <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.about_page.next_title') }}</h2>
-                <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{{ __('portfolio.about_page.next_body') }}</p>
-
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ Locale::route('projects.index') }}" class="btn btn-primary">{{ __('portfolio.about_page.cta_projects') }}</a>
-                    <a href="{{ Locale::route('contact') }}" class="btn btn-ghost">{{ __('portfolio.about_page.cta_contact') }}</a>
-                </div>
-
                 @if($experiences->isNotEmpty())
-                    <div class="mt-14" aria-labelledby="about-experiencia-title">
+                    <section id="experiencia" class="mt-14 scroll-mt-24" aria-labelledby="experiencia-title">
                         <p class="eyebrow">{{ __('portfolio.sections.experience_eyebrow') }}</p>
-                        <h2 id="about-experiencia-title" class="mt-2 text-2xl font-bold">{{ __('portfolio.sections.experience') }}</h2>
-                        <p class="mt-3 text-[var(--color-muted)] leading-relaxed mb-6">{{ __('portfolio.sections.experience_lead') }}</p>
-                        <x-site.experience-timeline :experiences="$experiences" />
+                        <h2 id="experiencia-title" class="mt-2 text-2xl sm:text-3xl font-bold">{{ __('portfolio.sections.experience') }}</h2>
+                        <p class="mt-3 text-sm sm:text-base text-[var(--color-muted)] leading-relaxed mb-8 max-w-2xl">{{ __('portfolio.sections.experience_lead') }}</p>
+                        <x-site.experience-timeline :experiences="$experiences" variant="full" />
+                    </section>
+                @endif
+
+                @if($stackGroups->isNotEmpty() || $platformTechnologies->isNotEmpty() || $toolTechnologies->isNotEmpty() || $additionalTechnologies->isNotEmpty())
+                    <div class="mt-14">
+                        <x-site.tech-stack
+                            :stack-groups="$stackGroups"
+                            :platforms="$platformTechnologies"
+                            :tools="$toolTechnologies"
+                            :additional="$additionalTechnologies" />
                     </div>
                 @endif
 
@@ -83,7 +79,16 @@
                                 <h3 class="font-display font-semibold">{{ $edu->getTranslation('title', $l) }}</h3>
                                 @if($edu->institution)
                                     <p class="text-sm text-[var(--color-muted)]">
-                                        {{ $edu->institution }}
+                                        @if($edu->institution_url)
+                                            <a href="{{ $edu->institution_url }}"
+                                               class="underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-bright)]"
+                                               target="_blank"
+                                               rel="noopener noreferrer">
+                                                {{ $edu->institution }}
+                                            </a>
+                                        @else
+                                            {{ $edu->institution }}
+                                        @endif
                                         @if($edu->start_year)
                                             · {{ $edu->start_year }}@if($edu->end_year)–{{ $edu->end_year }}@endif
                                         @endif
@@ -112,11 +117,16 @@
                     </ul>
                 @endif
 
-                @if($technologies->isNotEmpty())
-                    <h2 class="mt-14 text-2xl font-bold mb-4">{{ __('portfolio.sections.technologies') }}</h2>
-                    <p class="text-[var(--color-muted)] max-w-2xl mb-8 leading-relaxed">{{ __('portfolio.tech_lead') }}</p>
-                    <x-site.tech-grid :technologies="$technologies" />
-                @endif
+                <h2 class="mt-14 text-2xl font-bold">{{ __('portfolio.about_page.interest_title') }}</h2>
+                <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{{ __('portfolio.about_page.interest_body') }}</p>
+
+                <h2 class="mt-12 text-2xl font-bold">{{ __('portfolio.about_page.next_title') }}</h2>
+                <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{{ __('portfolio.about_page.next_body') }}</p>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ Locale::route('projects.index') }}" class="btn btn-primary">{{ __('portfolio.about_page.cta_projects') }}</a>
+                    <a href="{{ Locale::route('contact') }}" class="btn btn-ghost">{{ __('portfolio.about_page.cta_contact') }}</a>
+                </div>
             </div>
         </div>
     </section>

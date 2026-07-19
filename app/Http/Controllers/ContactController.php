@@ -35,15 +35,33 @@ class ContactController extends Controller
         }
 
         try {
+            $reason = $data['need_type'];
+            $subject = $data['subject'] ?? null;
+            if (in_array($reason, ['project', 'consulting'], true) && ! empty($data['systems'])) {
+                $subject = $data['systems'];
+            }
+
+            $extras = [];
+            if (! empty($data['offer_url'])) {
+                $extras[] = 'Oferta: '.$data['offer_url'];
+            }
+            if (! empty($data['estimated_value']) && $reason === 'job') {
+                $extras[] = 'Modalidad: '.$data['estimated_value'];
+            }
+            $message = $data['message'];
+            if ($extras !== []) {
+                $message .= "\n\n—\n".implode("\n", $extras);
+            }
+
             $lead = Lead::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
                 'company' => $data['company'] ?? null,
                 'country' => $data['country'] ?? null,
-                'subject' => $data['subject'] ?? null,
-                'message' => $data['message'],
-                'need_type' => $data['need_type'] ?? null,
+                'subject' => $subject,
+                'message' => $message,
+                'need_type' => $reason,
                 'estimated_value' => $data['estimated_value'] ?? null,
                 'source' => 'website',
                 'status' => 'new',

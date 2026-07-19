@@ -19,6 +19,11 @@ class EducationTable
                     ->weight('bold'),
                 TextColumn::make('institution')
                     ->searchable(),
+                TextColumn::make('institution_url')
+                    ->label('Web')
+                    ->url(fn ($record) => $record->institution_url)
+                    ->openUrlInNewTab()
+                    ->toggleable(),
                 TextColumn::make('start_year')
                     ->searchable(),
                 TextColumn::make('end_year')

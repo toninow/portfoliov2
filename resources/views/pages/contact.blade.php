@@ -3,6 +3,13 @@
     $l = app()->getLocale();
     $sent = session('contact_success');
     $failed = session('contact_error');
+    $reason = old('need_type', '');
+    $reasons = [
+        'job' => __('portfolio.contact.reasons.job'),
+        'project' => __('portfolio.contact.reasons.project'),
+        'consulting' => __('portfolio.contact.reasons.consulting'),
+        'other' => __('portfolio.contact.reasons.other'),
+    ];
 @endphp
 
 <x-layout :title="__('portfolio.contact.title')" :description="__('portfolio.contact.lead')">
@@ -27,13 +34,21 @@
 
                 <div class="mt-8 space-y-3 text-sm">
                     @if($profile->email)
-                        <a href="mailto:{{ $profile->email }}" class="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors">
-                            <span class="chip">@</span>{{ $profile->email }}
+                        <a href="mailto:{{ $profile->email }}" class="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-bright)]">
+                            <span class="chip" aria-hidden="true">Email</span>
+                            <span>{{ $profile->email }}</span>
                         </a>
                     @endif
                     @if($profile->whatsapp)
-                        <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $profile->whatsapp) }}" target="_blank" rel="noopener" class="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors">
-                            <span class="chip">WA</span>WhatsApp
+                        <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $profile->whatsapp) }}" target="_blank" rel="noopener" class="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-bright)]">
+                            <span class="chip" aria-hidden="true">WA</span>
+                            <span>{{ __('portfolio.contact.whatsapp') }}</span>
+                        </a>
+                    @endif
+                    @if($profile->cvAvailable())
+                        <a href="{{ Locale::route('cv') }}" class="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-bright)]" target="_blank" rel="noopener">
+                            <span class="chip" aria-hidden="true">CV</span>
+                            <span>{{ __('portfolio.nav.cv') }}</span>
                         </a>
                     @endif
                 </div>
@@ -76,12 +91,24 @@
                       data-network-error="{{ __('portfolio.contact.error') }}"
                       @if($sent) hidden @endif>
                     @csrf
-                    {{-- Honeypot --}}
-                    <div class="hidden" aria-hidden="true">
-                        <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+
+                    <div class="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0" aria-hidden="true">
+                        <label for="website_hp">Leave blank</label>
+                        <input id="website_hp" type="text" name="website" value="" tabindex="-1" autocomplete="off">
                     </div>
 
                     <p class="text-sm text-[var(--color-muted)]">{{ __('portfolio.contact.intro') }}</p>
+
+                    <div>
+                        <label for="need_type" class="block text-sm mb-1.5">{{ __('portfolio.contact.reason') }}</label>
+                        <select id="need_type" name="need_type" required class="input-field @error('need_type') border-[var(--color-danger)] @enderror" data-contact-reason aria-invalid="{{ $errors->has('need_type') ? 'true' : 'false' }}">
+                            <option value="" @selected($reason === '')>{{ __('portfolio.contact.reason_placeholder') }}</option>
+                            @foreach($reasons as $value => $label)
+                                <option value="{{ $value }}" @selected($reason === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('need_type')<p class="mt-1 text-sm text-[var(--color-danger)]" data-field-error="need_type">{{ $message }}</p>@enderror
+                    </div>
 
                     <div>
                         <label for="name" class="block text-sm mb-1.5">{{ __('portfolio.contact.name') }}</label>
@@ -96,24 +123,39 @@
                     </div>
 
                     <div>
+                        <label for="company" class="block text-sm mb-1.5">{{ __('portfolio.contact.company') }} <span class="text-[var(--color-muted)]">({{ __('portfolio.contact.optional') }})</span></label>
+                        <input id="company" name="company" autocomplete="organization" value="{{ old('company') }}" class="input-field">
+                    </div>
+
+                    <div data-reason-fields="job" @class(['space-y-5', 'hidden' => $reason !== 'job'])>
+                        <div>
+                            <label for="subject" class="block text-sm mb-1.5">{{ __('portfolio.contact.role_offered') }} <span class="text-[var(--color-muted)]">({{ __('portfolio.contact.optional') }})</span></label>
+                            <input id="subject" name="subject" value="{{ old('subject') }}" class="input-field" @disabled($reason !== 'job')>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label for="estimated_value" class="block text-sm mb-1.5">{{ __('portfolio.contact.modality') }} <span class="text-[var(--color-muted)]">({{ __('portfolio.contact.optional') }})</span></label>
+                                <input id="estimated_value" name="estimated_value" value="{{ old('estimated_value') }}" class="input-field" placeholder="{{ __('portfolio.contact.modality_placeholder') }}" @disabled($reason !== 'job')>
+                            </div>
+                            <div>
+                                <label for="offer_url" class="block text-sm mb-1.5">{{ __('portfolio.contact.offer_url') }} <span class="text-[var(--color-muted)]">({{ __('portfolio.contact.optional') }})</span></label>
+                                <input id="offer_url" name="offer_url" type="url" value="{{ old('offer_url') }}" class="input-field" placeholder="https://" @disabled($reason !== 'job')>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div data-reason-fields="project" @class(['space-y-5', 'hidden' => ! in_array($reason, ['project', 'consulting'], true)])>
+                        <div>
+                            <label for="systems" class="block text-sm mb-1.5">{{ __('portfolio.contact.systems') }} <span class="text-[var(--color-muted)]">({{ __('portfolio.contact.optional') }})</span></label>
+                            <input id="systems" name="systems" value="{{ old('systems') }}" class="input-field" placeholder="{{ __('portfolio.contact.systems_placeholder') }}" @disabled(! in_array($reason, ['project', 'consulting'], true))>
+                        </div>
+                    </div>
+
+                    <div>
                         <label for="message" class="block text-sm mb-1.5">{{ __('portfolio.contact.message') }}</label>
                         <textarea id="message" name="message" rows="5" required placeholder="{{ __('portfolio.contact.message_placeholder') }}" class="input-field @error('message') border-[var(--color-danger)] @enderror" aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}">{{ old('message') }}</textarea>
                         @error('message')<p class="mt-1 text-sm text-[var(--color-danger)]" data-field-error="message">{{ $message }}</p>@enderror
                     </div>
-
-                    <details class="contact-more">
-                        <summary class="text-sm text-[var(--color-muted)] cursor-pointer select-none hover:text-[var(--color-ink)] transition-colors">{{ __('portfolio.contact.more_details') }}</summary>
-                        <div class="mt-4 grid sm:grid-cols-2 gap-5">
-                            <div>
-                                <label for="company" class="block text-sm mb-1.5">{{ __('portfolio.contact.company') }}</label>
-                                <input id="company" name="company" autocomplete="organization" value="{{ old('company') }}" class="input-field">
-                            </div>
-                            <div>
-                                <label for="phone" class="block text-sm mb-1.5">{{ __('portfolio.contact.phone') }}</label>
-                                <input id="phone" name="phone" autocomplete="tel" value="{{ old('phone') }}" class="input-field">
-                            </div>
-                        </div>
-                    </details>
 
                     <label class="flex items-start gap-3 text-sm text-[var(--color-muted)]">
                         <input type="checkbox" name="consent" value="1" required class="mt-1 w-5 h-5 rounded border-[var(--color-line)]" @checked(old('consent'))>

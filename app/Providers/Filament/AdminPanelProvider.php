@@ -55,6 +55,10 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn (): string => view('filament.login-brand')->render(),
             )
+            ->renderHook(
+                PanelsRenderHook::HEAD_START,
+                fn (): string => '<meta name="robots" content="noindex,nofollow">',
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

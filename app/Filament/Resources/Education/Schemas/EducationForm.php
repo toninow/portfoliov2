@@ -13,6 +13,10 @@ class EducationForm
         return $schema->components([
             T::text('title', 'Título / Programa')->required(),
             TextInput::make('institution')->label('Institución'),
+            TextInput::make('institution_url')
+                ->label('Web de la institución')
+                ->url()
+                ->placeholder('https://…'),
             T::area('description', 'Descripción', 3),
             TextInput::make('start_year')->label('Año inicio'),
             TextInput::make('end_year')->label('Año fin'),
