@@ -46,6 +46,20 @@ class AdminTest extends TestCase
         $this->actingAs($admin)->get('/admin/services')->assertOk();
     }
 
+    public function test_admin_can_open_site_preview_with_device_controls(): void
+    {
+        $html = $this->actingAs($this->admin())
+            ->get('/admin/site-preview')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('Vista previa del sitio', $html);
+        $this->assertStringContainsString('Tablet', $html);
+        $this->assertStringContainsString('Móvil', $html);
+        $this->assertStringContainsString('fi-site-preview__stage', $html);
+        $this->assertStringContainsString('setDevice(', $html);
+    }
+
     public function test_non_admin_cannot_access_panel(): void
     {
         $user = User::create([
