@@ -314,7 +314,12 @@
             </div>
 
             @if($related->isNotEmpty())
-                <section class="related-slider mt-16" data-related-slider aria-labelledby="related-heading">
+                <section
+                    class="related-slider mt-16"
+                    data-related-slider
+                    data-autoplay="{{ (int) config('portfolio.related_autoplay_ms', 4000) }}"
+                    aria-labelledby="related-heading"
+                >
                     <div class="related-slider__head">
                         <h2 id="related-heading" class="text-xl font-bold">{{ __('portfolio.projects.related') }}</h2>
                         <div class="related-slider__controls">

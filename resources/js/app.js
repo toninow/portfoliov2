@@ -399,7 +399,7 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
     });
 })();
 
-// Related projects: 3-up carousel with infinite wrap + dots.
+// Related projects: 3-up carousel with infinite wrap + dots + autoplay.
 (function initRelatedSlider() {
     const root = document.querySelector('[data-related-slider]');
     if (!root) return;
@@ -413,6 +413,15 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
 
     let page = 0;
     let perView = 3;
+    let timer = 0;
+    let paused = false;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const autoplayMs = (() => {
+        const raw = Number.parseInt(root.getAttribute('data-autoplay') || '4000', 10);
+        if (!Number.isFinite(raw) || raw <= 0 || reduceMotion) return 0;
+        return raw;
+    })();
 
     const readPerView = () => {
         const raw = getComputedStyle(track).getPropertyValue('--related-per-view').trim();
@@ -421,6 +430,19 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
     };
 
     const pageCount = () => Math.max(1, Math.ceil(items.length / perView));
+
+    const stopAutoplay = () => {
+        if (timer) {
+            window.clearInterval(timer);
+            timer = 0;
+        }
+    };
+
+    const startAutoplay = () => {
+        stopAutoplay();
+        if (!autoplayMs || paused || pageCount() <= 1) return;
+        timer = window.setInterval(() => goTo(page + 1, false), autoplayMs);
+    };
 
     const renderDots = () => {
         const total = pageCount();
@@ -462,10 +484,11 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
         });
     };
 
-    const goTo = (next) => {
+    const goTo = (next, restart = true) => {
         const total = pageCount();
         page = ((next % total) + total) % total;
         apply();
+        if (restart) startAutoplay();
     };
 
     let resizeTimer = 0;
@@ -474,10 +497,37 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
         page = Math.min(page, pageCount() - 1);
         renderDots();
         apply();
+        startAutoplay();
     };
 
     prevBtn?.addEventListener('click', () => goTo(page - 1));
     nextBtn?.addEventListener('click', () => goTo(page + 1));
+
+    root.addEventListener('mouseenter', () => {
+        paused = true;
+        stopAutoplay();
+    });
+    root.addEventListener('mouseleave', () => {
+        paused = false;
+        startAutoplay();
+    });
+    root.addEventListener('focusin', () => {
+        paused = true;
+        stopAutoplay();
+    });
+    root.addEventListener('focusout', (event) => {
+        if (root.contains(event.relatedTarget)) return;
+        paused = false;
+        startAutoplay();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopAutoplay();
+        } else if (!paused) {
+            startAutoplay();
+        }
+    });
 
     window.addEventListener('resize', () => {
         window.clearTimeout(resizeTimer);
