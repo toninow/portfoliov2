@@ -47,6 +47,8 @@ class ManageProfile extends Page implements HasForms
             'availability' => $p->getTranslation('availability', 'es'),
             'headline_en' => $p->getTranslation('headline', 'en'),
             'bio_en' => $p->getTranslation('bio', 'en'),
+            'about_long_en' => $p->getTranslation('about_long', 'en'),
+            'availability_en' => $p->getTranslation('availability', 'en'),
             'email' => $p->email,
             'whatsapp' => $p->whatsapp,
             'location' => $p->location,
@@ -61,27 +63,29 @@ class ManageProfile extends Page implements HasForms
             ->statePath('data')
             ->components([
                 Section::make('Presentación')
-                    ->description('Textos en español que se muestran en la portada, "Sobre mí" y el pie.')
+                    ->description('Posicionamiento y textos editables de la portada. El título principal del hero y la página "Sobre mí" estructurada viven en las traducciones del proyecto.')
                     ->schema([
                         TextInput::make('name')
                             ->label('Nombre')
                             ->required()
                             ->columnSpanFull(),
                         TextInput::make('headline')
-                            ->label('Titular / categoría')
-                            ->helperText('Tu categoría profesional, p. ej. "Desarrollador de software full-stack".')
+                            ->label('Etiqueta profesional')
+                            ->helperText('Ej.: "Desarrollador de software · Backend, automatización e integraciones". Se usa en hero, pie y datos estructurados.')
                             ->columnSpanFull(),
                         Textarea::make('bio')
-                            ->label('Bio corta')
-                            ->rows(3)
+                            ->label('Descripción del hero')
+                            ->helperText('Párrafo bajo el título del inicio. Si lo dejas vacío, se usa el texto por defecto de la web.')
+                            ->rows(4)
                             ->columnSpanFull(),
                         Textarea::make('about_long')
-                            ->label('Sobre mí (texto largo)')
-                            ->rows(8)
+                            ->label('Notas biográficas (opcional)')
+                            ->helperText('Referencia interna o respaldo. La página pública "Sobre mí" usa la estructura editorial del sitio.')
+                            ->rows(6)
                             ->columnSpanFull(),
                         TextInput::make('availability')
                             ->label('Disponibilidad')
-                            ->helperText('Se muestra junto al punto verde en la portada.'),
+                            ->helperText('Se muestra junto al punto verde en la portada. Vacío = texto por defecto.'),
                     ])
                     ->columns(2),
 
@@ -89,8 +93,10 @@ class ManageProfile extends Page implements HasForms
                     ->description('Traducciones principales (opcional).')
                     ->collapsed()
                     ->schema([
-                        TextInput::make('headline_en')->label('Headline (EN)')->columnSpanFull(),
-                        Textarea::make('bio_en')->label('Bio (EN)')->rows(3)->columnSpanFull(),
+                        TextInput::make('headline_en')->label('Professional label (EN)')->columnSpanFull(),
+                        Textarea::make('bio_en')->label('Hero description (EN)')->rows(4)->columnSpanFull(),
+                        Textarea::make('about_long_en')->label('Bio notes (EN)')->rows(4)->columnSpanFull(),
+                        TextInput::make('availability_en')->label('Availability (EN)'),
                     ]),
 
                 Section::make('Contacto')
@@ -131,11 +137,17 @@ class ManageProfile extends Page implements HasForms
         $p->setTranslation('about_long', 'es', (string) ($state['about_long'] ?? ''));
         $p->setTranslation('availability', 'es', (string) ($state['availability'] ?? ''));
 
-        if (! empty($state['headline_en'])) {
-            $p->setTranslation('headline', 'en', (string) $state['headline_en']);
+        if (array_key_exists('headline_en', $state)) {
+            $p->setTranslation('headline', 'en', (string) ($state['headline_en'] ?? ''));
         }
-        if (! empty($state['bio_en'])) {
-            $p->setTranslation('bio', 'en', (string) $state['bio_en']);
+        if (array_key_exists('bio_en', $state)) {
+            $p->setTranslation('bio', 'en', (string) ($state['bio_en'] ?? ''));
+        }
+        if (array_key_exists('about_long_en', $state)) {
+            $p->setTranslation('about_long', 'en', (string) ($state['about_long_en'] ?? ''));
+        }
+        if (array_key_exists('availability_en', $state)) {
+            $p->setTranslation('availability', 'en', (string) ($state['availability_en'] ?? ''));
         }
 
         $p->email = $state['email'] ?? null;

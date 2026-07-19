@@ -5,14 +5,42 @@
     'canonical' => null,
     'indexable' => true,
     'jsonLd' => null,
+    'absoluteTitle' => false,
 ])
 @php
     use App\Support\Locale;
     use Illuminate\Support\Facades\Storage;
     $locale = app()->getLocale();
-    $pageTitle = trim((string) $title) !== '' ? ($title.' · '.$siteProfile->name) : $siteProfile->name;
+    $rawTitle = trim((string) $title);
+    if ($rawTitle === '') {
+        $pageTitle = $siteProfile->name;
+    } elseif ($absoluteTitle || str_contains($rawTitle, $siteProfile->name)) {
+        $pageTitle = $rawTitle;
+    } else {
+        $pageTitle = $rawTitle.' · '.$siteProfile->name;
+    }
     $pageDescription = $description ?? $siteProfile->getTranslation('bio', $locale) ?? '';
     $resolvedOg = $ogImage ?? ($siteProfile->avatar_path ? Storage::url($siteProfile->avatar_path) : null);
+    $jobTitle = $siteProfile->getTranslation('headline', $locale) ?: __('portfolio.hero.eyebrow');
+    $defaultJsonLd = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'Person',
+                'name' => $siteProfile->name,
+                'jobTitle' => $jobTitle,
+                'url' => url('/'),
+                'sameAs' => $socialLinks->pluck('url')->values()->all(),
+            ],
+            [
+                '@type' => 'WebSite',
+                'name' => $siteProfile->name,
+                'url' => url('/'),
+                'inLanguage' => [$locale === 'en' ? 'en' : 'es', $locale === 'en' ? 'es' : 'en'],
+                'description' => $pageDescription,
+            ],
+        ],
+    ];
 @endphp
 <!DOCTYPE html>
 <html lang="{{ $locale }}">
@@ -31,11 +59,15 @@
     <link rel="alternate" hreflang="x-default" href="{{ Locale::switchUrl('es') }}">
 
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="{{ $locale === 'en' ? 'en_GB' : 'es_ES' }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:url" content="{{ url()->current() }}">
     @if($resolvedOg)<meta property="og:image" content="{{ url($resolvedOg) }}">@endif
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    @if($resolvedOg)<meta name="twitter:image" content="{{ url($resolvedOg) }}">@endif
 
     @unless($indexable)
         <meta name="robots" content="noindex, nofollow">
@@ -46,14 +78,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script type="application/ld+json">
-    {!! json_encode($jsonLd ?? [
-        '@context' => 'https://schema.org',
-        '@type' => 'Person',
-        'name' => $siteProfile->name,
-        'jobTitle' => $siteProfile->getTranslation('headline', $locale),
-        'url' => url('/'),
-        'sameAs' => $socialLinks->pluck('url')->values(),
-    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    {!! json_encode($jsonLd ?? $defaultJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @stack('head')
 </head>

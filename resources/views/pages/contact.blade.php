@@ -1,6 +1,8 @@
 @php
     use App\Support\Locale;
     $l = app()->getLocale();
+    $sent = session('contact_success');
+    $failed = session('contact_error');
 @endphp
 
 <x-layout :title="__('portfolio.contact.title')" :description="__('portfolio.contact.lead')">
@@ -39,22 +41,40 @@
                 <p class="mt-8 text-sm text-[var(--color-muted)]">{{ __('portfolio.contact.response_time') }}</p>
             </div>
 
-            <div data-reveal style="--reveal-delay: 90ms">
-                @if(session('contact_success'))
-                    <div role="status" class="card p-6 border-l-4 contact-success" style="border-left-color: var(--color-positive);">
-                        <p class="text-[var(--color-ink)] text-lg">{{ __('portfolio.contact.success') }}</p>
-                    </div>
-                @endif
+            <div>
+                <div id="estado-contacto" tabindex="-1" class="outline-none" data-contact-status
+                     data-dismiss-label="{{ __('portfolio.contact.dismiss') }}"
+                     @unless($sent || $failed || $errors->any()) hidden @endunless>
+                    @if($sent)
+                        <div role="status" aria-live="polite" class="contact-feedback contact-feedback--success mb-6">
+                            <p class="font-display text-xl font-semibold text-[var(--color-ink)]">{{ __('portfolio.contact.success_title') }}</p>
+                            <p class="mt-2 text-[var(--color-muted)]">{{ __('portfolio.contact.success') }}</p>
+                            <button type="button" class="mt-4 btn btn-ghost" data-contact-dismiss>{{ __('portfolio.contact.dismiss') }}</button>
+                        </div>
+                    @endif
 
-                @if($errors->any())
-                    <div role="alert" class="card p-5 mb-5 border-l-4" style="border-left-color: var(--color-danger);">
-                        <ul class="text-sm text-[var(--color-muted)] space-y-1">
-                            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-                        </ul>
-                    </div>
-                @endif
+                    @if($failed)
+                        <div role="alert" aria-live="assertive" class="contact-feedback contact-feedback--error mb-5">
+                            <p class="font-semibold text-[var(--color-ink)]">{{ __('portfolio.contact.error_title') }}</p>
+                            <p class="mt-1 text-sm text-[var(--color-muted)]">{{ session('contact_error_message') ?: __('portfolio.contact.error') }}</p>
+                        </div>
+                    @endif
 
-                <form method="POST" action="{{ Locale::route('contact.store') }}" class="card p-6 sm:p-8 space-y-6" data-contact-form>
+                    @if($errors->any())
+                        <div role="alert" aria-live="assertive" class="contact-feedback contact-feedback--error mb-5">
+                            <p class="font-semibold text-[var(--color-ink)]">{{ __('portfolio.contact.validation_title') }}</p>
+                            <ul class="mt-2 text-sm text-[var(--color-muted)] space-y-1 list-disc pl-5">
+                                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+
+                <form method="POST" action="{{ Locale::route('contact.store') }}" class="card p-6 sm:p-8 space-y-6" data-contact-form novalidate
+                      data-validation-title="{{ __('portfolio.contact.validation_title') }}"
+                      data-error-title="{{ __('portfolio.contact.error_title') }}"
+                      data-network-error="{{ __('portfolio.contact.error') }}"
+                      @if($sent) hidden @endif>
                     @csrf
                     {{-- Honeypot --}}
                     <div class="hidden" aria-hidden="true">
@@ -65,17 +85,20 @@
 
                     <div>
                         <label for="name" class="block text-sm mb-1.5">{{ __('portfolio.contact.name') }}</label>
-                        <input id="name" name="name" required autocomplete="name" placeholder="{{ __('portfolio.contact.name_placeholder') }}" value="{{ old('name') }}" class="input-field">
+                        <input id="name" name="name" required autocomplete="name" placeholder="{{ __('portfolio.contact.name_placeholder') }}" value="{{ old('name') }}" class="input-field @error('name') border-[var(--color-danger)] @enderror" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}">
+                        @error('name')<p class="mt-1 text-sm text-[var(--color-danger)]" data-field-error="name">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label for="email" class="block text-sm mb-1.5">{{ __('portfolio.contact.email') }}</label>
-                        <input id="email" type="email" name="email" required autocomplete="email" placeholder="{{ __('portfolio.contact.email_placeholder') }}" value="{{ old('email') }}" class="input-field">
+                        <input id="email" type="email" name="email" required autocomplete="email" placeholder="{{ __('portfolio.contact.email_placeholder') }}" value="{{ old('email') }}" class="input-field @error('email') border-[var(--color-danger)] @enderror" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}">
+                        @error('email')<p class="mt-1 text-sm text-[var(--color-danger)]" data-field-error="email">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label for="message" class="block text-sm mb-1.5">{{ __('portfolio.contact.message') }}</label>
-                        <textarea id="message" name="message" rows="5" required placeholder="{{ __('portfolio.contact.message_placeholder') }}" class="input-field">{{ old('message') }}</textarea>
+                        <textarea id="message" name="message" rows="5" required placeholder="{{ __('portfolio.contact.message_placeholder') }}" class="input-field @error('message') border-[var(--color-danger)] @enderror" aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}">{{ old('message') }}</textarea>
+                        @error('message')<p class="mt-1 text-sm text-[var(--color-danger)]" data-field-error="message">{{ $message }}</p>@enderror
                     </div>
 
                     <details class="contact-more">
@@ -93,9 +116,10 @@
                     </details>
 
                     <label class="flex items-start gap-3 text-sm text-[var(--color-muted)]">
-                        <input type="checkbox" name="consent" value="1" required class="mt-1 w-5 h-5 rounded border-[var(--color-line)]">
+                        <input type="checkbox" name="consent" value="1" required class="mt-1 w-5 h-5 rounded border-[var(--color-line)]" @checked(old('consent'))>
                         <span>{{ __('portfolio.contact.consent') }}</span>
                     </label>
+                    @error('consent')<p class="text-sm text-[var(--color-danger)]" data-field-error="consent">{{ $message }}</p>@enderror
 
                     <div>
                         <button type="submit" class="btn btn-primary w-full sm:w-auto" data-submit data-sending="{{ __('portfolio.contact.sending') }}">{{ __('portfolio.contact.send') }}</button>

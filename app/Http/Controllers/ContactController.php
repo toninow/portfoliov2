@@ -6,7 +6,9 @@ use App\Http\Requests\ContactRequest;
 use App\Models\Lead;
 use App\Models\Profile;
 use App\Models\User;
+use App\Support\Locale;
 use Filament\Notifications\Notification as FilamentNotification;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -21,34 +23,62 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(ContactRequest $request): RedirectResponse
+    public function store(ContactRequest $request): JsonResponse|RedirectResponse
     {
         $data = $request->validated();
+        $back = Locale::route('contact').'#estado-contacto';
+        $wantsJson = $request->expectsJson() || $request->ajax();
 
         // Honeypot filled -> silently drop but pretend success.
         if (! empty($request->input('website'))) {
-            return back()->with('contact_success', true);
+            return $this->successResponse($wantsJson, $back);
         }
 
-        $lead = Lead::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'company' => $data['company'] ?? null,
-            'country' => $data['country'] ?? null,
-            'subject' => $data['subject'] ?? null,
-            'message' => $data['message'],
-            'need_type' => $data['need_type'] ?? null,
-            'estimated_value' => $data['estimated_value'] ?? null,
-            'source' => 'website',
-            'status' => 'new',
-        ]);
+        try {
+            $lead = Lead::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'company' => $data['company'] ?? null,
+                'country' => $data['country'] ?? null,
+                'subject' => $data['subject'] ?? null,
+                'message' => $data['message'],
+                'need_type' => $data['need_type'] ?? null,
+                'estimated_value' => $data['estimated_value'] ?? null,
+                'source' => 'website',
+                'status' => 'new',
+            ]);
 
-        $lead->logActivity('created', 'Lead creado desde el formulario web');
+            $lead->logActivity('created', 'Lead creado desde el formulario web');
+            $this->notifyAdmins($lead);
+        } catch (\Throwable $e) {
+            Log::error('Contact form failed: '.$e->getMessage(), ['exception' => $e]);
 
-        $this->notifyAdmins($lead);
+            if ($wantsJson) {
+                return response()->json([
+                    'ok' => false,
+                    'title' => __('portfolio.contact.error_title'),
+                    'message' => __('portfolio.contact.error'),
+                ], 500);
+            }
 
-        return back()->with('contact_success', true);
+            return redirect()->to($back)->withInput()->with('contact_error', true);
+        }
+
+        return $this->successResponse($wantsJson, $back);
+    }
+
+    protected function successResponse(bool $wantsJson, string $back): JsonResponse|RedirectResponse
+    {
+        if ($wantsJson) {
+            return response()->json([
+                'ok' => true,
+                'title' => __('portfolio.contact.success_title'),
+                'message' => __('portfolio.contact.success'),
+            ]);
+        }
+
+        return redirect()->to($back)->with('contact_success', true);
     }
 
     protected function notifyAdmins(Lead $lead): void

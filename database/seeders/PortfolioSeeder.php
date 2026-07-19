@@ -41,20 +41,20 @@ class PortfolioSeeder extends Seeder
         Profile::updateOrCreate(['id' => 1], [
             'name' => 'Antonio Benalcázar',
             'headline' => [
-                'es' => 'Desarrollador de software full-stack · Automatización e integraciones',
-                'en' => 'Full-stack software developer · Automation and integrations',
+                'es' => 'Desarrollador de software · Backend, automatización e integraciones',
+                'en' => 'Software Developer · Backend, Automation and Integrations',
             ],
             'bio' => [
-                'es' => 'Desarrollo aplicaciones web e internas, automatizo procesos e integro sistemas (ERP, ecommerce, inventario, APIs e infraestructura). Me apoyo en la IA para construir más rápido y con mejor criterio.',
-                'en' => 'I build web and internal applications, automate processes and integrate systems (ERP, ecommerce, inventory, APIs and infrastructure). I use AI to build faster and with better judgement.',
+                'es' => 'Desarrollo aplicaciones internas, automatizaciones e integraciones entre ERP, ecommerce, inventario, proveedores y APIs. Trabajo principalmente con PHP, Laravel, bases de datos y servidores Linux, desde el análisis del problema hasta el despliegue y la mejora continua.',
+                'en' => 'I build internal applications, automations and integrations across ERP, ecommerce, inventory, suppliers and APIs. I work mainly with PHP, Laravel, databases and Linux servers, from problem analysis through deployment and continuous improvement.',
             ],
             'about_long' => [
-                'es' => "Soy desarrollador de software full-stack. Empecé construyendo sitios web, plataformas y landings para instituciones y empresas, y con el tiempo me especialicé en resolver problemas de negocio concretos: sistemas internos, automatización de procesos e integraciones entre ERP (Dolibarr), ecommerce (PrestaShop), inventario, catálogos de proveedores e infraestructura.\n\nTrabajo de punta a punta: backend con PHP y Laravel, interfaces web y móviles (Livewire, Flutter), bases de datos MySQL y PostgreSQL, APIs REST y servidores Linux con Docker, Git y copias de seguridad.\n\nUso la inteligencia artificial como parte natural de mi flujo de trabajo —asistentes como GPT y Claude y editores como Cursor— para generar y revisar código, procesar datos y avanzar más rápido sin perder criterio. Me interesan los procesos que todavía dependen de hojas de cálculo, mensajes y trabajo manual, y disfruto convirtiéndolos en sistemas más claros, medibles y fáciles de mantener.",
-                'en' => "I am a full-stack software developer. I started building websites, platforms and landing pages for institutions and companies, and over time I specialised in solving concrete business problems: internal systems, process automation and integrations between ERP (Dolibarr), ecommerce (PrestaShop), inventory, supplier catalogs and infrastructure.\n\nI work end to end: backend with PHP and Laravel, web and mobile interfaces (Livewire, Flutter), MySQL and PostgreSQL databases, REST APIs and Linux servers with Docker, Git and backups.\n\nI use artificial intelligence as a natural part of my workflow —assistants like GPT and Claude and editors like Cursor— to generate and review code, process data and move faster without losing judgement. I am drawn to processes that still rely on spreadsheets, messages and manual work, and I enjoy turning them into clearer, measurable systems that are easy to maintain.",
+                'es' => "Soy desarrollador de software especializado en aplicaciones internas, automatización e integración de sistemas empresariales.\n\nHe trabajado en desarrollo web, plataformas educativas, soporte tecnológico e infraestructura. Actualmente centro mi trabajo en conectar ERP y ecommerce, organizar catálogos de proveedores, mejorar el control de inventario y transformar tareas manuales en procesos más fiables.\n\nUtilizo herramientas de inteligencia artificial como apoyo para analizar, desarrollar, revisar y documentar soluciones, manteniendo la validación técnica y la responsabilidad sobre el resultado.",
+                'en' => "I am a software developer specialised in internal applications, automation and business system integration.\n\nI have worked on web development, educational platforms, technical support and infrastructure. Today I focus on connecting ERP and ecommerce, organising supplier catalogs, improving inventory control and turning manual tasks into more reliable processes.\n\nI use AI tools to support analysis, development, review and documentation, while keeping technical validation and ownership of the result.",
             ],
             'availability' => [
-                'es' => 'Disponible para nuevos proyectos',
-                'en' => 'Available for new projects',
+                'es' => 'Disponible para oportunidades profesionales y proyectos seleccionados.',
+                'en' => 'Open to professional opportunities and selected projects.',
             ],
             'degree' => [
                 'es' => 'Tecnólogo en Desarrollo de Software',
@@ -244,21 +244,101 @@ class PortfolioSeeder extends Seeder
                 'slug' => 'mp-proveedores',
                 'category' => 'aplicaciones-internas',
                 'size' => 'large',
+                'lifecycle' => 'production',
+                'year' => 2025,
                 'name' => ['es' => 'MP Proveedores', 'en' => 'MP Suppliers'],
-                'summary' => ['es' => 'Sistema interno para relacionar productos del ERP con catálogos de proveedores.', 'en' => 'Internal system to match ERP products with supplier catalogs.'],
-                'problem' => ['es' => 'Relacionar grandes catálogos de proveedores con los productos del ERP era un trabajo manual, lento y propenso a errores.', 'en' => 'Matching large supplier catalogs with ERP products was manual, slow and error-prone.'],
-                'solution' => ['es' => 'Una herramienta que procesa grandes catálogos, detecta conflictos, relaciona referencias y códigos de barras, y ofrece una interfaz para revisar coincidencias y actualizar precios.', 'en' => 'A tool that processes large catalogs, detects conflicts, matches references and barcodes, and provides an interface to review matches and update prices.'],
-                'tech' => ['php', 'laravel', 'mysql'],
+                'summary' => [
+                    'es' => 'Plataforma interna para relacionar catálogos de proveedores con los productos del ERP y revisar conflictos de referencias, códigos de barras y precios.',
+                    'en' => 'Internal platform to match supplier catalogs with ERP products and review conflicts in references, barcodes and prices.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Relacionar grandes catálogos con el ERP dejando los conflictos visibles y controlados.',
+                    'en' => 'Matching large catalogs to the ERP while keeping conflicts visible and controlled.',
+                ],
+                'context' => [
+                    'es' => 'En un entorno de compra con múltiples proveedores, los catálogos llegan en formatos distintos y deben contrastarse con el ERP (Dolibarr) antes de actualizar precios o fichas.',
+                    'en' => 'In a purchasing environment with multiple suppliers, catalogs arrive in different formats and must be checked against the ERP (Dolibarr) before prices or product data are updated.',
+                ],
+                'problem' => [
+                    'es' => "Relacionar catálogos de proveedores con los productos del ERP era un trabajo manual, lento y propenso a errores.\nUn mismo código de barras podía asociarse a referencias distintas.\nLos conflictos se perdían entre hojas de cálculo y no había un flujo claro entre coincidencias seguras y casos dudosos.",
+                    'en' => "Matching supplier catalogs with ERP products was manual, slow and error-prone.\nThe same barcode could map to different references.\nConflicts were lost in spreadsheets and there was no clear flow between safe matches and doubtful cases.",
+                ],
+                'responsibilities' => [
+                    'es' => 'Análisis funcional, arquitectura, modelado de datos, backend, interfaz de revisión y criterios de coincidencia/conflicto.',
+                    'en' => 'Functional analysis, architecture, data modeling, backend, review UI and match/conflict criteria.',
+                ],
+                'role' => [
+                    'es' => 'Análisis, arquitectura, backend, integración y UX',
+                    'en' => 'Analysis, architecture, backend, integration and UX',
+                ],
+                'solution' => [
+                    'es' => 'Una herramienta que importa y normaliza catálogos, valida referencias y EAN, genera coincidencias, separa casos seguros de dudosos y permite revisión humana antes de actualizar precios de forma controlada.',
+                    'en' => 'A tool that imports and normalizes catalogs, validates references and EANs, generates matches, separates safe from doubtful cases and allows human review before controlled price updates.',
+                ],
+                'workflow_steps' => [
+                    ['label' => 'Importación del catálogo', 'description' => 'Carga del archivo o fuente del proveedor.'],
+                    ['label' => 'Normalización', 'description' => 'Homogeneización de campos, referencias y formatos.'],
+                    ['label' => 'Validación de referencias y EAN', 'description' => 'Detección de datos incompletos o inconsistentes.'],
+                    ['label' => 'Generación de coincidencias', 'description' => 'Emparejado con productos del ERP.'],
+                    ['label' => 'Separación seguros / dudosos', 'description' => 'Los conflictos quedan visibles para revisión.'],
+                    ['label' => 'Revisión humana', 'description' => 'Interfaz para resolver casos ambiguos.'],
+                    ['label' => 'Actualización controlada', 'description' => 'Aplicación de cambios de precio o ficha con trazabilidad.'],
+                ],
+                'challenges' => [
+                    [
+                        'difficulty' => 'Un mismo código de barras podía aparecer asociado a referencias diferentes.',
+                        'decision' => 'Separar coincidencias automáticas de casos que requieren revisión humana.',
+                        'outcome' => 'Los casos seguros pueden procesarse sin ocultar los conflictos.',
+                    ],
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Menos trabajo manual de emparejado'],
+                    ['label' => 'Conflictos visibles y trazables'],
+                    ['label' => 'Proceso repetible entre proveedores'],
+                ],
+                'tech' => ['php', 'laravel', 'mysql', 'dolibarr'],
                 'type' => 'Aplicación interna',
             ],
             [
                 'slug' => 'control-stock-dolibarr',
                 'category' => 'inventario',
                 'size' => 'medium',
+                'lifecycle' => 'production',
+                'year' => 2025,
                 'name' => ['es' => 'Control de stock Dolibarr', 'en' => 'Dolibarr stock control'],
-                'summary' => ['es' => 'Aplicación móvil interna para consultar inventario en tiempo real.', 'en' => 'Internal mobile app to check inventory in real time.'],
-                'problem' => ['es' => 'Consultar el stock por almacén requería acceder al ERP de escritorio, poco práctico en almacén.', 'en' => 'Checking stock by warehouse required the desktop ERP, impractical on the warehouse floor.'],
-                'solution' => ['es' => 'App mobile-first con búsqueda por EAN, UPC, referencia y nombre, stock por almacén, integración con la API y control de permisos.', 'en' => 'Mobile-first app with search by EAN, UPC, reference and name, stock by warehouse, API integration and permission control.'],
+                'summary' => [
+                    'es' => 'Aplicación móvil interna para consultar inventario en tiempo real desde el almacén.',
+                    'en' => 'Internal mobile app to check inventory in real time from the warehouse floor.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Consultar stock por almacén desde el móvil, sin abrir el ERP de escritorio.',
+                    'en' => 'Check warehouse stock from a phone, without opening the desktop ERP.',
+                ],
+                'context' => [
+                    'es' => 'El equipo de almacén necesitaba consultar existencias durante el trabajo diario, lejos del puesto con el ERP de escritorio.',
+                    'en' => 'Warehouse staff needed stock lookups during daily work, away from the desktop ERP workstation.',
+                ],
+                'problem' => [
+                    'es' => 'Consultar el stock por almacén requería acceder al ERP de escritorio, poco práctico en planta. Buscar por EAN, UPC, referencia o nombre no era ágil fuera del puesto fijo.',
+                    'en' => 'Checking stock by warehouse required the desktop ERP, impractical on the floor. Searching by EAN, UPC, reference or name was not agile away from a fixed desk.',
+                ],
+                'responsibilities' => [
+                    'es' => 'Diseño mobile-first, integración con la API de Dolibarr, autenticación, roles y modo de consulta.',
+                    'en' => 'Mobile-first design, Dolibarr API integration, authentication, roles and read-focused lookup mode.',
+                ],
+                'role' => [
+                    'es' => 'Producto, backend de integración y app móvil',
+                    'en' => 'Product, integration backend and mobile app',
+                ],
+                'solution' => [
+                    'es' => 'App mobile-first (Flutter) con búsqueda por EAN, UPC, referencia y nombre, stock por almacén, integración con la API de Dolibarr y control de permisos orientado a consulta.',
+                    'en' => 'Mobile-first Flutter app with search by EAN, UPC, reference and name, stock by warehouse, Dolibarr API integration and permission control focused on lookup.',
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Acceso a stock desde móvil'],
+                    ['label' => 'Búsqueda por código y nombre'],
+                    ['label' => 'Consulta por almacén'],
+                ],
                 'tech' => ['flutter', 'dolibarr', 'apis-rest'],
                 'type' => 'Inventario',
             ],
@@ -266,10 +346,42 @@ class PortfolioSeeder extends Seeder
                 'slug' => 'integracion-prestashop-dolibarr',
                 'category' => 'integraciones',
                 'size' => 'medium',
+                'lifecycle' => 'production',
+                'year' => 2025,
                 'name' => ['es' => 'Integración PrestaShop y Dolibarr', 'en' => 'PrestaShop and Dolibarr integration'],
-                'summary' => ['es' => 'Sincronización entre ecommerce y ERP: productos, precios, stock y datos web.', 'en' => 'Sync between ecommerce and ERP: products, prices, stock and web data.'],
-                'problem' => ['es' => 'El ecommerce y el ERP mantenían datos por separado, generando descuadres y doble trabajo.', 'en' => 'Ecommerce and ERP kept data separately, causing mismatches and duplicate work.'],
-                'solution' => ['es' => 'Sincronización de productos, precios y stock con diagnóstico de errores y compatibilidad entre sistemas.', 'en' => 'Product, price and stock synchronization with error diagnostics and cross-system compatibility.'],
+                'summary' => [
+                    'es' => 'Sincronización entre ecommerce y ERP: productos, precios, stock y datos web.',
+                    'en' => 'Sync between ecommerce and ERP: products, prices, stock and web data.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Una sola fuente de verdad entre PrestaShop y Dolibarr, con diagnóstico cuando algo falla.',
+                    'en' => 'A single source of truth between PrestaShop and Dolibarr, with diagnostics when something fails.',
+                ],
+                'context' => [
+                    'es' => 'La tienda online y el ERP mantenían catálogos y stock en paralelo. Cualquier desfase generaba errores de venta o trabajo duplicado.',
+                    'en' => 'The online store and ERP kept catalogs and stock in parallel. Any drift caused sales errors or duplicate work.',
+                ],
+                'problem' => [
+                    'es' => 'El ecommerce y el ERP mantenían datos por separado, generando descuadres de stock/precio y doble trabajo de introducción. Faltaba diagnóstico claro cuando una sincronización fallaba.',
+                    'en' => 'Ecommerce and ERP kept data separately, causing stock/price mismatches and duplicate data entry. There was no clear diagnosis when a sync failed.',
+                ],
+                'responsibilities' => [
+                    'es' => 'Diseño de la sincronización, reglas de dirección de datos, manejo de errores y compatibilidad entre versiones de ambos sistemas.',
+                    'en' => 'Sync design, data-direction rules, error handling and compatibility across versions of both systems.',
+                ],
+                'role' => [
+                    'es' => 'Integración, backend y diagnóstico',
+                    'en' => 'Integration, backend and diagnostics',
+                ],
+                'solution' => [
+                    'es' => 'Sincronización de productos, precios y stock con diagnóstico de errores, controles para no romper producción y compatibilidad entre sistemas.',
+                    'en' => 'Product, price and stock synchronization with error diagnostics, safeguards for production and cross-system compatibility.',
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Menos doble introducción de datos'],
+                    ['label' => 'Descuadres más fáciles de diagnosticar'],
+                    ['label' => 'Sincronización repetible'],
+                ],
                 'tech' => ['dolibarr', 'prestashop', 'php', 'apis-rest'],
                 'type' => 'Integración',
             ],
@@ -277,9 +389,43 @@ class PortfolioSeeder extends Seeder
                 'slug' => 'gitea-autogestionado',
                 'category' => 'infraestructura',
                 'size' => 'compact',
+                'lifecycle' => 'production',
+                'year' => 2026,
+                'period' => '2026',
                 'name' => ['es' => 'Gitea autogestionado', 'en' => 'Self-hosted Gitea'],
-                'summary' => ['es' => 'Infraestructura privada para repositorios de código.', 'en' => 'Private infrastructure for code repositories.'],
-                'solution' => ['es' => 'Gitea sobre Docker con PostgreSQL, Apache, HTTPS, acceso SSH, backups y publicación organizada de repositorios.', 'en' => 'Gitea on Docker with PostgreSQL, Apache, HTTPS, SSH access, backups and organized repository publishing.'],
+                'summary' => [
+                    'es' => 'Infraestructura privada para repositorios de código con acceso controlado.',
+                    'en' => 'Private infrastructure for code repositories with controlled access.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Repositorios privados bajo control propio, con HTTPS, SSH y backups.',
+                    'en' => 'Private repositories under your own control, with HTTPS, SSH and backups.',
+                ],
+                'context' => [
+                    'es' => 'Se necesitaba un remoto Git privado, organizado y recuperable, sin depender exclusivamente de un SaaS externo.',
+                    'en' => 'A private, organized and recoverable Git remote was needed without relying solely on an external SaaS.',
+                ],
+                'problem' => [
+                    'es' => 'Faltaba una infraestructura propia para repositorios privados, con acceso SSH/HTTPS, organización clara y copias de seguridad.',
+                    'en' => 'There was no self-hosted setup for private repositories with SSH/HTTPS access, clear organization and backups.',
+                ],
+                'responsibilities' => [
+                    'es' => 'Diseño e implementación de la infraestructura: Docker, PostgreSQL, Apache como proxy, HTTPS, SSH, organización de repos y backups.',
+                    'en' => 'Infrastructure design and implementation: Docker, PostgreSQL, Apache as proxy, HTTPS, SSH, repo organization and backups.',
+                ],
+                'role' => [
+                    'es' => 'Infraestructura y despliegue',
+                    'en' => 'Infrastructure and deployment',
+                ],
+                'solution' => [
+                    'es' => 'Gitea sobre Docker con PostgreSQL, Apache como proxy, HTTPS, acceso SSH, organización de repositorios y backups.',
+                    'en' => 'Gitea on Docker with PostgreSQL, Apache as proxy, HTTPS, SSH access, repository organization and backups.',
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Control privado del código'],
+                    ['label' => 'Acceso HTTPS y SSH'],
+                    ['label' => 'Base preparada para backups'],
+                ],
                 'tech' => ['docker', 'gitea', 'postgresql', 'apache', 'linux'],
                 'type' => 'Infraestructura',
             ],
@@ -287,9 +433,43 @@ class PortfolioSeeder extends Seeder
                 'slug' => 'backups-restic',
                 'category' => 'infraestructura',
                 'size' => 'compact',
+                'lifecycle' => 'implementation',
+                'is_ongoing' => true,
+                'year' => 2025,
                 'name' => ['es' => 'Sistema de backups con Restic', 'en' => 'Backup system with Restic'],
-                'summary' => ['es' => 'Diseño de copias de seguridad verificables y recuperables.', 'en' => 'Verifiable, recoverable backup design.'],
-                'solution' => ['es' => 'Copias de web, bases de datos y repositorios con políticas de retención, verificación y pruebas de recuperación.', 'en' => 'Backups of web, databases and repositories with retention policies, verification and recovery testing.'],
+                'summary' => [
+                    'es' => 'Diseño e implementación de copias de seguridad verificables y recuperables.',
+                    'en' => 'Design and implementation of verifiable, recoverable backups.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Un diseño de backups con retención, verificación y recuperación — en implementación.',
+                    'en' => 'A backup design with retention, verification and recovery — currently being implemented.',
+                ],
+                'context' => [
+                    'es' => 'Web, bases de datos y repositorios necesitan copias verificables, no solo archivos copiados a otro disco.',
+                    'en' => 'Web, databases and repositories need verifiable backups, not just files copied to another disk.',
+                ],
+                'problem' => [
+                    'es' => 'Sin políticas claras de retención, verificación y pruebas de restauración, una copia puede existir y aun así no servir cuando hace falta.',
+                    'en' => 'Without clear retention, verification and restore tests, a copy may exist and still fail when it is needed.',
+                ],
+                'responsibilities' => [
+                    'es' => 'Auditoría del alcance, diseño de la política, elección de Restic y definición de verificación/recuperación. Estado: en implementación.',
+                    'en' => 'Scope audit, policy design, Restic choice and definition of verification/recovery. Status: in implementation.',
+                ],
+                'role' => [
+                    'es' => 'Diseño de backups e infraestructura',
+                    'en' => 'Backup design and infrastructure',
+                ],
+                'solution' => [
+                    'es' => 'Diseño de copias de web, bases de datos y repositorios con Restic, políticas de retención, verificación y pruebas de recuperación. Aún en fase de implementación.',
+                    'en' => 'Design of web, database and repository backups with Restic, retention policies, verification and recovery testing. Still in implementation.',
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Alcance de backup definido'],
+                    ['label' => 'Política de retención diseñada'],
+                    ['label' => 'Verificación y restauración previstas'],
+                ],
                 'tech' => ['restic', 'linux'],
                 'type' => 'Infraestructura',
             ],
@@ -297,9 +477,49 @@ class PortfolioSeeder extends Seeder
                 'slug' => 'automatizacion-catalogos-proveedores',
                 'category' => 'automatizacion',
                 'size' => 'compact',
+                'lifecycle' => 'production',
+                'year' => 2025,
                 'name' => ['es' => 'Automatización de catálogos de proveedores', 'en' => 'Supplier catalog automation'],
-                'summary' => ['es' => 'Procesamiento y enriquecimiento de archivos Excel y catálogos web.', 'en' => 'Processing and enrichment of Excel files and web catalogs.'],
-                'solution' => ['es' => 'Procesamiento de SKU, EAN, precios, disponibilidad e imágenes, con validación y exportación.', 'en' => 'Processing of SKU, EAN, prices, availability and images, with validation and export.'],
+                'summary' => [
+                    'es' => 'Procesamiento y enriquecimiento de archivos Excel, CSV y catálogos web de proveedores.',
+                    'en' => 'Processing and enrichment of Excel, CSV and web supplier catalogs.',
+                ],
+                'outcome_headline' => [
+                    'es' => 'Pasar de catálogos manuales a un flujo con validación, errores visibles y exportación lista.',
+                    'en' => 'Moving from manual catalogs to a flow with validation, visible errors and ready-to-use export.',
+                ],
+                'context' => [
+                    'es' => 'Los proveedores envían catálogos en Excel, CSV o web. Antes de usarlos hay que limpiar SKU, EAN, precios, disponibilidad e imágenes.',
+                    'en' => 'Suppliers send catalogs as Excel, CSV or web sources. Before use they need SKU, EAN, price, availability and image cleanup.',
+                ],
+                'problem' => [
+                    'es' => 'El procesamiento manual de catálogos generaba errores de SKU/EAN, precios inconsistentes y retrasos al preparar exportaciones útiles para el ERP u otros sistemas.',
+                    'en' => 'Manual catalog processing caused SKU/EAN errors, inconsistent prices and delays preparing useful exports for the ERP or other systems.',
+                ],
+                'responsibilities' => [
+                    'es' => 'Diseño del pipeline de importación, reglas de validación, manejo de errores y exportación.',
+                    'en' => 'Import pipeline design, validation rules, error handling and export.',
+                ],
+                'role' => [
+                    'es' => 'Automatización y procesamiento de datos',
+                    'en' => 'Automation and data processing',
+                ],
+                'solution' => [
+                    'es' => 'Procesamiento de SKU, EAN/UPC/GTIN, precios, disponibilidad e imágenes, con validación, registro de errores y exportación.',
+                    'en' => 'Processing of SKU, EAN/UPC/GTIN, prices, availability and images, with validation, error logging and export.',
+                ],
+                'workflow_steps' => [
+                    ['label' => 'Ingesta', 'description' => 'Excel, CSV o fuente web.'],
+                    ['label' => 'Limpieza y normalización', 'description' => 'SKU, EAN, precios y disponibilidad.'],
+                    ['label' => 'Validación', 'description' => 'Errores visibles y trazables.'],
+                    ['label' => 'Enriquecimiento', 'description' => 'Imágenes y campos auxiliares cuando aplica.'],
+                    ['label' => 'Exportación', 'description' => 'Salida lista para el siguiente sistema.'],
+                ],
+                'qualitative_results' => [
+                    ['label' => 'Menos trabajo manual sobre Excel'],
+                    ['label' => 'Validaciones repetibles'],
+                    ['label' => 'Errores visibles antes de exportar'],
+                ],
                 'tech' => ['php', 'mysql'],
                 'type' => 'Automatización',
             ],
@@ -310,19 +530,33 @@ class PortfolioSeeder extends Seeder
                 'project_category_id' => $cat[$p['category']]->id,
                 'name' => $p['name'],
                 'summary' => $p['summary'] ?? null,
+                'outcome_headline' => $p['outcome_headline'] ?? null,
+                'context' => $p['context'] ?? null,
                 'problem' => $p['problem'] ?? null,
+                'responsibilities' => $p['responsibilities'] ?? null,
+                'role' => $p['role'] ?? null,
                 'solution' => $p['solution'] ?? null,
+                'workflow_steps' => $p['workflow_steps'] ?? null,
+                'challenges' => $p['challenges'] ?? null,
+                'qualitative_results' => $p['qualitative_results'] ?? null,
                 'project_type' => $p['type'] ?? null,
+                'period' => $p['period'] ?? null,
                 'status' => 'published',
                 'visibility' => 'public',
+                'lifecycle' => $p['lifecycle'] ?? 'production',
+                'is_ongoing' => $p['is_ongoing'] ?? false,
                 'is_featured' => true,
+                'is_case_study' => true,
+                'is_archived' => false,
                 'featured_size' => $p['size'],
                 'sort' => $i,
-                'year' => 2025,
+                'year' => $p['year'] ?? 2025,
                 'published_at' => now(),
             ]);
             $ids = collect($p['tech'])->map(fn ($slug) => $tech[$slug]->id ?? null)->filter()->all();
             $project->technologies()->sync($ids);
+            $project->recalculateCompleteness();
+            $project->saveQuietly();
         }
     }
 
@@ -360,7 +594,10 @@ class PortfolioSeeder extends Seeder
                 'main_image_path' => 'projects/'.$image,
                 'status' => 'published',
                 'visibility' => 'public',
+                'lifecycle' => 'historical',
                 'is_featured' => false,
+                'is_case_study' => false,
+                'is_archived' => true,
                 'sort' => 100 + $i,
                 'published_at' => now(),
             ]);
@@ -377,20 +614,39 @@ class PortfolioSeeder extends Seeder
 
         $experiences = [
             [
+                'role' => [
+                    'es' => 'Informático · Desarrollo de software y sistemas internos',
+                    'en' => 'IT specialist · Software development and internal systems',
+                ],
+                'company' => 'Musical Princesa',
+                'company_url' => 'https://tienda.musicalprincesa.com',
+                'location' => 'España',
+                'description' => [
+                    'es' => 'Desarrollo y evolución de aplicaciones internas, automatización de catálogos, integraciones entre Dolibarr y PrestaShop, control de inventario, gestión de proveedores e infraestructura tecnológica. También realizo diagnóstico de incidencias, administración de servidores y mejora de procesos operativos.',
+                    'en' => 'Development and evolution of internal applications, catalog automation, integrations between Dolibarr and PrestaShop, inventory control, supplier management and technology infrastructure. I also diagnose incidents, administer servers and improve operational processes.',
+                ],
+                'start_date' => '2025',
+                'is_current' => true,
+                'sort' => 0,
+            ],
+            [
                 'role' => ['es' => 'Cofundador y desarrollador', 'en' => 'Co-founder and developer'],
                 'company' => 'R&B Studio · Marketing Digital',
+                'company_url' => 'https://rbestudio.net',
                 'location' => 'Ecuador',
                 'description' => [
                     'es' => 'Análisis, configuración y desarrollo de sitios web personalizados con WordPress y maquetado HTML5/CSS3, además de la gestión de presencia digital y redes sociales para marcas y empresas.',
                     'en' => 'Analysis, configuration and development of custom websites with WordPress and HTML5/CSS3, plus digital presence and social media management for brands and companies.',
                 ],
                 'start_date' => '2023',
-                'is_current' => true,
-                'sort' => 0,
+                'end_date' => '2026',
+                'is_current' => false,
+                'sort' => 1,
             ],
             [
                 'role' => ['es' => 'Desarrollador de software · Soporte técnico TICS', 'en' => 'Software developer · IT support (TICS)'],
                 'company' => 'Instituto Superior Tecnológico Cruz Roja Ecuatoriana',
+                'company_url' => 'https://www.cruzrojainstituto.edu.ec',
                 'location' => 'Ecuador',
                 'description' => [
                     'es' => 'Desarrollo de sistemas web institucionales, gestión y mantenimiento de bases de datos, soporte técnico y Help Desk, administración de servidores y del entorno Microsoft, y administración de Moodle (cursos, actividades, docentes y estudiantes).',
@@ -398,19 +654,20 @@ class PortfolioSeeder extends Seeder
                 ],
                 'start_date' => '2019',
                 'end_date' => '2025',
-                'sort' => 1,
+                'sort' => 2,
             ],
             [
                 'role' => ['es' => 'Becario · Desarrollador', 'en' => 'Intern · Developer'],
                 'company' => 'Algoritmun',
+                'company_url' => 'https://www.algoritmun.com',
                 'location' => 'Ecuador',
                 'description' => [
                     'es' => 'Desarrollo de aplicaciones móviles con React Native y administración de bases de datos y servidores Linux (CentOS y Ubuntu Server), dando soporte a la infraestructura y a soluciones a medida.',
                     'en' => 'Mobile app development with React Native and administration of databases and Linux servers (CentOS and Ubuntu Server), supporting infrastructure and custom solutions.',
                 ],
                 'start_date' => '2017',
-                'end_date' => '2021',
-                'sort' => 2,
+                'end_date' => '2019',
+                'sort' => 3,
             ],
         ];
 

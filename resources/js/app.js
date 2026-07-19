@@ -195,16 +195,162 @@ if (!prefersReduced && 'IntersectionObserver' in window) {
     document.querySelectorAll(revealSelector).forEach((el) => el.classList.add('is-visible'));
 }
 
-// Contact form: gentle submit feedback so it feels responsive and human.
+// Contact form: AJAX submit with inline feedback (no full page reload).
 (function initContactForm() {
+    const status = document.querySelector('[data-contact-status]');
     const form = document.querySelector('[data-contact-form]');
-    if (!form) return;
-    form.addEventListener('submit', () => {
+    if (!status || !form) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let hideTimer = null;
+    const labels = {
+        validation: form.dataset.validationTitle || 'Error',
+        error: form.dataset.errorTitle || 'Error',
+        network: form.dataset.networkError || 'Error',
+    };
+
+    function clearFieldErrors() {
+        form.querySelectorAll('[data-field-error]').forEach((el) => el.remove());
+        form.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.setAttribute('aria-invalid', 'false'));
+        form.querySelectorAll('.border-\\[var\\(--color-danger\\)\\], .is-invalid').forEach((el) => {
+            el.classList.remove('is-invalid');
+        });
+    }
+
+    function showStatus(kind, title, message, { autoHide = false } = {}) {
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+
+        const dismissLabel = status.dataset.dismissLabel || 'OK';
+        status.hidden = false;
+        status.innerHTML = `
+            <div role="${kind === 'success' ? 'status' : 'alert'}" aria-live="${kind === 'success' ? 'polite' : 'assertive'}"
+                 class="contact-feedback contact-feedback--${kind} mb-6 is-in">
+                <p class="font-display text-xl font-semibold text-[var(--color-ink)]"></p>
+                <p class="mt-2 text-[var(--color-muted)]"></p>
+                <button type="button" class="mt-4 btn btn-ghost" data-contact-dismiss></button>
+            </div>
+        `;
+        const box = status.firstElementChild;
+        box.querySelector('p:nth-of-type(1)').textContent = title;
+        box.querySelector('p:nth-of-type(2)').textContent = message;
+        box.querySelector('[data-contact-dismiss]').textContent = dismissLabel;
+
+        status.focus({ preventScroll: true });
+        status.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+
+        if (autoHide) {
+            hideTimer = setTimeout(() => hideStatus(), reduceMotion ? 4000 : 7000);
+        }
+    }
+
+    function hideStatus() {
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+        const box = status.querySelector('.contact-feedback');
+        if (box && !reduceMotion) {
+            box.classList.add('is-out');
+            box.addEventListener(
+                'animationend',
+                () => {
+                    status.hidden = true;
+                    status.innerHTML = '';
+                },
+                { once: true }
+            );
+            return;
+        }
+        status.hidden = true;
+        status.innerHTML = '';
+    }
+
+    status.addEventListener('click', (e) => {
+        if (e.target.closest('[data-contact-dismiss]')) {
+            hideStatus();
+            form.hidden = false;
+        }
+    });
+
+    // Legacy redirect flash: allow dismiss and restore form.
+    if (!status.hidden && status.querySelector('.contact-feedback--success')) {
+        form.hidden = true;
+        hideTimer = setTimeout(() => {
+            hideStatus();
+            form.hidden = false;
+        }, reduceMotion ? 4000 : 7000);
+        status.focus({ preventScroll: true });
+        status.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+    } else if (!status.hidden) {
+        status.focus({ preventScroll: true });
+        status.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
         const btn = form.querySelector('[data-submit]');
-        if (!btn) return;
+        if (!btn || btn.disabled) return;
+
+        clearFieldErrors();
         btn.dataset.label = btn.textContent;
         btn.textContent = btn.dataset.sending || btn.textContent;
         btn.disabled = true;
+        btn.setAttribute('aria-busy', 'true');
         btn.style.opacity = '0.75';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new FormData(form),
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (response.status === 422) {
+                const errors = data.errors || {};
+                Object.entries(errors).forEach(([field, messages]) => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    const text = Array.isArray(messages) ? messages[0] : String(messages);
+                    if (input) {
+                        input.setAttribute('aria-invalid', 'true');
+                        const p = document.createElement('p');
+                        p.className = 'mt-1 text-sm text-[var(--color-danger)]';
+                        p.dataset.fieldError = field;
+                        p.textContent = text;
+                        (input.closest('label') || input).insertAdjacentElement('afterend', p);
+                    }
+                });
+                showStatus('error', labels.validation, Object.values(errors).flat()[0] || '');
+                return;
+            }
+
+            if (!response.ok || data.ok === false) {
+                showStatus('error', data.title || labels.error, data.message || labels.network);
+                return;
+            }
+
+            form.reset();
+            form.hidden = true;
+            showStatus('success', data.title, data.message, { autoHide: true });
+            // After auto-hide, bring the form back so the user can write again.
+            const reopenDelay = reduceMotion ? 4200 : 7200;
+            setTimeout(() => {
+                form.hidden = false;
+            }, reopenDelay);
+        } catch {
+            showStatus('error', labels.error, labels.network);
+        } finally {
+            btn.textContent = btn.dataset.label || btn.textContent;
+            btn.disabled = false;
+            btn.removeAttribute('aria-busy');
+            btn.style.opacity = '';
+        }
     });
 })();

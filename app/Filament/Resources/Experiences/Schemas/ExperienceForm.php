@@ -14,6 +14,7 @@ class ExperienceForm
         return $schema->components([
             T::text('role', 'Rol / Puesto')->required(),
             TextInput::make('company')->label('Empresa'),
+            TextInput::make('company_url')->label('Web de la empresa')->url()->placeholder('https://…'),
             TextInput::make('location')->label('Ubicación'),
             T::area('description', 'Descripción', 4),
             TextInput::make('start_date')->label('Inicio (ej. 2022)'),

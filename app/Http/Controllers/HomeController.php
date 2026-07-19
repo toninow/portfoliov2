@@ -16,14 +16,30 @@ class HomeController extends Controller
     public function __invoke(): View
     {
         $featured = Project::published()->featured()
-            ->with(['category', 'technologies'])
+            ->with(['category', 'technologies', 'metrics' => fn ($q) => $q->where('is_public', true)])
             ->orderBy('sort')
             ->orderByDesc('year')
             ->get();
 
+        $homeCases = Project::published()->caseStudies()
+            ->with(['category', 'technologies', 'metrics' => fn ($q) => $q->where('is_public', true)])
+            ->orderByDesc('is_featured')
+            ->orderBy('sort')
+            ->orderByDesc('year')
+            ->take(3)
+            ->get();
+
+        $impactMetrics = $homeCases
+            ->flatMap(fn ($p) => $p->metrics)
+            ->unique(fn ($m) => $m->id)
+            ->take(4)
+            ->values();
+
         return view('pages.home', [
             'profile' => Profile::current(),
             'sections' => HomepageSection::visible()->get()->keyBy('key'),
+            'homeCases' => $homeCases,
+            'impactMetrics' => $impactMetrics,
             'featuredLarge' => $featured->where('featured_size', 'large')->take(1)->values(),
             'featuredMedium' => $featured->where('featured_size', 'medium')->take(2)->values(),
             'featuredCompact' => $featured->whereNotIn('featured_size', ['large', 'medium'])->take(3)->values(),

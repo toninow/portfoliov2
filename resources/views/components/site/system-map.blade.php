@@ -20,10 +20,10 @@
         ],
         [
             'key' => 'ai', 'glyph' => '✦',
-            'label' => ['es' => 'Automatización + IA', 'en' => 'Automation + AI'],
-            'role' => ['es' => 'Motor asistido por IA', 'en' => 'AI-assisted engine'],
-            'desc' => ['es' => 'Automatizo tareas repetitivas y uso IA (asistentes como GPT/Claude y editores como Cursor) para acelerar el desarrollo, generar y revisar código y procesar datos con mejor criterio.', 'en' => 'I automate repetitive tasks and use AI (assistants like GPT/Claude and editors like Cursor) to speed up development, generate and review code, and process data with better judgement.'],
-            'tags' => ['IA', 'GPT / Claude', 'Cursor', 'Scripts'],
+            'label' => ['es' => 'Automatización', 'en' => 'Automation'],
+            'role' => ['es' => 'Procesos y flujos', 'en' => 'Processes and flows'],
+            'desc' => ['es' => 'Reduzco trabajo manual con scripts, importaciones y flujos repetibles. Uso herramientas de IA como apoyo para analizar, desarrollar, revisar y documentar, manteniendo la validación técnica sobre el resultado.', 'en' => 'I reduce manual work with scripts, imports and repeatable flows. I use AI tools to support analysis, development, review and documentation, while keeping technical validation of the result.'],
+            'tags' => ['Scripts', 'Flujos', 'Importaciones'],
         ],
         [
             'key' => 'erp', 'glyph' => '▤',
@@ -69,8 +69,8 @@
         ],
     ];
 
-    // Positions on a 440 x 380 stage. AI/automation sits in the middle as the
-    // engine that touches everything — the work is a mesh, not a single pipeline.
+    // Positions on a 440 x 380 stage. Automation sits in the middle as the
+    // connector that touches many systems — the work is a mesh, not a single pipeline.
     $pos = [
         [72, 60],    // 0 web
         [206, 46],   // 1 data

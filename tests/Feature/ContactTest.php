@@ -31,9 +31,40 @@ class ContactTest extends TestCase
         $response = $this->post('/contacto', $this->payload());
 
         $response->assertRedirect();
+        $response->assertSessionHas('contact_success', true);
+        $this->followRedirects($response)
+            ->assertOk()
+            ->assertSee(__('portfolio.contact.success_title'))
+            ->assertSee(__('portfolio.contact.success'));
         $this->assertDatabaseCount('leads', 1);
         $this->assertDatabaseHas('leads', ['email' => 'demo@empresa.com', 'status' => 'new']);
         $this->assertDatabaseCount('lead_activities', 1);
+    }
+
+    public function test_ajax_submission_returns_json_without_redirect(): void
+    {
+        $response = $this->postJson('/contacto', $this->payload());
+
+        $response->assertOk()
+            ->assertJson([
+                'ok' => true,
+                'title' => __('portfolio.contact.success_title'),
+                'message' => __('portfolio.contact.success'),
+            ]);
+        $this->assertDatabaseCount('leads', 1);
+    }
+
+    public function test_validation_errors_are_flashed_for_the_user(): void
+    {
+        $response = $this->from('/contacto')->post('/contacto', $this->payload([
+            'name' => '',
+            'email' => 'no-es-email',
+            'message' => '',
+            'consent' => null,
+        ]));
+
+        $response->assertRedirect('/contacto');
+        $response->assertSessionHasErrors(['name', 'email', 'message', 'consent']);
     }
 
     public function test_missing_consent_fails_validation(): void

@@ -16,10 +16,18 @@ class ProjectMetric extends Model
 
     protected $casts = [
         'is_public' => 'boolean',
+        'is_approximate' => 'boolean',
     ];
 
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function displayValue(): string
+    {
+        $prefix = $this->is_approximate ? '~' : '';
+
+        return $prefix.(string) $this->value;
     }
 }

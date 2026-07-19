@@ -15,7 +15,14 @@
                 </div>
                 <h3 class="timeline__role">{{ $exp->getTranslation('role', $l) }}</h3>
                 @if($exp->company)
-                    <p class="timeline__company">{{ $exp->company }}@if($exp->location) <span class="timeline__loc">· {{ $exp->location }}</span>@endif</p>
+                    <p class="timeline__company">
+                        @if($exp->company_url)
+                            <a href="{{ $exp->company_url }}" class="timeline__company-link" target="_blank" rel="noopener noreferrer">{{ $exp->company }}</a>
+                        @else
+                            {{ $exp->company }}
+                        @endif
+                        @if($exp->location) <span class="timeline__loc">· {{ $exp->location }}</span>@endif
+                    </p>
                 @endif
                 @if($exp->getTranslation('description', $l))
                     <p class="timeline__desc">{{ $exp->getTranslation('description', $l) }}</p>

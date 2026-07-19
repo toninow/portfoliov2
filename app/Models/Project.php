@@ -21,16 +21,40 @@ class Project extends Model
 
     public const VISIBILITIES = ['public', 'private_summary', 'draft', 'archived'];
 
+    /** Public lifecycle of the work itself (not publication status). */
+    public const LIFECYCLES = [
+        'production',
+        'active_development',
+        'internal_pilot',
+        'implementation',
+        'completed',
+        'historical',
+        'paused',
+    ];
+
+    public const CONFIDENTIALITY = ['public', 'confidential'];
+
     public array $translatable = [
-        'name', 'summary', 'description', 'problem', 'context', 'constraints',
-        'solution', 'process', 'decisions', 'result', 'improvements', 'role',
+        'name', 'summary', 'outcome_headline', 'description', 'problem', 'context',
+        'constraints', 'solution', 'process', 'decisions', 'architecture_description',
+        'result', 'improvements', 'role', 'responsibilities', 'learnings',
     ];
 
     protected $casts = [
         'seo' => 'array',
+        'workflow_steps' => 'array',
+        'features' => 'array',
+        'technical_decisions' => 'array',
+        'challenges' => 'array',
+        'qualitative_results' => 'array',
+        'external_links' => 'array',
         'is_featured' => 'boolean',
+        'is_case_study' => 'boolean',
+        'is_archived' => 'boolean',
+        'is_ongoing' => 'boolean',
         'published_at' => 'datetime',
         'year' => 'integer',
+        'completeness_score' => 'integer',
     ];
 
     public function getRouteKeyName(): string
@@ -53,9 +77,19 @@ class Project extends Model
         return $this->hasMany(ProjectImage::class)->orderBy('sort');
     }
 
+    public function visibleImages(): HasMany
+    {
+        return $this->images()->where('is_visible', true);
+    }
+
     public function metrics(): HasMany
     {
         return $this->hasMany(ProjectMetric::class)->orderBy('sort');
+    }
+
+    public function publicMetrics(): HasMany
+    {
+        return $this->metrics()->where('is_public', true);
     }
 
     public function scopePublished(Builder $query): Builder
@@ -72,10 +106,84 @@ class Project extends Model
         return $query->where('is_featured', true);
     }
 
+    public function scopeCaseStudies(Builder $query): Builder
+    {
+        return $query->where('is_case_study', true)->where('is_archived', false);
+    }
+
+    public function scopeArchive(Builder $query): Builder
+    {
+        return $query->where(function ($q) {
+            $q->where('is_archived', true)->orWhere('is_case_study', false);
+        });
+    }
+
     public function isPubliclyVisible(): bool
     {
         return $this->status === 'published'
             && in_array($this->visibility, ['public', 'private_summary'], true)
-            && (is_null($this->published_at) || $this->published_at->isPast());
+            && (is_null($this->published_at) || $this->published_at->lte(now()));
+    }
+
+    public function isConfidential(): bool
+    {
+        return $this->confidentiality_level === 'confidential'
+            || $this->visibility === 'private_summary';
+    }
+
+    public function translated(string $field, ?string $locale = null): ?string
+    {
+        $locale ??= app()->getLocale();
+        $value = $this->getTranslation($field, $locale, false);
+
+        if (is_string($value) && trim($value) !== '') {
+            return $value;
+        }
+
+        return null;
+    }
+
+    public function hasFilled(string $field, ?string $locale = null): bool
+    {
+        return filled($this->translated($field, $locale));
+    }
+
+    /** @return list<array{value?: string, unit?: string, label?: string, description?: string}> */
+    public function orderedWorkflowSteps(): array
+    {
+        return collect($this->workflow_steps ?? [])
+            ->filter(fn ($step) => filled(data_get($step, 'label.es') ?: data_get($step, 'label') ?: data_get($step, 'title')))
+            ->values()
+            ->all();
+    }
+
+    /** Completeness score 0–100 for admin only. */
+    public function recalculateCompleteness(): int
+    {
+        $checks = [
+            $this->hasFilled('name', 'es'),
+            $this->hasFilled('summary', 'es'),
+            filled($this->lifecycle),
+            filled($this->main_image_path),
+            $this->hasFilled('problem', 'es'),
+            $this->hasFilled('responsibilities', 'es') || $this->hasFilled('role', 'es'),
+            $this->hasFilled('solution', 'es'),
+            $this->hasFilled('result', 'es') || $this->hasFilled('outcome_headline', 'es'),
+            $this->metrics()->where('is_public', true)->exists(),
+            $this->hasFilled('name', 'en') && $this->hasFilled('summary', 'en'),
+            filled(data_get($this->seo, 'title.es')) || filled(data_get($this->seo, 'description.es')),
+        ];
+
+        $score = (int) round((collect($checks)->filter()->count() / max(count($checks), 1)) * 100);
+        $this->completeness_score = $score;
+
+        return $score;
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Project $project) {
+            $project->recalculateCompleteness();
+        });
     }
 }

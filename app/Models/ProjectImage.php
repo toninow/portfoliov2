@@ -14,6 +14,13 @@ class ProjectImage extends Model
 
     public array $translatable = ['alt', 'caption'];
 
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'is_visible' => 'boolean',
+    ];
+
+    public const TYPES = ['gallery', 'desktop', 'mobile', 'diagram', 'process', 'result'];
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

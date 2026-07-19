@@ -11,7 +11,7 @@
                 <span class="font-display font-semibold">{{ $siteProfile->name }}</span>
             </div>
             <p class="mt-4 max-w-sm text-sm text-[var(--color-muted)]">
-                {{ $siteProfile->getTranslation('headline', $locale) }}
+                {{ $siteProfile->getTranslation('headline', $locale) ?: __('portfolio.footer.tagline') }}
             </p>
             @if($siteProfile->email)
                 <a href="mailto:{{ $siteProfile->email }}" class="mt-3 inline-block text-sm text-[var(--color-brand-bright)] link-underline">{{ $siteProfile->email }}</a>
