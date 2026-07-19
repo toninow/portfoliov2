@@ -21,7 +21,7 @@ class ImportCaseStudyMedia extends Command
     /**
      * Local portfolio slug => remote module id + selected screenshots (prefer full UI, skip *-lista).
      *
-     * @var array<string, array{module: string, cover: string, shots: list<string>, video?: string, tech?: list<string>}>
+     * @var array<string, array{module: string, cover: string, shots: list<string>, captions?: array<string, array{es: string, en: string}>, video?: string, tech?: list<string>}>
      */
     protected array $map = [
         'mp-proveedores' => [
@@ -46,13 +46,36 @@ class ImportCaseStudyMedia extends Command
             'video' => 'videos/dolibarr-module-mp-proveedores-dolv5.mp4',
         ],
         'control-stock-dolibarr' => [
+            // Source pack id: web-control-stock-dolibarr — public name stays "Control de stock Dolibarr".
             'module' => 'web-control-stock-dolibarr',
-            'cover' => '01-aplicacion.png',
+            'cover' => '14-home-stock-final.png',
             'shots' => [
-                '01-aplicacion.png',
+                '14-home-stock-final.png',
+                '01-login-stock-mp.png',
+                '01-catalogo-stock-vivo.png',
+                '03-buscar-producto-stock.png',
+                '04-ficha-revision-stock.png',
+                '05-controles-corregir-stock.png',
+                '08-busqueda-por-referencia.png',
+                '09-detalle-desde-busqueda.png',
+                '10-escaner-ean-manual.png',
+                '12-perfil-actividad-stock.png',
+                '13-mis-productos-revisados.png',
+            ],
+            'captions' => [
+                '14-home-stock-final.png' => ['es' => 'Inicio', 'en' => 'Home'],
+                '01-login-stock-mp.png' => ['es' => 'Acceso', 'en' => 'Login'],
+                '01-catalogo-stock-vivo.png' => ['es' => 'Catálogo de stock', 'en' => 'Live stock catalog'],
+                '03-buscar-producto-stock.png' => ['es' => 'Búsqueda de producto', 'en' => 'Product search'],
+                '04-ficha-revision-stock.png' => ['es' => 'Ficha de revisión', 'en' => 'Review sheet'],
+                '05-controles-corregir-stock.png' => ['es' => 'Corrección de stock', 'en' => 'Stock correction'],
+                '08-busqueda-por-referencia.png' => ['es' => 'Búsqueda por referencia', 'en' => 'Search by reference'],
+                '09-detalle-desde-busqueda.png' => ['es' => 'Detalle del producto', 'en' => 'Product detail'],
+                '10-escaner-ean-manual.png' => ['es' => 'Escáner EAN', 'en' => 'EAN scanner'],
+                '12-perfil-actividad-stock.png' => ['es' => 'Actividad del perfil', 'en' => 'Profile activity'],
+                '13-mis-productos-revisados.png' => ['es' => 'Productos revisados', 'en' => 'Reviewed products'],
             ],
             'video' => 'videos/web-control-stock-dolibarr.mp4',
-            // Confirmed webapp in the media pack (not Flutter).
             'tech' => ['php', 'javascript', 'dolibarr', 'apis-rest'],
         ],
         'integracion-prestashop-dolibarr' => [
@@ -115,17 +138,17 @@ class ImportCaseStudyMedia extends Command
                     $coverRelative = $coverDest;
                 }
 
-                $label = $this->captionFromFilename($filename);
+                $labels = $this->labelsFor($filename, $config['captions'][$filename] ?? null);
                 ProjectImage::create([
                     'project_id' => $project->id,
                     'path' => $dest,
                     'alt' => [
-                        'es' => $label.' — '.$project->getTranslation('name', 'es'),
-                        'en' => $label.' — '.$project->getTranslation('name', 'en'),
+                        'es' => $labels['es'].' — '.$project->getTranslation('name', 'es'),
+                        'en' => $labels['en'].' — '.$project->getTranslation('name', 'en'),
                     ],
                     'caption' => [
-                        'es' => $label,
-                        'en' => $label,
+                        'es' => $labels['es'],
+                        'en' => $labels['en'],
                     ],
                     'type' => str_contains($filename, 'detalle') || str_contains($filename, 'panel') ? 'desktop' : 'gallery',
                     'is_featured' => $filename === $config['cover'],
@@ -215,6 +238,20 @@ class ImportCaseStudyMedia extends Command
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    /**
+     * @param  array{es?: string, en?: string}|null  $override
+     * @return array{es: string, en: string}
+     */
+    protected function labelsFor(string $filename, ?array $override): array
+    {
+        $fallback = $this->captionFromFilename($filename);
+
+        return [
+            'es' => $override['es'] ?? $fallback,
+            'en' => $override['en'] ?? $fallback,
+        ];
     }
 
     protected function captionFromFilename(string $filename): string

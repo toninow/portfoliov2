@@ -382,8 +382,8 @@ class PortfolioSeeder extends Seeder
                 'year' => 2025,
                 'name' => ['es' => 'Control de stock Dolibarr', 'en' => 'Dolibarr stock control'],
                 'summary' => [
-                    'es' => 'Aplicación móvil interna para consultar inventario en tiempo real desde el almacén.',
-                    'en' => 'Internal mobile app to check inventory in real time from the warehouse floor.',
+                    'es' => 'Aplicación web interna para consultar y corregir inventario en tiempo real desde el almacén.',
+                    'en' => 'Internal web app to check and correct inventory in real time from the warehouse floor.',
                 ],
                 'outcome_headline' => [
                     'es' => 'Consultar stock por almacén desde el móvil, sin abrir el ERP de escritorio.',
