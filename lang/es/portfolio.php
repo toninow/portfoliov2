@@ -37,6 +37,8 @@ return [
         'capabilities' => 'Problemas que ayudo a resolver',
         'process' => 'Cómo trabajo',
         'experience' => 'Experiencia',
+        'experience_eyebrow' => 'Trayectoria profesional',
+        'experience_lead' => 'Una trayectoria que combina desarrollo de software, sistemas internos, soporte técnico e infraestructura.',
         'technologies' => 'Tecnologías',
         'about' => 'Sobre mí',
         'contact' => 'Contacto',

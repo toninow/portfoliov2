@@ -124,9 +124,11 @@
 
     {{-- 7 · Experience --}}
     @if($experiences->isNotEmpty())
-    <section id="experiencia" class="section scroll-mt-24">
+    <section id="experiencia" class="section scroll-mt-24" aria-labelledby="experiencia-title">
         <div class="container-page">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-10">{{ __('portfolio.sections.experience') }}</h2>
+            <p class="eyebrow">{{ __('portfolio.sections.experience_eyebrow') }}</p>
+            <h2 id="experiencia-title" class="mt-2 text-3xl sm:text-4xl font-bold max-w-2xl">{{ __('portfolio.sections.experience') }}</h2>
+            <p class="mt-4 text-[var(--color-muted)] max-w-2xl leading-relaxed mb-10">{{ __('portfolio.sections.experience_lead') }}</p>
             <x-site.experience-timeline :experiences="$experiences" />
         </div>
     </section>

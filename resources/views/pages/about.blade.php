@@ -67,8 +67,12 @@
                 </div>
 
                 @if($experiences->isNotEmpty())
-                    <h2 class="mt-14 text-2xl font-bold mb-6">{{ __('portfolio.sections.experience') }}</h2>
-                    <x-site.experience-timeline :experiences="$experiences" />
+                    <div class="mt-14" aria-labelledby="about-experiencia-title">
+                        <p class="eyebrow">{{ __('portfolio.sections.experience_eyebrow') }}</p>
+                        <h2 id="about-experiencia-title" class="mt-2 text-2xl font-bold">{{ __('portfolio.sections.experience') }}</h2>
+                        <p class="mt-3 text-[var(--color-muted)] leading-relaxed mb-6">{{ __('portfolio.sections.experience_lead') }}</p>
+                        <x-site.experience-timeline :experiences="$experiences" />
+                    </div>
                 @endif
 
                 @if($education->isNotEmpty())

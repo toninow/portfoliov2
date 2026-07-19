@@ -14,35 +14,28 @@ class ExperiencesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('sort')
+            ->reorderable('sort')
             ->columns([
-                TextColumn::make('role')->label('Rol')
+                TextColumn::make('role')->label('Cargo')
                     ->formatStateUsing(fn ($record) => $record->getTranslation('role', 'es'))
-                    ->weight('bold'),
-                TextColumn::make('company')
-                    ->searchable(),
-                TextColumn::make('location')
-                    ->searchable(),
-                TextColumn::make('start_date')
-                    ->searchable(),
-                TextColumn::make('end_date')
-                    ->searchable(),
-                IconColumn::make('is_current')
-                    ->boolean(),
-                TextColumn::make('sort')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->weight('bold')
+                    ->searchable(query: function ($query, string $search) {
+                        return $query->where('role', 'like', "%{$search}%");
+                    }),
+                TextColumn::make('company')->searchable(),
+                TextColumn::make('location')->label('Ubicación')
+                    ->formatStateUsing(fn ($record) => $record->displayLocation()),
+                TextColumn::make('period')->label('Periodo')
+                    ->state(fn ($record) => $record->periodLabel('es')),
+                TextColumn::make('modality')->label('Modalidad')
+                    ->formatStateUsing(fn ($record) => $record->modalityLabel('es') ?: '—'),
+                IconColumn::make('is_current')->label('Actual')->boolean(),
+                IconColumn::make('is_visible')->label('Visible')->boolean(),
+                TextColumn::make('sort')->numeric()->sortable(),
+                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->recordActions([
                 EditAction::make(),
             ])

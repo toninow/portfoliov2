@@ -16,7 +16,7 @@ class AboutController extends Controller
     {
         return view('pages.about', [
             'profile' => Profile::current(),
-            'experiences' => Experience::orderBy('sort')->get(),
+            'experiences' => Experience::query()->visible()->ordered()->get(),
             'education' => Education::orderBy('sort')->get(),
             'certifications' => Certification::orderBy('sort')->get(),
             'skillGroups' => SkillGroup::with('skills')->orderBy('sort')->get(),

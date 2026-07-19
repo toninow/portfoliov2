@@ -37,6 +37,8 @@ return [
         'capabilities' => 'Problems I Help Solve',
         'process' => 'How I Work',
         'experience' => 'Experience',
+        'experience_eyebrow' => 'Professional Background',
+        'experience_lead' => 'A career combining software development, internal systems, technical support and infrastructure.',
         'technologies' => 'Technologies',
         'about' => 'About Me',
         'contact' => 'Contact',

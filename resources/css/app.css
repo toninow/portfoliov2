@@ -962,22 +962,27 @@ html.js main[data-page] {
     list-style: none;
     margin: 0;
     padding: 0;
+    max-width: 46rem;
 }
 
 .timeline__item {
     position: relative;
-    padding-left: 2.25rem;
-    padding-bottom: 1.25rem;
+    padding-left: 2.1rem;
+    padding-bottom: 1.75rem;
 }
 
 .timeline__item::before {
     content: '';
     position: absolute;
-    left: 7px;
-    top: 1.5rem;
-    bottom: -0.25rem;
+    left: 6px;
+    top: 2rem;
+    bottom: -0.35rem;
     width: 2px;
     background: var(--color-line);
+}
+
+.timeline__item:last-child {
+    padding-bottom: 0;
 }
 
 .timeline__item:last-child::before {
@@ -987,9 +992,9 @@ html.js main[data-page] {
 .timeline__marker {
     position: absolute;
     left: 0;
-    top: 1.2rem;
-    width: 16px;
-    height: 16px;
+    top: 1.85rem;
+    width: 14px;
+    height: 14px;
     border-radius: 999px;
     background: var(--color-surface);
     border: 2px solid var(--color-brand-bright);
@@ -1001,7 +1006,12 @@ html.js main[data-page] {
     background: var(--color-cyan);
     border-color: var(--color-cyan);
     box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18);
-    animation: tl-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .timeline__item.is-current .timeline__marker {
+        animation: tl-pulse 2.2s ease-in-out infinite;
+    }
 }
 
 @keyframes tl-pulse {
@@ -1014,51 +1024,42 @@ html.js main[data-page] {
     border: 1px solid var(--color-line);
     border-left: 2px solid transparent;
     border-radius: var(--radius-card);
-    padding: 1.05rem 1.25rem;
+    padding: 1.15rem 1.25rem 1.25rem;
     transition: transform 0.25s var(--ease-out), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .timeline__item:hover .timeline__card,
 .timeline__item:focus-within .timeline__card {
-    transform: translateX(4px);
+    transform: translateX(3px);
     border-left-color: var(--color-cyan);
     box-shadow: var(--shadow-glow);
 }
 
 .timeline__item:hover .timeline__marker {
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 
 .timeline__period {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    margin: 0;
     font-family: var(--font-mono);
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     letter-spacing: 0.03em;
     color: var(--color-muted);
 }
 
-.timeline__now {
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-cyan);
-    border: 1px solid color-mix(in oklab, var(--color-cyan) 45%, transparent);
-    border-radius: 999px;
-    padding: 0.1rem 0.45rem;
-}
-
 .timeline__role {
-    margin-top: 0.3rem;
+    margin-top: 0.45rem;
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.05rem;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    line-height: 1.25;
+    color: var(--color-ink);
+    text-wrap: balance;
 }
 
 .timeline__company {
-    margin-top: 0.1rem;
-    font-size: 0.85rem;
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
     color: var(--color-brand-bright);
 }
 
@@ -1078,11 +1079,92 @@ html.js main[data-page] {
     color: var(--color-muted);
 }
 
-.timeline__desc {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.55;
+.timeline__meta {
+    margin-top: 0.55rem;
+}
+
+.timeline__badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-muted);
+    border: 1px solid var(--color-line);
+    border-radius: 0.4rem;
+    padding: 0.15rem 0.5rem;
+}
+
+.timeline__desc {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+}
+
+.timeline__desc p {
+    margin: 0;
+}
+
+.timeline__desc p + p {
+    margin-top: 0.65rem;
+}
+
+.timeline__achievements {
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.timeline__achievements li {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+}
+
+.timeline__achievements strong {
+    display: block;
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+.timeline__metric {
+    display: inline-block;
+    margin-top: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-brand-bright);
+}
+
+.timeline__tags {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+@media (max-width: 639px) {
+    .timeline {
+        max-width: none;
+    }
+
+    .timeline__item {
+        padding-left: 1.75rem;
+    }
+
+    .timeline__card {
+        padding: 1rem;
+    }
+
+    .timeline__item:hover .timeline__card,
+    .timeline__item:focus-within .timeline__card {
+        transform: none;
+    }
 }
 
 /* ===== Technologies grid ===== */

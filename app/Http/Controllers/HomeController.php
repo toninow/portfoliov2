@@ -46,7 +46,7 @@ class HomeController extends Controller
             'services' => Service::published()->with('technologies')->get(),
             'skillGroups' => SkillGroup::with('skills')->orderBy('sort')->get(),
             'technologies' => Technology::orderBy('sort')->get()->groupBy('area'),
-            'experiences' => Experience::orderBy('sort')->get(),
+            'experiences' => Experience::query()->visible()->ordered()->get(),
         ]);
     }
 }

@@ -100,7 +100,7 @@ class PositioningCopyTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
 
         $this->assertStringContainsString('Informático · Desarrollo de software y sistemas internos', $html);
-        $this->assertStringContainsString('integraciones entre Dolibarr y PrestaShop', $html);
+        $this->assertStringContainsString('integraciones entre Dolibarr, PrestaShop', $html);
     }
 
     public function test_english_metadata_is_locale_specific(): void
