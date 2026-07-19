@@ -29,14 +29,18 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Antonio Benalcázar')
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('2.4rem')
             ->colors([
                 'primary' => Color::Blue,
                 'info' => Color::Cyan,
+                'gray' => Color::Slate,
             ])
             ->font('Inter')
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('18rem')
             ->navigationGroups([
-                'Panel',
+                'Sistema',
                 'Contenido',
                 'CRM',
                 'Configuración',
@@ -58,6 +62,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::HEAD_START,
                 fn (): string => '<meta name="robots" content="noindex,nofollow">',
+            )
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn (): string => view('filament.admin-styles')->render(),
             )
             ->middleware([
                 EncryptCookies::class,

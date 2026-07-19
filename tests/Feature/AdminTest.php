@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
 use App\Models\User;
 use Database\Seeders\PortfolioSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,6 +45,22 @@ class AdminTest extends TestCase
         $this->actingAs($admin)->get('/admin/projects')->assertOk();
         $this->actingAs($admin)->get('/admin/leads')->assertOk();
         $this->actingAs($admin)->get('/admin/services')->assertOk();
+    }
+
+    public function test_admin_projects_table_renders_public_disk_cover_urls(): void
+    {
+        $this->seed(PortfolioSeeder::class);
+
+        $project = Project::where('slug', 'mp-proveedores')->firstOrFail();
+        $project->update(['main_image_path' => 'projects/mp-proveedores-cover.png']);
+
+        $html = $this->actingAs($this->admin())
+            ->get('/admin/projects')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('/storage/projects/mp-proveedores-cover.png', $html);
+        $this->assertStringContainsString('ab-admin-brand', $html);
     }
 
     public function test_admin_can_open_site_preview_with_device_controls(): void

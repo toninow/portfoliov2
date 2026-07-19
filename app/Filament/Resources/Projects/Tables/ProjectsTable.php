@@ -24,7 +24,13 @@ class ProjectsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('main_image_path')->label('')->square()->size(48),
+                ImageColumn::make('main_image_path')
+                    ->label('')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->square()
+                    ->size(52)
+                    ->extraImgAttributes(['class' => 'object-cover ring-1 ring-gray-200 dark:ring-white/10']),
                 TextColumn::make('name')->label('Nombre')
                     ->formatStateUsing(fn ($record) => $record->getTranslation('name', 'es'))
                     ->searchable(query: fn ($query, $search) => $query->where('name->es', 'like', "%{$search}%"))

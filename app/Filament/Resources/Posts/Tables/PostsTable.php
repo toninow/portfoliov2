@@ -23,8 +23,11 @@ class PostsTable
             ->columns([
                 ImageColumn::make('cover_image_path')
                     ->label('')
+                    ->disk('public')
+                    ->visibility('public')
                     ->square()
-                    ->size(48),
+                    ->size(52)
+                    ->extraImgAttributes(['class' => 'object-cover ring-1 ring-gray-200 dark:ring-white/10']),
                 TextColumn::make('title')
                     ->label('Título')
                     ->formatStateUsing(fn ($record) => $record->getTranslation('title', 'es'))
